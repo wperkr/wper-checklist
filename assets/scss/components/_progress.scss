@@ -1,0 +1,139 @@
+// 진행 패널 — wper 관제 패널(.wper-guard__panel)의 시각 문법을 따른다:
+// 딥 톤 배경 · 라이브 도트 · 카테고리 미터 · 이벤트 로그. 전부 코드, 이미지 0장.
+
+.wper-check-progress {
+	overflow: hidden;
+	border: 1px solid var(--wper-deep-border);
+	border-radius: var(--wper-radius-lg);
+	background: linear-gradient(160deg, var(--wper-deep), var(--wper-deep-2));
+	color: var(--wper-on-deep);
+
+	&__preparing {
+		color: var(--wper-ink-subtle);
+	}
+
+	&__bar {
+		display: flex;
+		align-items: center;
+		gap: var(--wper-space-3);
+		padding: var(--wper-space-4) var(--wper-space-5);
+		border-block-end: 1px solid var(--wper-deep-border);
+	}
+
+	&__dot {
+		inline-size: 10px;
+		block-size: 10px;
+		border-radius: var(--wper-radius-full);
+		background: var(--wper-warning);
+		animation: wper-check-pulse 1.2s ease-in-out infinite;
+	}
+
+	&__bar.is-complete &__dot {
+		background: var(--wper-success);
+		animation: none;
+	}
+
+	&__title {
+		font-weight: var(--wper-weight-semibold);
+	}
+
+	&__live {
+		margin-inline-start: auto;
+		font-family: var(--wper-font-mono);
+		font-size: var(--wper-text-sm);
+		color: var(--wper-on-deep-muted);
+	}
+
+	&__cats {
+		display: grid;
+		gap: var(--wper-space-3);
+		padding: var(--wper-space-5);
+	}
+
+	&__cat {
+		display: grid;
+		grid-template-columns: 110px minmax(0, 1fr) 48px;
+		align-items: center;
+		gap: var(--wper-space-4);
+	}
+
+	&__cat-name {
+		font-size: var(--wper-text-sm);
+		color: var(--wper-on-deep-muted);
+	}
+
+	&__cat-count {
+		font-family: var(--wper-font-mono);
+		font-size: var(--wper-text-xs);
+		color: var(--wper-on-deep-muted);
+		text-align: end;
+	}
+
+	&__events {
+		max-block-size: 240px;
+		margin: 0;
+		padding: var(--wper-space-4) var(--wper-space-5);
+		border-block-start: 1px solid var(--wper-deep-border);
+		overflow-y: auto;
+		list-style: none;
+		font-family: var(--wper-font-mono);
+		font-size: var(--wper-text-xs);
+		line-height: 1.9;
+	}
+
+	&__event {
+		margin: 0;
+		color: var(--wper-on-deep-muted);
+
+		&::before {
+			content: '✓ ';
+			color: var(--wper-brand);
+		}
+	}
+}
+
+// 미터 — 진행(패널 안)과 카테고리 점수(보고서) 양쪽에서 쓰는 공용 블록.
+.wper-check-meter {
+	&__track {
+		block-size: 8px;
+		border-radius: var(--wper-radius-full);
+		background: rgba(255, 255, 255, 0.08);
+		overflow: hidden;
+	}
+
+	&__bar {
+		block-size: 100%;
+		inline-size: 0;
+		border-radius: var(--wper-radius-full);
+		background: linear-gradient(90deg, var(--wper-brand), var(--wper-brand-hover));
+		transition: inline-size var(--wper-transition-normal);
+
+		&--ok {
+			background: linear-gradient(90deg, var(--wper-success), var(--wper-brand));
+		}
+
+		&--warn {
+			background: linear-gradient(90deg, var(--wper-warning), var(--wper-warning-fg));
+		}
+
+		&--fail {
+			background: linear-gradient(90deg, var(--wper-danger), var(--wper-danger-fg));
+		}
+	}
+}
+
+// 보고서 쪽 미터 트랙은 밝은 배경 위에 놓인다.
+.wper-check-cat .wper-check-meter__track {
+	background: var(--wper-surface-muted);
+}
+
+@keyframes wper-check-pulse {
+	0%,
+	100% {
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 0.35;
+	}
+}

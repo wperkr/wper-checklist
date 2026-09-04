@@ -1,0 +1,145 @@
+// 화면 크롬 — 진입 화면(시작 버튼 · 이력) · 툴바 · 오류.
+
+.wper-checklist {
+	max-inline-size: 960px;
+
+	&__title {
+		color: var(--wper-heading);
+	}
+
+	&__lede {
+		margin: var(--wper-space-1) 0 var(--wper-space-6);
+		color: var(--wper-ink-muted);
+		font-size: var(--wper-text-base);
+	}
+
+	&__intro {
+		display: grid;
+		justify-items: start;
+		gap: var(--wper-space-8);
+		padding: var(--wper-space-10) 0;
+	}
+}
+
+// 진단 시작 — 이 화면의 유일한 주인공.
+.wper-check-start {
+	padding: var(--wper-space-4) var(--wper-space-10);
+	border: 0;
+	border-radius: var(--wper-radius-full);
+	background: linear-gradient(135deg, var(--wper-brand), var(--wper-brand-active));
+	color: var(--wper-on-brand);
+	font-size: var(--wper-text-lg);
+	font-weight: var(--wper-weight-bold);
+	cursor: pointer;
+	box-shadow: var(--wper-shadow-md);
+	transition: transform var(--wper-transition-fast), box-shadow var(--wper-transition-fast);
+
+	&:hover {
+		transform: translateY(-1px);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--wper-brand-active);
+		outline-offset: 2px;
+	}
+}
+
+.wper-check-history {
+	&__title {
+		margin: 0 0 var(--wper-space-2);
+		font-size: var(--wper-text-sm);
+		font-weight: var(--wper-weight-semibold);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--wper-ink-faint);
+	}
+
+	ul {
+		display: grid;
+		gap: var(--wper-space-1);
+		margin: 0;
+	}
+
+	&__open {
+		display: inline-flex;
+		align-items: baseline;
+		gap: var(--wper-space-3);
+		padding: var(--wper-space-2) var(--wper-space-4);
+		border: 1px solid var(--wper-border);
+		border-radius: var(--wper-radius-md);
+		background: var(--wper-surface);
+		color: var(--wper-ink-muted);
+		font-size: var(--wper-text-sm);
+		cursor: pointer;
+		transition: border-color var(--wper-transition-fast);
+
+		strong {
+			color: var(--wper-brand-active);
+			font-family: var(--wper-font-mono);
+		}
+
+		&:hover {
+			border-color: var(--wper-brand);
+		}
+	}
+}
+
+// 툴바 — 보고서 상세 토글 + 언어.
+.wper-check-toolbar {
+	display: flex;
+	align-items: center;
+	gap: var(--wper-space-4);
+	margin: var(--wper-space-6) 0;
+
+	&__reco {
+		padding: var(--wper-space-3) var(--wper-space-6);
+		border: 0;
+		border-radius: var(--wper-radius-md);
+		background: var(--wper-heading);
+		color: var(--wper-on-brand);
+		font-size: var(--wper-text-base);
+		font-weight: var(--wper-weight-semibold);
+		cursor: pointer;
+		transition: background var(--wper-transition-fast);
+
+		&:hover {
+			background: var(--wper-brand-active);
+		}
+	}
+
+	&__lang {
+		display: inline-flex;
+		border: 1px solid var(--wper-border);
+		border-radius: var(--wper-radius-full);
+		overflow: hidden;
+	}
+
+	&__lang-btn {
+		padding: var(--wper-space-1) var(--wper-space-3);
+		border: 0;
+		background: var(--wper-surface);
+		color: var(--wper-ink-subtle);
+		font-size: var(--wper-text-xs);
+		font-weight: var(--wper-weight-semibold);
+		cursor: pointer;
+
+		&.is-active {
+			background: var(--wper-brand-tint);
+			color: var(--wper-brand-active);
+		}
+	}
+}
+
+.wper-check-error {
+	padding: var(--wper-space-5);
+	border: 1px solid var(--wper-danger);
+	border-radius: var(--wper-radius-md);
+	background: var(--wper-danger-bg);
+	color: var(--wper-danger-fg);
+
+	&__detail {
+		font-family: var(--wper-font-mono);
+		font-size: var(--wper-text-xs);
+		color: var(--wper-ink-subtle);
+	}
+}

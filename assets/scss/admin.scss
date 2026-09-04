@@ -1,0 +1,12 @@
+// WPER Checklist — 관리자 화면 스타일 진입점.
+//
+// 규율 (wperkr 디자인 시스템과 동일 기준, 자체 적용):
+//   · 값 리터럴은 _tokens.scss 에만 — 컴포넌트는 var(--wper-*) 만 참조
+//   · !important 금지
+//   · js- 클래스는 절대 스타일하지 않는다 (JS 훅 전용)
+//   · 모든 규칙은 .wper-checklist 래퍼 스코프 안 — wp-admin 전역 누출 0
+
+@use 'tokens';
+@use 'components/chrome';
+@use 'components/progress';
+@use 'components/report';

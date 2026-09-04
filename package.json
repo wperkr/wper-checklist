@@ -1,0 +1,13 @@
+{
+	"name": "wper-checklist",
+	"version": "1.0.0",
+	"private": true,
+	"description": "WPER Checklist admin SCSS build (dist is committed — no runtime Node dependency)",
+	"scripts": {
+		"build": "sass assets/scss/admin.scss assets/dist/admin.css --style=compressed --no-source-map",
+		"watch": "sass assets/scss/admin.scss assets/dist/admin.css --style=expanded --watch"
+	},
+	"devDependencies": {
+		"sass": "^1.80.0"
+	}
+}

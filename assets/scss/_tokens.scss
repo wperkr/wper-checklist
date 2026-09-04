@@ -1,0 +1,81 @@
+// 디자인 토큰 — 값 리터럴은 이 파일에만 존재한다 (wperkr 디자인 시스템과 같은 규율).
+//
+// ⭐ 전부 `.wper-checklist` 래퍼 아래에만 선언한다 — wp-admin 전역으로 아무것도
+//    누출하지 않는다. 이 플러그인은 배포용 독립 플러그인이라 테마 토큰에 의존할
+//    수 없고, 대신 wper 브랜드 값(teal #1abb9c · 상태 삼중값)을 자체 재선언한다.
+
+.wper-checklist {
+	// Brand
+	--wper-brand: #1abb9c;
+	--wper-brand-hover: #17a78b;
+	--wper-brand-active: #14907a;
+	--wper-brand-tint: #e8f8f4;
+	--wper-on-brand: #ffffff;
+
+	// Ink · Surface · Border
+	--wper-ink: #1f2933;
+	--wper-ink-muted: #52606d;
+	--wper-ink-subtle: #7b8794;
+	--wper-ink-faint: #9aa5b1;
+	--wper-heading: #121a24;
+	--wper-surface: #ffffff;
+	--wper-surface-alt: #f7f9fa;
+	--wper-surface-muted: #eef2f4;
+	--wper-border: #dde3e7;
+
+	// Deep (진행 패널 — 관제 패널 무드)
+	--wper-deep: #0d1420;
+	--wper-deep-2: #121c2b;
+	--wper-deep-border: #23304a;
+	--wper-on-deep: #dbe4ee;
+	--wper-on-deep-muted: #8294ab;
+
+	// Status 삼중값 (solid / bg tint / fg)
+	--wper-success: #15b258;
+	--wper-success-bg: #e2f6ea;
+	--wper-success-fg: #0f8541;
+	--wper-warning: #ffb23f;
+	--wper-warning-bg: #fff4e0;
+	--wper-warning-fg: #a36105;
+	--wper-danger: #ed3625;
+	--wper-danger-bg: #fdeae8;
+	--wper-danger-fg: #b3271a;
+	--wper-info: #18a0ff;
+	--wper-info-bg: #e4f3ff;
+	--wper-info-fg: #0b6fb8;
+
+	// Spacing (4px 기반)
+	--wper-space-1: 4px;
+	--wper-space-2: 8px;
+	--wper-space-3: 12px;
+	--wper-space-4: 16px;
+	--wper-space-5: 20px;
+	--wper-space-6: 24px;
+	--wper-space-8: 32px;
+	--wper-space-10: 40px;
+	--wper-space-12: 48px;
+
+	// Radius
+	--wper-radius-sm: 4px;
+	--wper-radius-md: 8px;
+	--wper-radius-lg: 12px;
+	--wper-radius-full: 9999px;
+
+	// Typography — wp-admin 폰트를 따르고 수치는 모노로.
+	--wper-font-mono: 'JetBrains Mono', 'D2Coding', Consolas, Menlo, monospace;
+	--wper-text-xs: 12px;
+	--wper-text-sm: 13px;
+	--wper-text-base: 14px;
+	--wper-text-lg: 16px;
+	--wper-text-xl: 20px;
+	--wper-text-3xl: 32px;
+	--wper-weight-medium: 500;
+	--wper-weight-semibold: 600;
+	--wper-weight-bold: 700;
+
+	// Shadow · Transition
+	--wper-shadow-sm: 0 1px 2px rgba(18, 26, 36, 0.06);
+	--wper-shadow-md: 0 4px 14px rgba(18, 26, 36, 0.1);
+	--wper-transition-fast: 150ms ease;
+	--wper-transition-normal: 200ms ease;
+}

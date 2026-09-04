@@ -1,0 +1,290 @@
+// 보고서 — 점수 링 · 카테고리 카드 · 항목 목록 · 권장 조치 · 확인 불가 고지.
+// 전 항목(pass/warn/fail/skip)이 표기된다 — 선택적 보고 금지 (계측 독트린).
+
+.wper-check-score {
+	display: flex;
+	align-items: center;
+	gap: var(--wper-space-8);
+	padding: var(--wper-space-6) 0;
+
+	&__grade {
+		margin: 0;
+		font-size: var(--wper-text-xl);
+		font-weight: var(--wper-weight-bold);
+
+		&--pass { color: var(--wper-success-fg); }
+		&--warn { color: var(--wper-warning-fg); }
+		&--fail { color: var(--wper-danger-fg); }
+	}
+
+	&__site,
+	&__date {
+		margin: var(--wper-space-1) 0 0;
+		color: var(--wper-ink-subtle);
+		font-size: var(--wper-text-sm);
+		font-family: var(--wper-font-mono);
+	}
+}
+
+// 점수 링 — 코드로 그린 SVG. stroke-dashoffset 은 서버가 계산해 인라인으로 준다
+// (컴포넌트 클래스가 별도로 있으므로 허용 예외 — wperkr DO/DON'T 규약과 동일).
+.wper-check-ring {
+	position: relative;
+	inline-size: 150px;
+	block-size: 150px;
+	flex: 0 0 auto;
+
+	svg {
+		inline-size: 100%;
+		block-size: 100%;
+		transform: rotate(-90deg);
+	}
+
+	&__track {
+		fill: none;
+		stroke: var(--wper-surface-muted);
+		stroke-width: 10;
+	}
+
+	&__bar {
+		fill: none;
+		stroke: var(--wper-brand);
+		stroke-width: 10;
+		stroke-linecap: round;
+		transition: stroke-dashoffset 600ms ease;
+	}
+
+	&--warn &__bar { stroke: var(--wper-warning); }
+	&--fail &__bar { stroke: var(--wper-danger); }
+
+	&__num {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-content: center;
+		text-align: center;
+
+		strong {
+			font-size: var(--wper-text-3xl);
+			font-weight: var(--wper-weight-bold);
+			color: var(--wper-heading);
+			line-height: 1.1;
+		}
+
+		span {
+			font-size: var(--wper-text-sm);
+			color: var(--wper-ink-faint);
+		}
+	}
+}
+
+.wper-check-cats {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+	gap: var(--wper-space-4);
+}
+
+.wper-check-cat {
+	padding: var(--wper-space-4);
+	border: 1px solid var(--wper-border);
+	border-radius: var(--wper-radius-lg);
+	background: var(--wper-surface);
+	box-shadow: var(--wper-shadow-sm);
+
+	&__head {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		margin-block-end: var(--wper-space-2);
+	}
+
+	&__name {
+		font-size: var(--wper-text-sm);
+		font-weight: var(--wper-weight-semibold);
+		color: var(--wper-ink-muted);
+	}
+
+	&__score {
+		font-family: var(--wper-font-mono);
+		font-weight: var(--wper-weight-bold);
+		color: var(--wper-heading);
+
+		small {
+			color: var(--wper-ink-faint);
+			font-weight: var(--wper-weight-medium);
+		}
+	}
+
+	&__counts {
+		margin: var(--wper-space-2) 0 0;
+		font-size: var(--wper-text-xs);
+		color: var(--wper-ink-faint);
+	}
+}
+
+/* -------------------------------------------------------------- 항목 목록 */
+
+.wper-check-report {
+	&__cat {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		margin: var(--wper-space-8) 0 var(--wper-space-3);
+		font-size: var(--wper-text-lg);
+		color: var(--wper-heading);
+	}
+
+	&__pts {
+		font-family: var(--wper-font-mono);
+		font-size: var(--wper-text-sm);
+		color: var(--wper-ink-subtle);
+	}
+}
+
+.wper-check-items {
+	display: grid;
+	gap: var(--wper-space-1);
+	margin: 0;
+}
+
+.wper-check-item {
+	display: grid;
+	grid-template-columns: 72px 220px minmax(0, 1fr) 60px;
+	gap: var(--wper-space-3);
+	align-items: center;
+	margin: 0;
+	padding: var(--wper-space-2) var(--wper-space-3);
+	border-radius: var(--wper-radius-md);
+	background: var(--wper-surface-alt);
+	font-size: var(--wper-text-sm);
+
+	&--fail { background: var(--wper-danger-bg); }
+	&--warn { background: var(--wper-warning-bg); }
+	&--skip { opacity: 0.75; }
+
+	&__label {
+		font-weight: var(--wper-weight-medium);
+		color: var(--wper-ink);
+	}
+
+	&__measured {
+		color: var(--wper-ink-subtle);
+		font-family: var(--wper-font-mono);
+		font-size: var(--wper-text-xs);
+		overflow-wrap: anywhere;
+	}
+
+	&__pts {
+		font-family: var(--wper-font-mono);
+		font-size: var(--wper-text-xs);
+		color: var(--wper-ink-faint);
+		text-align: end;
+	}
+
+	@media (max-width: 782px) {
+		grid-template-columns: 72px minmax(0, 1fr) 48px;
+
+		&__measured {
+			grid-column: 2 / -1;
+		}
+	}
+}
+
+.wper-check-badge {
+	justify-self: start;
+	padding: 2px var(--wper-space-2);
+	border-radius: var(--wper-radius-full);
+	font-size: var(--wper-text-xs);
+	font-weight: var(--wper-weight-bold);
+	white-space: nowrap;
+
+	&--pass { background: var(--wper-success-bg); color: var(--wper-success-fg); }
+	&--warn { background: var(--wper-warning-bg); color: var(--wper-warning-fg); }
+	&--fail { background: var(--wper-danger-bg); color: var(--wper-danger-fg); }
+	&--skip { background: var(--wper-surface-muted); color: var(--wper-ink-subtle); }
+}
+
+/* ------------------------------------------------------------ 권장 조치 */
+
+.wper-check-recos {
+	margin-block-start: var(--wper-space-10);
+
+	h3 {
+		font-size: var(--wper-text-xl);
+		color: var(--wper-heading);
+	}
+
+	&__clean {
+		color: var(--wper-success-fg);
+	}
+}
+
+// 정직 고지 박스(.wper-note) 문법 — 좌측 상태색 바 + 옅은 배경.
+.wper-check-reco {
+	margin-block-end: var(--wper-space-4);
+	padding: var(--wper-space-4) var(--wper-space-5);
+	border-inline-start: 4px solid var(--wper-warning);
+	border-radius: var(--wper-radius-md);
+	background: var(--wper-surface-alt);
+
+	&--fail {
+		border-inline-start-color: var(--wper-danger);
+	}
+
+	&__title {
+		display: flex;
+		align-items: center;
+		gap: var(--wper-space-2);
+		margin: 0 0 var(--wper-space-2);
+		font-size: var(--wper-text-base);
+		color: var(--wper-heading);
+	}
+
+	&__measured {
+		margin: 0 0 var(--wper-space-2);
+		font-family: var(--wper-font-mono);
+		font-size: var(--wper-text-xs);
+		color: var(--wper-ink-subtle);
+		overflow-wrap: anywhere;
+	}
+
+	&__cause,
+	&__fix {
+		margin: var(--wper-space-1) 0;
+		font-size: var(--wper-text-sm);
+		color: var(--wper-ink-muted);
+		line-height: 1.7;
+	}
+}
+
+/* ---------------------------------------------------- 확인 불가 · 푸터 */
+
+.wper-check-skips {
+	margin-block-start: var(--wper-space-8);
+	padding: var(--wper-space-4) var(--wper-space-5);
+	border: 1px dashed var(--wper-border);
+	border-radius: var(--wper-radius-md);
+	color: var(--wper-ink-subtle);
+	font-size: var(--wper-text-sm);
+
+	h4 {
+		margin: 0 0 var(--wper-space-2);
+		color: var(--wper-ink-muted);
+	}
+
+	ul {
+		margin: var(--wper-space-2) 0 0 var(--wper-space-4);
+	}
+}
+
+.wper-check-footer {
+	margin-block-start: var(--wper-space-8);
+	padding-block-start: var(--wper-space-4);
+	border-block-start: 1px solid var(--wper-border);
+	color: var(--wper-ink-faint);
+	font-size: var(--wper-text-xs);
+
+	a {
+		color: var(--wper-brand-active);
+	}
+}
