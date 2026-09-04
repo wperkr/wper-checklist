@@ -1,0 +1,1804 @@
+# Copyright (C) 2026 WPER
+# This file is distributed under the GPL-3.0.
+msgid ""
+msgstr ""
+
+#. Plugin Name of the plugin
+#: wper-checklist.php
+#: includes/class-admin.php:27
+#: includes/class-admin.php:73
+msgid "WPER Checklist"
+msgstr "WPER 진단"
+
+#. Plugin URI of the plugin
+#: wper-checklist.php
+msgid "https://github.com/wperkr/wper-checklist"
+msgstr ""
+
+#. Description of the plugin
+#: wper-checklist.php
+msgid "WordPress site health diagnostics — checks response time, database queries, SEO, vulnerabilities and server configuration, and produces a report scored out of 1000."
+msgstr "워드프레스 사이트 건강 진단 — 응답 속도 · DB 쿼리 · SEO · 취약점 · 서버 설정을 검사해 1000점 만점 리포트를 만듭니다."
+
+#. Author of the plugin
+#: wper-checklist.php
+msgid "WPER"
+msgstr "WPER"
+
+#. Author URI of the plugin
+#: wper-checklist.php
+msgid "https://wper.kr"
+msgstr ""
+
+#: data/js-vulns.php:26
+msgid "CVE-2013-4383 family"
+msgstr "CVE-2013-4383 계열"
+
+#: data/js-vulns.php:51
+msgid "CVE-2024-6783 family"
+msgstr "CVE-2024-6783 계열"
+
+#: data/recommendations.php:16
+msgid "The landing page is likely executing PHP and DB queries on every request — there is no page cache (e.g. nginx FastCGI) or its miss rate is high."
+msgstr "랜딩이 요청마다 PHP·DB 를 처음부터 실행하고 있을 가능성이 큽니다 — 페이지 캐시(nginx FastCGI 등)가 없거나 미스율이 높습니다."
+
+#: data/recommendations.php:17
+msgid "Enable a server-layer page cache (nginx FastCGI cache) together with an object cache (Redis) and OPcache. Avoid stacking cache plugins."
+msgstr "서버 계층 페이지 캐시(nginx FastCGI 캐시)를 켜고, 오브젝트 캐시(Redis)와 OPcache 를 함께 구성하세요. 캐시 플러그인 중첩은 피합니다."
+
+#: data/recommendations.php:20
+msgid "Archive listing queries are heavy and slow down easily without caching."
+msgstr "아카이브는 목록 쿼리가 무거워 캐시 없이는 느려지기 쉽습니다."
+
+#: data/recommendations.php:21
+msgid "Include archives in the page cache scope and verify listing queries use indexes."
+msgstr "페이지 캐시 적용 범위에 아카이브를 포함하고, 목록 쿼리에 인덱스가 타는지 확인하세요."
+
+#: data/recommendations.php:24
+msgid "Post rendering is uncached, or related-post/widget queries are heavy."
+msgstr "글 페이지 렌더링에 캐시가 적용되지 않거나 무거운 관련 글·위젯 쿼리가 있습니다."
+
+#: data/recommendations.php:25
+msgid "Apply page caching and audit the query cost of related-post plugins and sidebar widgets."
+msgstr "페이지 캐시를 적용하고, 관련 글 플러그인·사이드바 위젯의 쿼리 비용을 점검하세요."
+
+#: data/recommendations.php:28
+msgid "Static pages are rendered on every request without caching."
+msgstr "고정 페이지가 캐시 없이 매 요청 렌더링되고 있습니다."
+
+#: data/recommendations.php:29
+msgid "Check the page cache coverage."
+msgstr "페이지 캐시 적용 범위를 확인하세요."
+
+#: data/recommendations.php:32
+msgid "Product/service pages tend to be excluded from caching due to dynamic elements."
+msgstr "상품·서비스 페이지는 동적 요소가 많아 캐시 예외가 되기 쉽습니다."
+
+#: data/recommendations.php:33
+msgid "Exclude only personalized fragments (cart etc.) and cache the rest."
+msgstr "장바구니 등 개인화 요소만 예외로 두고 나머지는 캐시하세요."
+
+#: data/recommendations.php:36
+msgid "Measurements vary widely — fluctuating server load, cache-miss mixing, or resource contention is suspected."
+msgstr "측정 편차가 큽니다 — 서버 부하 변동, 캐시 미스 혼입, 또는 리소스 경합이 의심됩니다."
+
+#: data/recommendations.php:37
+msgid "Re-measure during low traffic; if the spread persists, inspect server resources (CPU/memory) and co-hosted workloads."
+msgstr "트래픽이 적은 시간대에 재측정하고, 편차가 유지되면 서버 리소스(CPU·메모리)와 동거 서비스 부하를 점검하세요."
+
+#: data/recommendations.php:40
+msgid "The HTML payload is large — excessive inline CSS/JS or page-builder markup bloat are the usual causes."
+msgstr "HTML 페이로드가 큽니다 — 인라인 CSS/JS 과다, 페이지 빌더 마크업 비대가 흔한 원인입니다."
+
+#: data/recommendations.php:41
+msgid "Move unnecessary inline assets to external files and verify gzip/brotli compression."
+msgstr "불필요한 인라인 자산을 외부 파일로 분리하고 gzip/brotli 압축을 확인하세요."
+
+#: data/recommendations.php:44
+msgid "Every redirect hop adds a round trip and increases perceived latency."
+msgstr "리다이렉트 홉마다 왕복이 하나씩 추가되어 체감 지연이 커집니다."
+
+#: data/recommendations.php:45
+msgid "Point internal links and canonicals at the final URL (www vs non-www, trailing slash)."
+msgstr "내부 링크와 canonical 주소를 최종 URL 로 통일하세요 (www/비www · 슬래시 유무)."
+
+#: data/recommendations.php:50
+msgid "Too many queries for one landing view — widget, menu, and option lookups are likely repeating uncached."
+msgstr "랜딩 한 화면에 쿼리가 과다합니다 — 위젯·메뉴·옵션 조회가 캐시 없이 반복되고 있을 가능성이 큽니다."
+
+#: data/recommendations.php:51
+msgid "Introduce a Redis object cache and use Query Monitor to find and reduce hotspots."
+msgstr "Redis 오브젝트 캐시를 도입하고, Query Monitor 로 다발 지점을 찾아 줄이세요."
+
+#: data/recommendations.php:54
+msgid "Post pages issue many queries — related-post, view-counter, and comment plugins are common causes."
+msgstr "글 페이지 쿼리가 많습니다 — 관련 글·조회수·댓글 플러그인이 흔한 원인입니다."
+
+#: data/recommendations.php:55
+msgid "Attribute queries per plugin and wrap cacheable lookups in transients."
+msgstr "플러그인별 쿼리 기여도를 확인하고 캐시 가능한 조회는 트랜션트로 감싸세요."
+
+#: data/recommendations.php:58
+msgid "The archive loop may run extra queries per post (N+1)."
+msgstr "아카이브 목록에서 글마다 추가 쿼리가 실행되고 있을 수 있습니다 (N+1)."
+
+#: data/recommendations.php:59
+msgid "Check update_post_meta_cache / update_post_term_cache and per-item lookups inside the loop."
+msgstr "update_post_meta_cache·update_post_term_cache 활성 여부와 루프 내 개별 조회를 점검하세요."
+
+#: data/recommendations.php:62
+msgid "DB time is high — slow queries or latency on the DB server itself."
+msgstr "DB 응답 시간이 깁니다 — 느린 쿼리 또는 DB 서버 자체의 지연입니다."
+
+#: data/recommendations.php:63
+msgid "Enable the slow query log to pinpoint offenders, then tune indexes and buffer pool size."
+msgstr "슬로 쿼리 로그를 켜 원인 쿼리를 특정하고, 인덱스·버퍼 풀 크기를 조정하세요."
+
+#: data/recommendations.php:66
+msgid "Queries exceed 20ms — index misses or full scans on large tables are suspected."
+msgstr "20ms 를 넘는 쿼리가 있습니다 — 인덱스 미스나 대형 테이블 풀스캔이 의심됩니다."
+
+#: data/recommendations.php:67
+msgid "Inspect the plan with EXPLAIN and add the missing indexes."
+msgstr "EXPLAIN 으로 실행 계획을 확인하고 필요한 인덱스를 추가하세요."
+
+#: data/recommendations.php:70
+msgid "Identically-shaped queries repeat within one request — per-item lookups inside a loop (N+1)."
+msgstr "같은 형상의 쿼리가 한 요청에서 반복됩니다 — 루프 안에서 개별 조회하는 코드(N+1)가 원인입니다."
+
+#: data/recommendations.php:71
+msgid "Batch the repeated lookups or absorb them with the object cache."
+msgstr "반복 조회를 일괄 조회로 바꾸거나 오브젝트 캐시로 흡수하세요."
+
+#: data/recommendations.php:74
+msgid "Without an external object cache, repeated queries hit the DB every time."
+msgstr "외부 오브젝트 캐시가 없어 반복 쿼리가 매번 DB 로 갑니다."
+
+#: data/recommendations.php:75
+msgid "Run a Redis server and enable the drop-in via the redis-cache plugin (wp redis enable)."
+msgstr "Redis 서버를 두고 redis-cache 플러그인으로 드롭인을 활성화하세요 (wp redis enable)."
+
+#: data/recommendations.php:80
+msgid "The document title is missing or outside the recommended 10–60 characters — search results truncate or ignore it."
+msgstr "문서 제목이 없거나 권장 길이(10–60자)를 벗어나 검색 결과에서 잘리거나 무시됩니다."
+
+#: data/recommendations.php:81
+msgid "Configure title templates in your SEO plugin (e.g. Rank Math)."
+msgstr "SEO 플러그인(Rank Math 등)에서 페이지 제목 템플릿을 설정하세요."
+
+#: data/recommendations.php:84
+msgid "Without a meta description, search engines excerpt arbitrarily — you lose control of the click-through pitch."
+msgstr "메타 설명이 없으면 검색엔진이 본문에서 임의 발췌합니다 — 클릭률을 통제할 수 없습니다."
+
+#: data/recommendations.php:85
+msgid "Write 50–160 character summaries yourself, starting with key pages."
+msgstr "핵심 페이지부터 50–160자 요약을 직접 작성하세요."
+
+#: data/recommendations.php:88
+msgid "A missing or duplicated H1 blurs the page topic signal."
+msgstr "H1 이 없거나 여러 개면 페이지 주제 신호가 흐려집니다."
+
+#: data/recommendations.php:89
+msgid "Keep one H1 per page and demote the rest to H2 and below."
+msgstr "페이지당 H1 하나로 정리하고 나머지는 H2 이하로 내리세요."
+
+#: data/recommendations.php:92
+msgid "The landing page is blocked by noindex or robots.txt — it cannot appear in search at all."
+msgstr "랜딩이 noindex 또는 robots.txt 로 차단되어 검색에 아예 노출되지 않습니다."
+
+#: data/recommendations.php:93
+msgid "If unintended, check Settings › Reading discourage-search option and your SEO plugin robots settings."
+msgstr "의도한 차단이 아니라면 설정 › 읽기의 검색엔진 차단 옵션과 SEO 플러그인 robots 설정을 확인하세요."
+
+#: data/recommendations.php:96
+msgid "A missing or off-target canonical causes duplicate-content judgments and diluted authority."
+msgstr "canonical 이 없거나 다른 주소를 가리키면 중복 콘텐츠 판정과 권한 분산이 생깁니다."
+
+#: data/recommendations.php:97
+msgid "Verify your SEO plugin outputs a self-referential canonical."
+msgstr "SEO 플러그인이 자기 자신을 가리키는 canonical 을 출력하는지 확인하세요."
+
+#: data/recommendations.php:100
+msgid "Without html lang, search engines and screen readers must guess the language."
+msgstr "html lang 이 없으면 검색엔진·스크린리더가 언어를 추측해야 합니다."
+
+#: data/recommendations.php:101
+msgid "Check the theme outputs <html <?php language_attributes(); ?>>."
+msgstr "테마의 <html <?php language_attributes(); ?>> 출력을 확인하세요."
+
+#: data/recommendations.php:104
+msgid "Without a viewport meta the desktop layout renders shrunken on mobile — failing mobile-friendliness."
+msgstr "viewport 메타가 없으면 모바일에서 데스크톱 레이아웃이 축소 렌더링됩니다 — 모바일 친화 판정 탈락."
+
+#: data/recommendations.php:105
+msgid "Add the standard viewport meta to the theme head."
+msgstr "테마 head 에 표준 viewport 메타를 추가하세요."
+
+#: data/recommendations.php:108
+msgid "Images without alt are excluded from image search and cost accessibility points."
+msgstr "alt 없는 이미지는 이미지 검색에서 제외되고 접근성 점수도 깎입니다."
+
+#: data/recommendations.php:109
+msgid "Fill in alt text starting with meaningful images in the media library. Decorative images should carry an empty alt=\"\"."
+msgstr "미디어 라이브러리에서 의미 있는 이미지부터 대체 텍스트를 채우세요. 장식 이미지는 빈 alt=\"\" 가 정답입니다."
+
+#: data/recommendations.php:112
+msgid "Links without text tell crawlers and screen readers nothing about the destination."
+msgstr "텍스트 없는 링크는 크롤러와 스크린리더에게 목적지를 설명하지 못합니다."
+
+#: data/recommendations.php:113
+msgid "Give icon links an aria-label or visually hidden text."
+msgstr "아이콘 링크에 aria-label 을 붙이거나 시각적으로 숨긴 텍스트를 넣으세요."
+
+#: data/recommendations.php:116
+msgid "Without structured data the site is excluded from rich results (FAQ, ratings, breadcrumbs)."
+msgstr "구조화 데이터가 없으면 리치 결과(FAQ·별점·브레드크럼) 대상에서 제외됩니다."
+
+#: data/recommendations.php:117
+msgid "Enable your SEO plugin schema features and emit Article, FAQPage, BreadcrumbList."
+msgstr "SEO 플러그인의 스키마 기능을 켜고 Article·FAQPage·BreadcrumbList 를 출력하세요."
+
+#: data/recommendations.php:120
+msgid "If you have multilingual pages without hreflang, the wrong language version may surface."
+msgstr "다국어 페이지가 있는데 hreflang 이 없으면 언어별 잘못된 판이 노출될 수 있습니다."
+
+#: data/recommendations.php:121
+msgid "No action needed for single-language sites. For multilingual sites, declare reciprocal alternates plus x-default."
+msgstr "단일 언어 사이트면 조치가 필요 없습니다. 다국어라면 언어판 상호 참조 + x-default 를 선언하세요."
+
+#: data/recommendations.php:124
+msgid "Without OG meta, shares on social media pick arbitrary titles and images."
+msgstr "OG 메타가 없으면 SNS 공유 시 제목·이미지가 임의로 잡힙니다."
+
+#: data/recommendations.php:125
+msgid "Enable social meta output in your SEO plugin and set a default image."
+msgstr "SEO 플러그인의 소셜 메타 출력을 켜고 대표 이미지를 지정하세요."
+
+#: data/recommendations.php:128
+msgid "An http site — or https pages referencing http assets — triggers browser warnings and ranking penalties."
+msgstr "http 사이트거나 https 페이지가 http 자산을 참조하면 브라우저 경고와 순위 불이익이 있습니다."
+
+#: data/recommendations.php:129
+msgid "Install a TLS certificate and bulk-replace http:// references in the DB (wp search-replace)."
+msgstr "TLS 인증서를 적용하고 DB 의 http:// 참조를 일괄 치환하세요 (wp search-replace)."
+
+#: data/recommendations.php:132
+msgid "A missing sitemap (or one absent from robots.txt) slows discovery of new content."
+msgstr "사이트맵이 없거나 robots.txt 에 명시되지 않아 새 글 발견이 느립니다."
+
+#: data/recommendations.php:133
+msgid "Enable the SEO plugin sitemap, add a Sitemap: line to robots.txt, and submit it to Search Console."
+msgstr "SEO 플러그인 사이트맵을 활성화하고 robots.txt 에 Sitemap: 줄을 추가한 뒤 서치콘솔에 제출하세요."
+
+#: data/recommendations.php:138
+msgid "Your core version has published vulnerabilities — public CVEs are the first target of automated scanners."
+msgstr "현재 코어 버전에 공개된 취약점이 있습니다 — 공개 취약점은 자동화 스캐너의 최우선 표적입니다."
+
+#: data/recommendations.php:139
+msgid "Update core immediately after staging verification. Mitigate with WAF rules until then."
+msgstr "스테이징에서 검증 후 즉시 코어를 업데이트하세요. 업데이트 전까지는 WAF 규칙으로 완화합니다."
+
+#: data/recommendations.php:142
+msgid "Core is outdated — the version is public, making known flaws targetable."
+msgstr "코어가 구버전입니다 — 버전이 공개되어 있어 알려진 결함의 표적이 됩니다."
+
+#: data/recommendations.php:143
+msgid "Back up, then update to the latest version."
+msgstr "백업 후 최신 버전으로 업데이트하세요."
+
+#: data/recommendations.php:146
+msgid "A plugin with known vulnerabilities is active — the most common WordPress breach entry point."
+msgstr "알려진 취약점이 있는 플러그인이 활성 상태입니다 — 워드프레스 침해의 최다 진입로입니다."
+
+#: data/recommendations.php:147
+msgid "Update it immediately; if no fixed release exists, deactivate and find a replacement."
+msgstr "해당 플러그인을 즉시 업데이트하고, 수정판이 없으면 비활성화 후 대체제를 찾으세요."
+
+#: data/recommendations.php:150
+msgid "For outdated plugins, the published changelog doubles as an attack manual."
+msgstr "업데이트가 밀린 플러그인은 이미 공개된 수정 내역이 곧 공격 설명서가 됩니다."
+
+#: data/recommendations.php:151
+msgid "Establish a recurring update routine: verify on staging, then roll to production."
+msgstr "스테이징 검증 → 운영 반영의 주기적 업데이트 루틴을 만드세요."
+
+#: data/recommendations.php:154
+msgid "The theme has known vulnerabilities."
+msgstr "테마에 알려진 취약점이 있습니다."
+
+#: data/recommendations.php:155
+msgid "Update the theme, or if it is abandoned, consider switching to a maintained one."
+msgstr "테마를 업데이트하거나, 방치된 테마라면 유지보수되는 테마로 교체를 검토하세요."
+
+#: data/recommendations.php:158
+msgid "Theme updates are pending."
+msgstr "테마 업데이트가 밀려 있습니다."
+
+#: data/recommendations.php:159
+msgid "Keeping customizations in a child theme lets you update the parent safely."
+msgstr "자식 테마로 커스텀을 분리해 두면 부모 테마를 안전하게 업데이트할 수 있습니다."
+
+#: data/recommendations.php:162
+msgid "A front-end JS library with known vulnerabilities (XSS etc.) is being loaded."
+msgstr "알려진 취약점이 있는 프론트 JS 라이브러리가 로드되고 있습니다 (XSS 등)."
+
+#: data/recommendations.php:163
+msgid "Update the theme/plugin loading it. Core-bundled jQuery is fixed by updating core."
+msgstr "해당 라이브러리를 로드하는 테마·플러그인을 업데이트하세요. 코어 번들 jQuery 는 코어 업데이트가 해결합니다."
+
+#: data/recommendations.php:166
+msgid "?author=N redirects hand out login usernames — giving attackers half of a brute-force pair for free."
+msgstr "?author=N 리다이렉트로 로그인 아이디가 수집됩니다 — 무차별 대입의 절반(아이디)을 공짜로 주는 셈입니다."
+
+#: data/recommendations.php:167
+msgid "Block author-scan redirects at the web server or via security configuration."
+msgstr "웹서버 규칙이나 보안 설정으로 author 스캔 리다이렉트를 차단하세요."
+
+#: data/recommendations.php:170
+msgid "xmlrpc.php enables amplified login attempts (system.multicall) and pingback DDoS."
+msgstr "xmlrpc.php 는 인증 시도 증폭(system.multicall)과 pingback DDoS 의 통로입니다."
+
+#: data/recommendations.php:171
+msgid "If no app depends on it, block xmlrpc.php at the web server."
+msgstr "사용하는 앱이 없다면 웹서버에서 xmlrpc.php 를 차단하세요."
+
+#: data/recommendations.php:174
+msgid "The REST users endpoint is open to unauthenticated requests, enumerating login names."
+msgstr "REST 사용자 엔드포인트가 비인증에 열려 로그인 아이디가 열거됩니다."
+
+#: data/recommendations.php:175
+msgid "Block unauthenticated /wp-json/wp/v2/users at the web server or require authentication."
+msgstr "웹서버에서 비인증 /wp-json/wp/v2/users 를 차단하거나 인증 요구로 제한하세요."
+
+#: data/recommendations.php:180
+msgid "PHP past (or near) end of security support receives no fixes for new vulnerabilities."
+msgstr "보안 지원이 끝난(또는 임박한) PHP 는 새 취약점의 수정판을 받지 못합니다."
+
+#: data/recommendations.php:181
+msgid "Upgrade to a supported PHP branch. Verify compatibility on staging first."
+msgstr "지원 중인 PHP 브랜치로 업그레이드하세요. 호환성은 스테이징에서 먼저 검증합니다."
+
+#: data/recommendations.php:184
+msgid "X-Powered-By exposes the PHP version, inviting version-specific attacks."
+msgstr "X-Powered-By 로 PHP 버전이 노출되어 버전별 취약점 표적이 됩니다."
+
+#: data/recommendations.php:185
+msgid "Set expose_php = Off in php.ini."
+msgstr "php.ini 에서 expose_php = Off 로 설정하세요."
+
+#: data/recommendations.php:188
+msgid "With shell-execution functions open, one code injection becomes full server takeover."
+msgstr "셸 실행 함수가 열려 있으면 코드 주입 한 번이 곧 서버 장악으로 이어집니다."
+
+#: data/recommendations.php:189
+msgid "Add exec, shell_exec, system, passthru, proc_open, popen to disable_functions in php.ini."
+msgstr "php.ini disable_functions 에 exec, shell_exec, system, passthru, proc_open, popen 을 추가하세요."
+
+#: data/recommendations.php:192
+msgid "Disabling curl_exec kills all WordPress outbound HTTP (core updates, plugin installs, external APIs) — the classic copy-pasted-blocklist accident."
+msgstr "curl_exec 가 차단되면 워드프레스의 외부 통신(코어 업데이트 · 플러그인 설치 · 외부 API)이 전부 죽습니다 — \"위험 함수 목록\" 복붙의 대표 사고입니다."
+
+#: data/recommendations.php:193
+msgid "Remove curl_exec from disable_functions."
+msgstr "disable_functions 에서 curl_exec 를 제거하세요."
+
+#: data/recommendations.php:196
+msgid "With allow_url_fopen on, file functions can open remote URLs, widening the remote-inclusion attack surface."
+msgstr "allow_url_fopen 이 켜져 있으면 파일 함수가 원격 URL 을 열 수 있어 원격 포함 공격면이 넓어집니다."
+
+#: data/recommendations.php:197
+msgid "Set allow_url_fopen = Off in php.ini. WordPress uses cURL, so nothing breaks."
+msgstr "php.ini 에서 allow_url_fopen = Off. 워드프레스는 cURL 로 통신하므로 영향이 없습니다."
+
+#: data/recommendations.php:200
+msgid "Error messages shown to visitors leak paths, queries, and internal structure."
+msgstr "오류 메시지가 방문자에게 노출되면 경로·쿼리 등 내부 구조가 새어 나갑니다."
+
+#: data/recommendations.php:201
+msgid "Set display_errors = Off and keep log_errors writing to a file instead."
+msgstr "display_errors = Off, 대신 log_errors 로 파일에만 남기세요."
+
+#: data/recommendations.php:204
+msgid "Without a path restriction, compromised PHP can reach files across the whole server."
+msgstr "경로 제한이 없으면 침해된 PHP 가 서버 전체 파일에 접근할 수 있습니다."
+
+#: data/recommendations.php:205
+msgid "Restrict open_basedir to the document root plus the temp directory."
+msgstr "open_basedir 를 문서 루트 + 임시 디렉터리로 한정하세요."
+
+#: data/recommendations.php:208
+msgid "WP_DEBUG in production can expose errors to visitors."
+msgstr "운영 환경의 WP_DEBUG 는 오류를 방문자에게 노출할 수 있습니다."
+
+#: data/recommendations.php:209
+msgid "Keep WP_DEBUG false; if you need logs, enable only WP_DEBUG_LOG and keep WP_DEBUG_DISPLAY always false."
+msgstr "WP_DEBUG false, 로그가 필요하면 WP_DEBUG_LOG 만 켜고 WP_DEBUG_DISPLAY 는 항상 false."
+
+#: data/recommendations.php:212
+msgid "The built-in theme/plugin editor is the shortest path to a web shell once an admin account is stolen."
+msgstr "관리자 화면의 테마·플러그인 편집기는 관리자 계정 탈취 시 웹셸 설치의 최단 경로입니다."
+
+#: data/recommendations.php:213
+msgid "Add define( 'DISALLOW_FILE_EDIT', true ) to wp-config.php."
+msgstr "wp-config.php 에 define( 'DISALLOW_FILE_EDIT', true ) 를 추가하세요."
+
+#: data/recommendations.php:216
+msgid "utf8 (3-byte) silently loses emoji and some CJK characters."
+msgstr "utf8(3바이트) 은 이모지·일부 한자에서 무음 데이터 손실을 일으킵니다."
+
+#: data/recommendations.php:217
+msgid "Switch DB_CHARSET to utf8mb4 and convert existing tables (back up first)."
+msgstr "DB_CHARSET 을 utf8mb4 로 바꾸고 기존 테이블을 변환하세요 (백업 필수)."
+
+#: data/recommendations.php:220
+msgid "Without security headers, MIME-sniffing, clickjacking, and referrer-leak defenses rely on browser defaults alone."
+msgstr "보안 헤더가 없으면 MIME 스니핑 · 클릭재킹 · 정보 유출 방어가 브라우저 기본값에만 의존합니다."
+
+#: data/recommendations.php:221
+msgid "Add X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, and (on https) HSTS at the web server."
+msgstr "웹서버에 X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, (https 라면) HSTS 를 추가하세요."
+
+#: data/recommendations.php:224
+msgid "Exposed server software versions invite attacks on version-specific known flaws."
+msgstr "서버 소프트웨어 버전이 노출되면 버전별 알려진 취약점의 표적이 됩니다."
+
+#: data/recommendations.php:225
+msgid "Hide versions with server_tokens off (nginx) and expose_php Off (PHP)."
+msgstr "nginx 는 server_tokens off, PHP 는 expose_php Off 로 버전 표기를 지우세요."
+
+#: data/recommendations.php:228
+msgid "Without forced https, session cookies can travel in plaintext."
+msgstr "http 접속이 https 로 강제되지 않으면 세션 쿠키가 평문으로 노출될 수 있습니다."
+
+#: data/recommendations.php:229
+msgid "Add an http→https 301 redirect at the web server and define( 'FORCE_SSL_ADMIN', true ) in wp-config.php."
+msgstr "웹서버에서 http→https 301 리다이렉트를 걸고 wp-config.php 에 define( 'FORCE_SSL_ADMIN', true ) 를 추가하세요."
+
+#: data/recommendations.php:232
+msgid "Web-reachable config files, repository metadata, or PHP execution inside uploads leads straight to disclosure and remote execution."
+msgstr "설정 파일·저장소 메타데이터·업로드 디렉터리의 PHP 실행이 웹에서 접근 가능하면 정보 유출과 원격 실행으로 직결됩니다."
+
+#: data/recommendations.php:233
+msgid "Block access to wp-config.php, .git, and *.sql at the web server and forbid PHP execution in uploads."
+msgstr "웹서버에서 wp-config.php · .git · *.sql 접근을 차단하고 uploads 디렉터리의 PHP 실행을 금지하세요."
+
+#: data/recommendations.php:236
+msgid "The DB server is outdated or deviates from recommended settings (utf8mb4, local_infile Off, slow query log)."
+msgstr "DB 서버가 구버전이거나 권장 설정(utf8mb4 · local_infile Off · 슬로 쿼리 로그)에서 벗어나 있습니다."
+
+#: data/recommendations.php:237
+msgid "Upgrade to a supported MariaDB/MySQL and set character-set-server=utf8mb4, local_infile=0, slow_query_log=1 in my.cnf."
+msgstr "지원 중인 MariaDB/MySQL 로 올리고 my.cnf 에서 character-set-server=utf8mb4, local_infile=0, slow_query_log=1 을 설정하세요."
+
+#: includes/checks/class-check-db.php:26
+#: includes/class-runner.php:86
+msgid "Landing query count"
+msgstr "랜딩 쿼리 수"
+
+#: includes/checks/class-check-db.php:27
+#: includes/class-runner.php:87
+msgid "Post query count"
+msgstr "글 페이지 쿼리 수"
+
+#: includes/checks/class-check-db.php:28
+#: includes/class-runner.php:88
+msgid "Archive query count"
+msgstr "아카이브 쿼리 수"
+
+#: includes/checks/class-check-db.php:46
+#: includes/checks/class-check-latency.php:60
+msgid "No such URL — skipped"
+msgstr "해당 URL 없음 — 건너뜀"
+
+#: includes/checks/class-check-db.php:47
+msgid ": no target"
+msgstr ": 대상 없음"
+
+#: includes/checks/class-check-db.php:60
+msgid "Capture headers not received — unverifiable (plugin may be inactive on the front end)"
+msgstr "캡처 헤더 미수신 — 확인 불가 (플러그인이 프론트에서 비활성일 수 있음)"
+
+#: includes/checks/class-check-db.php:61
+msgid ": capture failed"
+msgstr ": 캡처 실패"
+
+#. translators: 1: query count, 2: how it was measured (median of 3, or single run).
+#: includes/checks/class-check-db.php:79
+#, php-format
+msgid "%1$d queries (%2$s)"
+msgstr "%d개 쿼리 (%s)"
+
+#. translators: 1: query count, 2: how it was measured (median of 3, or single run).
+#: includes/checks/class-check-db.php:79
+msgid "median of 3"
+msgstr "3회 중앙값"
+
+#. translators: 1: query count, 2: how it was measured (median of 3, or single run).
+#: includes/checks/class-check-db.php:79
+msgid "single run"
+msgstr "1회"
+
+#. translators: %d: database time in milliseconds.
+#: includes/checks/class-check-db.php:87
+msgid "Landing total DB time"
+msgstr "랜딩 DB 총 시간"
+
+#. translators: %d: database time in milliseconds.
+#: includes/checks/class-check-db.php:87
+#, php-format
+msgid "%dms (median of 3)"
+msgstr "%dms (3회 중앙값)"
+
+#. translators: 1: item label, 2: measured count.
+#: includes/checks/class-check-db.php:91
+#, php-format
+msgid "%1$s: %2$d"
+msgstr "%s: %d개"
+
+#. translators: 1: number of occurrences, 2: optional suffix with extra detail.
+#: includes/checks/class-check-db.php:122
+#: includes/checks/class-check-db.php:135
+#: includes/class-runner.php:90
+msgid "Slow queries (>20ms)"
+msgstr "슬로 쿼리 (>20ms)"
+
+#: includes/checks/class-check-db.php:122
+#: includes/checks/class-check-db.php:123
+msgid "No capture data — unverifiable"
+msgstr "캡처 데이터 없음 — 확인 불가"
+
+#. translators: %d: number of duplicate queries.
+#: includes/checks/class-check-db.php:123
+#: includes/checks/class-check-db.php:139
+#: includes/class-runner.php:91
+msgid "Duplicate queries (N+1)"
+msgstr "중복 쿼리 (N+1)"
+
+#. translators: %s: duration of the slowest query, in milliseconds.
+#: includes/checks/class-check-db.php:130
+#, php-format
+msgid " · slowest %sms"
+msgstr " · 최다 %sms"
+
+#. translators: 1: number of occurrences, 2: optional suffix with extra detail.
+#: includes/checks/class-check-db.php:135
+#, php-format
+msgid "%1$d found%2$s"
+msgstr "%d건%s"
+
+#. translators: %d: number of duplicate queries.
+#: includes/checks/class-check-db.php:139
+#, php-format
+msgid "%d found (by literal-stripped fingerprint)"
+msgstr "%d건 (리터럴 제거 지문 기준)"
+
+#: includes/checks/class-check-db.php:147
+msgid "External object cache active"
+msgstr "외부 오브젝트 캐시 활성"
+
+#: includes/checks/class-check-db.php:147
+msgid "No external object cache"
+msgstr "외부 오브젝트 캐시 없음"
+
+#. translators: %d: object cache hit ratio, as a percentage.
+#: includes/checks/class-check-db.php:150
+#, php-format
+msgid " · hit ratio %d%%"
+msgstr " · 히트율 %d%%"
+
+#: includes/checks/class-check-db.php:152
+#: includes/class-runner.php:92
+msgid "Object cache"
+msgstr "오브젝트 캐시"
+
+#. translators: 1: slow query count, 2: duplicate query count.
+#: includes/checks/class-check-db.php:155
+#, php-format
+msgid "Query analysis: %1$d slow · %2$d duplicate"
+msgstr "쿼리 분석: 슬로 %d · 중복 %d"
+
+#: includes/checks/class-check-latency.php:27
+#: includes/class-runner.php:76
+msgid "Landing response time"
+msgstr "랜딩 응답 속도"
+
+#: includes/checks/class-check-latency.php:28
+#: includes/class-runner.php:77
+msgid "Archive response time"
+msgstr "아카이브 응답 속도"
+
+#: includes/checks/class-check-latency.php:29
+#: includes/class-runner.php:78
+msgid "Post response time"
+msgstr "글 페이지 응답 속도"
+
+#: includes/checks/class-check-latency.php:30
+#: includes/class-runner.php:79
+msgid "Page response time"
+msgstr "고정 페이지 응답 속도"
+
+#: includes/checks/class-check-latency.php:31
+#: includes/class-runner.php:80
+msgid "Product/service response time"
+msgstr "상품·서비스 응답 속도"
+
+#: includes/checks/class-check-latency.php:61
+msgid ": no target — skipped"
+msgstr ": 대상 없음 — 건너뜀"
+
+#. translators: 1: HTTP status code, 2: error message.
+#: includes/checks/class-check-latency.php:75
+#, php-format
+msgid "Measurement failed (HTTP %1$d %2$s)"
+msgstr "측정 실패 (HTTP %d %s)"
+
+#: includes/checks/class-check-latency.php:76
+msgid ": measurement failed"
+msgstr ": 측정 실패"
+
+#. translators: 1: response time in milliseconds, 2: HTTP status code.
+#: includes/checks/class-check-latency.php:94
+#, php-format
+msgid "%1$dms (median of 3 · HTTP %2$d)"
+msgstr "%dms (3회 중앙값 · HTTP %d)"
+
+#: includes/checks/class-check-latency.php:106
+#: includes/class-runner.php:81
+msgid "Response time stability"
+msgstr "응답 시간 안정성"
+
+#. translators: 1: spread between runs as a percentage, 2: the three measurements.
+#: includes/checks/class-check-latency.php:110
+#, php-format
+msgid "Spread %1$d%% (3 runs: %2$s ms)"
+msgstr "편차 %d%% (3회: %s ms)"
+
+#: includes/checks/class-check-latency.php:116
+#: includes/class-runner.php:82
+msgid "Landing HTML size"
+msgstr "랜딩 HTML 크기"
+
+#: includes/checks/class-check-latency.php:137
+#: includes/checks/class-check-latency.php:151
+msgid " hop(s)"
+msgstr "홉"
+
+#: includes/checks/class-check-latency.php:145
+msgid "No redirect chains"
+msgstr "리다이렉트 체인 없음"
+
+#: includes/checks/class-check-latency.php:148
+msgid "All URLs direct (0 hops)"
+msgstr "전 URL 직행 (0홉)"
+
+#: includes/checks/class-check-latency.php:151
+msgid "Redirect check: max "
+msgstr "리다이렉트 검사: 최대 "
+
+#: includes/checks/class-check-seo.php:32
+msgid "Failed to fetch landing HTML — unverifiable"
+msgstr "랜딩 HTML 수신 실패 — 확인 불가"
+
+#: includes/checks/class-check-seo.php:34
+msgid "SEO: could not fetch the landing page"
+msgstr "SEO: 랜딩 수신 실패"
+
+#. translators: %d: character count.
+#: includes/checks/class-check-seo.php:47
+#: includes/checks/class-check-seo.php:68
+#: includes/checks/class-check-seo.php:97
+#: includes/checks/class-check-seo.php:107
+#: includes/checks/class-check-seo.php:111
+#: includes/checks/class-check-seo.php:244
+#: includes/checks/class-check-seo.php:290
+msgid "None"
+msgstr "없음"
+
+#. translators: 1: character count, 2: the text that was found.
+#: includes/checks/class-check-seo.php:50
+#, php-format
+msgid "%1$d chars — \"%2$s\""
+msgstr "%d자 — \"%s\""
+
+#: includes/checks/class-check-seo.php:54
+#: includes/checks/class-check-seo.php:307
+#: includes/class-runner.php:95
+msgid "Document title"
+msgstr "문서 제목 (title)"
+
+#: includes/checks/class-check-seo.php:64
+#: includes/checks/class-check-seo.php:308
+#: includes/class-runner.php:96
+msgid "Meta description"
+msgstr "메타 설명 (description)"
+
+#. translators: %d: character count.
+#: includes/checks/class-check-seo.php:68
+#, php-format
+msgid "%d chars"
+msgstr "%d자"
+
+#: includes/checks/class-check-seo.php:74
+#: includes/checks/class-check-seo.php:309
+msgid "H1 heading structure"
+msgstr "H1 제목 구조"
+
+#. translators: %d: number of h1 elements found.
+#: includes/checks/class-check-seo.php:78
+#, php-format
+msgid "%d h1 elements"
+msgstr "h1 %d개"
+
+#: includes/checks/class-check-seo.php:86
+#: includes/checks/class-check-seo.php:214
+#: includes/checks/class-check-seo.php:310
+msgid "Landing indexable"
+msgstr "랜딩 색인 가능"
+
+#: includes/checks/class-check-seo.php:89
+#: includes/checks/class-check-seo.php:215
+msgid "noindex directive found"
+msgstr "noindex 지시 발견"
+
+#: includes/checks/class-check-seo.php:89
+msgid "Indexing allowed"
+msgstr "색인 허용"
+
+#: includes/checks/class-check-seo.php:101
+msgid "self-referential"
+msgstr "자기 자신"
+
+#: includes/checks/class-check-seo.php:101
+msgid "not self: "
+msgstr "자기 아님: "
+
+#: includes/checks/class-check-seo.php:107
+#: includes/checks/class-check-seo.php:312
+#: includes/class-runner.php:100
+msgid "html lang attribute"
+msgstr "html lang 속성"
+
+#: includes/checks/class-check-seo.php:111
+#: includes/checks/class-check-seo.php:313
+msgid "Mobile viewport"
+msgstr "모바일 viewport"
+
+#: includes/checks/class-check-seo.php:122
+#: includes/checks/class-check-seo.php:126
+#: includes/checks/class-check-seo.php:314
+#: includes/class-runner.php:102
+msgid "Image alt text"
+msgstr "이미지 대체 텍스트"
+
+#: includes/checks/class-check-seo.php:122
+msgid "No images"
+msgstr "이미지 0장"
+
+#. translators: 1: images with alt text, 2: total images, 3: percentage.
+#: includes/checks/class-check-seo.php:130
+#, php-format
+msgid "%1$d of %2$d images have alt (%3$d%%)"
+msgstr "%d/%d장에 alt (%d%%)"
+
+#: includes/checks/class-check-seo.php:145
+#: includes/checks/class-check-seo.php:315
+msgid "Link text"
+msgstr "링크 텍스트"
+
+#. translators: %d: number of links with no descriptive text.
+#: includes/checks/class-check-seo.php:149
+msgid "No empty links"
+msgstr "빈 링크 없음"
+
+#. translators: %d: number of links with no descriptive text.
+#: includes/checks/class-check-seo.php:149
+#, php-format
+msgid "%d links without text"
+msgstr "텍스트 없는 링크 %d개"
+
+#: includes/checks/class-check-seo.php:158
+#: includes/checks/class-check-seo.php:317
+msgid "hreflang alternates"
+msgstr "hreflang 대체 주소"
+
+#. translators: %d: number of hreflang declarations.
+#: includes/checks/class-check-seo.php:162
+#, php-format
+msgid "%d declared"
+msgstr "%d개 선언"
+
+#. translators: %d: number of hreflang declarations.
+#: includes/checks/class-check-seo.php:162
+msgid "None (safe to ignore for single-language sites)"
+msgstr "없음 (단일 언어 사이트면 무시 가능)"
+
+#: includes/checks/class-check-seo.php:171
+#: includes/checks/class-check-seo.php:318
+msgid "Social meta (OG)"
+msgstr "소셜 공유 메타 (OG)"
+
+#. translators: %d: how many of the three Open Graph tags are present.
+#: includes/checks/class-check-seo.php:175
+#, php-format
+msgid "%d of og:title / og:description / og:image"
+msgstr "og:title·description·image 중 %d개"
+
+#: includes/checks/class-check-seo.php:184
+#: includes/checks/class-check-seo.php:191
+#: includes/checks/class-check-seo.php:319
+msgid "HTTPS · mixed content"
+msgstr "HTTPS · 혼합 콘텐츠"
+
+#. translators: %d: number of insecure http:// references on an https page.
+#: includes/checks/class-check-seo.php:188
+msgid "https + no mixed content"
+msgstr "https + 혼합 콘텐츠 없음"
+
+#. translators: %d: number of insecure http:// references on an https page.
+#: includes/checks/class-check-seo.php:188
+#, php-format
+msgid "%d http:// references"
+msgstr "http:// 참조 %d건"
+
+#: includes/checks/class-check-seo.php:191
+msgid "Site is http — no TLS"
+msgstr "사이트가 http — TLS 미적용"
+
+#: includes/checks/class-check-seo.php:194
+msgid "Landing SEO analysis complete ("
+msgstr "SEO 랜딩 분석 완료 ("
+
+#: includes/checks/class-check-seo.php:194
+msgid " items)"
+msgstr "개 항목)"
+
+#: includes/checks/class-check-seo.php:215
+msgid "robots.txt blocks everything (Disallow: /)"
+msgstr "robots.txt 가 전체 차단 (Disallow: /)"
+
+#: includes/checks/class-check-seo.php:239
+msgid "XML sitemap"
+msgstr "XML 사이트맵"
+
+#: includes/checks/class-check-seo.php:242
+msgid " · listed in robots.txt"
+msgstr " · robots.txt 에 명시"
+
+#: includes/checks/class-check-seo.php:242
+msgid " · not listed in robots.txt"
+msgstr " · robots.txt 미명시"
+
+#: includes/checks/class-check-seo.php:242
+msgid "No reachable sitemap"
+msgstr "도달 가능한 사이트맵 없음"
+
+#: includes/checks/class-check-seo.php:244
+msgid "Sitemap: "
+msgstr "사이트맵: "
+
+#: includes/checks/class-check-seo.php:244
+msgid "checked"
+msgstr "확인"
+
+#: includes/checks/class-check-seo.php:276
+msgid " (including post page)"
+msgstr " (글 페이지 포함)"
+
+#. translators: 1: number of valid JSON-LD blocks, 2: optional suffix.
+#: includes/checks/class-check-seo.php:282
+#, php-format
+msgid "%1$d valid blocks%2$s"
+msgstr "유효 블록 %d개%s"
+
+#. translators: 1: valid JSON-LD blocks, 2: total JSON-LD blocks.
+#: includes/checks/class-check-seo.php:284
+#: includes/checks/class-check-seo.php:288
+#: includes/checks/class-check-seo.php:290
+#: includes/checks/class-check-seo.php:316
+#: includes/class-runner.php:104
+msgid "Structured data (JSON-LD)"
+msgstr "구조화 데이터 (JSON-LD)"
+
+#. translators: 1: valid JSON-LD blocks, 2: total JSON-LD blocks.
+#: includes/checks/class-check-seo.php:288
+#, php-format
+msgid "only %1$d of %2$d blocks valid"
+msgstr "%d/%d 블록만 유효"
+
+#: includes/checks/class-check-seo.php:290
+msgid "JSON parse failure"
+msgstr "JSON 파싱 실패"
+
+#. translators: %s: PHP version number.
+#: includes/checks/class-check-server.php:56
+#, php-format
+msgid "PHP %s — long past end of life"
+msgstr "PHP %s — 지원 종료된 지 오래"
+
+#. translators: %s: PHP version number.
+#: includes/checks/class-check-server.php:56
+#, php-format
+msgid "PHP %s — not in the EOL table, unverifiable"
+msgstr "PHP %s — EOL 표에 없음, 확인 불가"
+
+#. translators: 1: PHP version number, 2: end-of-support date.
+#: includes/checks/class-check-server.php:61
+#, php-format
+msgid "PHP %1$s — security support until %2$s"
+msgstr "PHP %s — 보안 지원 %s까지"
+
+#: includes/checks/class-check-server.php:63
+#: includes/class-runner.php:123
+msgid "PHP version supported"
+msgstr "PHP 버전 지원"
+
+#: includes/checks/class-check-server.php:79
+#: includes/class-runner.php:125
+msgid "Shell functions disabled"
+msgstr "셸 함수 차단 (disable_functions)"
+
+#. translators: %d: how many shell functions are disabled.
+#: includes/checks/class-check-server.php:83
+#, php-format
+msgid "%d of 6 shell functions blocked"
+msgstr "셸 계열 6종 중 %d종 차단"
+
+#: includes/checks/class-check-server.php:90
+msgid "curl_exec not disabled"
+msgstr "curl_exec 미차단"
+
+#: includes/checks/class-check-server.php:93
+msgid "Disabled — kills all WP outbound HTTP"
+msgstr "차단됨 — WP 외부 통신 전체 마비"
+
+#: includes/checks/class-check-server.php:93
+msgid "Available"
+msgstr "사용 가능"
+
+#: includes/checks/class-check-server.php:112
+msgid "open_basedir path isolation"
+msgstr "open_basedir 경로 격리"
+
+#: includes/checks/class-check-server.php:115
+msgid "Configured"
+msgstr "설정됨"
+
+#: includes/checks/class-check-server.php:115
+msgid "Not set — PHP can reach the entire filesystem"
+msgstr "미설정 — PHP 가 전체 파일시스템에 접근 가능"
+
+#: includes/checks/class-check-server.php:118
+msgid "PHP settings checked: "
+msgstr "PHP 설정 검사: "
+
+#: includes/checks/class-check-server.php:130
+#: includes/checks/class-check-server.php:132
+#: includes/checks/class-check-server.php:136
+msgid "WP_DEBUG disabled"
+msgstr "WP_DEBUG 비활성"
+
+#: includes/checks/class-check-server.php:130
+msgid "Local/dev environment — excluded from judgment"
+msgstr "로컬/개발 환경 — 판정 제외"
+
+#: includes/checks/class-check-server.php:139
+msgid "WP_DEBUG with display — errors shown to visitors"
+msgstr "WP_DEBUG + 화면 표시 — 방문자에게 오류 노출"
+
+#: includes/checks/class-check-server.php:139
+msgid "WP_DEBUG on (log only)"
+msgstr "WP_DEBUG on (로그 전용)"
+
+#: includes/checks/class-check-server.php:144
+msgid "File editor disabled (DISALLOW_FILE_EDIT)"
+msgstr "파일 편집기 차단 (DISALLOW_FILE_EDIT)"
+
+#: includes/checks/class-check-server.php:147
+msgid "Blocked"
+msgstr "차단됨"
+
+#: includes/checks/class-check-server.php:147
+msgid "Allowed — the shortest path to a web shell after admin takeover"
+msgstr "허용 — 관리자 탈취 시 셸 심기 최단 경로"
+
+#: includes/checks/class-check-server.php:155
+msgid "(undefined)"
+msgstr "(미정의)"
+
+#: includes/checks/class-check-server.php:155
+msgid " — 3-byte: silent data loss for emoji and some CJK"
+msgstr " — 3바이트: 이모지·일부 한자 무음 손실"
+
+#: includes/checks/class-check-server.php:158
+msgid "wp-config constants checked"
+msgstr "wp-config 상수 검사 완료"
+
+#: includes/checks/class-check-server.php:169
+#: includes/checks/class-check-server.php:209
+#: includes/class-runner.php:133
+#: includes/class-runner.php:359
+msgid "Security response headers"
+msgstr "보안 응답 헤더"
+
+#: includes/checks/class-check-server.php:169
+#: includes/checks/class-check-server.php:170
+#: includes/checks/class-check-server.php:171
+msgid "No response received — unverifiable"
+msgstr "응답 수신 실패 — 확인 불가"
+
+#: includes/checks/class-check-server.php:170
+#: includes/checks/class-check-server.php:222
+#: includes/checks/class-check-server.php:224
+#: includes/checks/class-check-server.php:226
+#: includes/class-runner.php:134
+msgid "Server version hidden"
+msgstr "서버 버전 은닉"
+
+#: includes/checks/class-check-server.php:171
+#: includes/checks/class-check-server.php:231
+#: includes/checks/class-check-server.php:238
+#: includes/class-runner.php:135
+msgid "HTTPS enforced"
+msgstr "HTTPS 강제"
+
+#: includes/checks/class-check-server.php:173
+msgid "Header check: request failed"
+msgstr "헤더 검사: 수신 실패"
+
+#. translators: 1: headers present, 2: headers expected, 3: optional suffix listing what is missing.
+#: includes/checks/class-check-server.php:213
+#, php-format
+msgid "%1$d of %2$d present%3$s"
+msgstr "%d/%d 존재%s"
+
+#. translators: 1: headers present, 2: headers expected, 3: optional suffix listing what is missing.
+#: includes/checks/class-check-server.php:213
+msgid " — missing: "
+msgstr " — 누락: "
+
+#: includes/checks/class-check-server.php:222
+msgid " — version exposed"
+msgstr " — 버전 노출"
+
+#: includes/checks/class-check-server.php:224
+msgid "X-Powered-By header exposed"
+msgstr "X-Powered-By 헤더 노출"
+
+#: includes/checks/class-check-server.php:226
+msgid "(none)"
+msgstr "(없음)"
+
+#: includes/checks/class-check-server.php:231
+msgid "Site address is http"
+msgstr "사이트 주소가 http"
+
+#: includes/checks/class-check-server.php:241
+msgid "http→https redirect OK"
+msgstr "http→https 리다이렉트 OK"
+
+#: includes/checks/class-check-server.php:241
+msgid "http does not redirect to https"
+msgstr "http 접속이 https 로 이동하지 않음"
+
+#. translators: 1: headers present, 2: headers expected.
+#: includes/checks/class-check-server.php:246
+#, php-format
+msgid "Security headers %1$d/%2$d"
+msgstr "보안 헤더 %d/%d"
+
+#: includes/checks/class-check-server.php:258
+msgid "source exposed!"
+msgstr "소스 노출!"
+
+#. translators: %d: HTTP status code.
+#: includes/checks/class-check-server.php:263
+#, php-format
+msgid "HTTP %d (executes but exposes nothing — blocking recommended)"
+msgstr "HTTP %d (실행되나 노출 없음 — 차단 권장)"
+
+#: includes/checks/class-check-server.php:269
+msgid "repository exposed!"
+msgstr "저장소 노출!"
+
+#: includes/checks/class-check-server.php:277
+msgid "HTTP 403 — execution-blocking rule confirmed"
+msgstr "HTTP 403 — 실행 차단 규칙 확인"
+
+#. translators: %d: HTTP status code.
+#: includes/checks/class-check-server.php:280
+#, php-format
+msgid "HTTP %d — cannot be judged from a non-existent file (unverifiable)"
+msgstr "HTTP %d — 부재 파일로는 판정 불가 (확인 불가)"
+
+#: includes/checks/class-check-server.php:291
+#: includes/class-runner.php:136
+msgid "Sensitive paths blocked"
+msgstr "민감 경로 차단"
+
+#: includes/checks/class-check-server.php:293
+msgid "3 sensitive-path probes complete"
+msgstr "민감 경로 프로브 3종 완료"
+
+#: includes/checks/class-check-server.php:307
+#: includes/checks/class-check-server.php:345
+msgid "DB server settings"
+msgstr "DB 서버 설정"
+
+#: includes/checks/class-check-server.php:307
+msgid "No SHOW VARIABLES privilege — unverifiable"
+msgstr "SHOW VARIABLES 권한 없음 — 확인 불가"
+
+#: includes/checks/class-check-server.php:308
+msgid "DB variables: permission denied"
+msgstr "DB 변수: 권한 없음"
+
+#: includes/checks/class-check-server.php:322
+#: includes/checks/class-check-server.php:325
+msgid "version"
+msgstr "버전"
+
+#: includes/checks/class-check-server.php:329
+msgid "server charset"
+msgstr "서버 문자셋"
+
+#: includes/checks/class-check-server.php:335
+msgid "slow query log"
+msgstr "슬로 쿼리 로그"
+
+#: includes/checks/class-check-server.php:344
+msgid " outdated"
+msgstr " 구버전"
+
+#: includes/checks/class-check-server.php:344
+msgid " not recommended"
+msgstr " 권장 아님"
+
+#: includes/checks/class-check-server.php:347
+msgid "DB variables checked: "
+msgstr "DB 변수 검사: "
+
+#: includes/checks/class-check-vuln-wp.php:44
+#: includes/checks/class-check-vuln-wp.php:47
+msgid "Core known vulnerabilities"
+msgstr "코어 알려진 취약점"
+
+#: includes/checks/class-check-vuln-wp.php:44
+#: includes/checks/class-check-vuln-wp.php:179
+msgid "API lookup failed — unverifiable"
+msgstr "API 조회 실패 — 확인 불가"
+
+#. translators: %s: WordPress version number.
+#: includes/checks/class-check-vuln-wp.php:51
+#, php-format
+msgid "WP %s: no matching CVE"
+msgstr "WP %s: 해당 CVE 없음"
+
+#: includes/checks/class-check-vuln-wp.php:58
+#: includes/checks/class-check-vuln-wp.php:62
+#: includes/class-runner.php:112
+msgid "Core up to date"
+msgstr "코어 최신 버전"
+
+#: includes/checks/class-check-vuln-wp.php:58
+#: includes/checks/class-check-vuln-wp.php:136
+#: includes/checks/class-check-vuln-wp.php:187
+msgid "Update info unavailable — unverifiable"
+msgstr "업데이트 정보 미수신 — 확인 불가"
+
+#. translators: %s: current version number.
+#: includes/checks/class-check-vuln-wp.php:66
+#, php-format
+msgid "%s = latest"
+msgstr "%s = 최신"
+
+#. translators: %s: current version number.
+#: includes/checks/class-check-vuln-wp.php:66
+#, php-format
+msgid "%1$s → %2$s update pending"
+msgstr "%s → %s 업데이트 대기"
+
+#: includes/checks/class-check-vuln-wp.php:70
+msgid "Core vulnerability lookup: WP "
+msgstr "코어 취약점 조회: WP "
+
+#. translators: 1: plugin slug, 2: version, 3: result summary.
+#: includes/checks/class-check-vuln-wp.php:105
+#, php-format
+msgid "Plugin %1$s %2$s: %3$s"
+msgstr "플러그인 %s %s: %s"
+
+#. translators: 1: plugin slug, 2: version, 3: result summary.
+#: includes/checks/class-check-vuln-wp.php:105
+#: includes/class-cli.php:81
+#: includes/class-report.php:242
+msgid "Unverifiable"
+msgstr "확인 불가"
+
+#. translators: 1: plugin slug, 2: version, 3: result summary.
+#: includes/checks/class-check-vuln-wp.php:105
+msgid "⚠ vulnerable"
+msgstr "⚠ 취약"
+
+#. translators: 1: plugin slug, 2: version, 3: result summary.
+#: includes/checks/class-check-vuln-wp.php:105
+msgid "no issues"
+msgstr "이상 없음"
+
+#. translators: 1: number of vulnerable plugins, 2: comma-separated list.
+#: includes/checks/class-check-vuln-wp.php:118
+#, php-format
+msgid "%1$d vulnerable: %2$s"
+msgstr "취약 %d개: %s"
+
+#: includes/checks/class-check-vuln-wp.php:120
+#: includes/checks/class-check-vuln-wp.php:122
+#: includes/checks/class-check-vuln-wp.php:129
+#: includes/checks/class-check-vuln-wp.php:151
+msgid "Plugin known vulnerabilities"
+msgstr "플러그인 알려진 취약점"
+
+#: includes/checks/class-check-vuln-wp.php:122
+msgid "All API lookups failed — unverifiable"
+msgstr "API 전체 조회 실패 — 확인 불가"
+
+#. translators: %d: how many could not be checked.
+#: includes/checks/class-check-vuln-wp.php:125
+#, php-format
+msgid " (%d unverifiable)"
+msgstr " (%d개는 확인 불가)"
+
+#. translators: 1: number of active plugins, 2: optional suffix.
+#: includes/checks/class-check-vuln-wp.php:127
+#, php-format
+msgid "%1$d active, 0 vulnerable%2$s"
+msgstr "활성 %d개 중 취약 0개%s"
+
+#: includes/checks/class-check-vuln-wp.php:136
+#: includes/checks/class-check-vuln-wp.php:139
+msgid "Plugins up to date"
+msgstr "플러그인 최신 유지"
+
+#. translators: %d: number of pending updates.
+#: includes/checks/class-check-vuln-wp.php:143
+#: includes/checks/class-check-vuln-wp.php:194
+msgid "All up to date"
+msgstr "전부 최신"
+
+#. translators: %d: number of pending updates.
+#: includes/checks/class-check-vuln-wp.php:143
+#: includes/checks/class-check-vuln-wp.php:194
+#, php-format
+msgid "%d update(s) pending"
+msgstr "업데이트 대기 %d개"
+
+#. translators: 1: items processed so far, 2: total items.
+#: includes/checks/class-check-vuln-wp.php:149
+#, php-format
+msgid "In progress %1$d/%2$d"
+msgstr "진행 중 %d/%d"
+
+#: includes/checks/class-check-vuln-wp.php:177
+#: includes/checks/class-check-vuln-wp.php:179
+#: includes/checks/class-check-vuln-wp.php:181
+msgid "Theme known vulnerabilities"
+msgstr "테마 알려진 취약점"
+
+#: includes/checks/class-check-vuln-wp.php:181
+msgid ": no matching CVE"
+msgstr ": 해당 CVE 없음"
+
+#: includes/checks/class-check-vuln-wp.php:187
+#: includes/checks/class-check-vuln-wp.php:190
+msgid "Themes up to date"
+msgstr "테마 최신 유지"
+
+#: includes/checks/class-check-vuln-wp.php:198
+msgid "Theme vulnerability lookup: "
+msgstr "테마 취약점 조회: "
+
+#. translators: %s: script file name.
+#: includes/checks/class-check-vuln-wp.php:207
+#: includes/checks/class-check-vuln-wp.php:247
+#: includes/checks/class-check-vuln-wp.php:251
+#: includes/checks/class-check-vuln-wp.php:254
+#: includes/class-runner.php:117
+#: includes/class-runner.php:355
+msgid "Front-end JS libraries"
+msgstr "프론트 JS 라이브러리"
+
+#: includes/checks/class-check-vuln-wp.php:207
+msgid "Failed to fetch landing — unverifiable"
+msgstr "랜딩 수신 실패 — 확인 불가"
+
+#: includes/checks/class-check-vuln-wp.php:208
+msgid "JS check: request failed"
+msgstr "JS 검사: 수신 실패"
+
+#. translators: 1: library name, 2: detected version, 3: CVE identifier, 4: first fixed version.
+#: includes/checks/class-check-vuln-wp.php:238
+#, php-format
+msgid "%1$s %2$s (%3$s, below %4$s)"
+msgstr "%s %s (%s, %s 미만)"
+
+#. translators: %s: script file name.
+#: includes/checks/class-check-vuln-wp.php:251
+#, php-format
+msgid "Unknown version: %s — cannot judge"
+msgstr "버전 미상: %s — 판정 불가"
+
+#: includes/checks/class-check-vuln-wp.php:253
+msgid "Detected: "
+msgstr "감지: "
+
+#: includes/checks/class-check-vuln-wp.php:253
+msgid "No known libraries detected"
+msgstr "알려진 라이브러리 미감지"
+
+#: includes/checks/class-check-vuln-wp.php:254
+msgid " — not in a vulnerable range"
+msgstr " — 취약 범위 아님"
+
+#. translators: %d: number of scripts inspected.
+#: includes/checks/class-check-vuln-wp.php:258
+#, php-format
+msgid "JS libraries: %d scripts checked"
+msgstr "JS 라이브러리: 스크립트 %d개 검사"
+
+#. translators: %d: HTTP status code.
+#: includes/checks/class-check-vuln-wp.php:271
+#: includes/checks/class-check-vuln-wp.php:273
+#: includes/checks/class-check-vuln-wp.php:276
+msgid "Username enumeration (?author=N)"
+msgstr "사용자명 열거 (?author=N)"
+
+#: includes/checks/class-check-vuln-wp.php:271
+msgid "Username exposed via redirect: "
+msgstr "리다이렉트로 사용자명 노출: "
+
+#: includes/checks/class-check-vuln-wp.php:273
+msgid "Author archive exposed in response"
+msgstr "작성자 아카이브가 응답에 노출"
+
+#. translators: %d: HTTP status code.
+#: includes/checks/class-check-vuln-wp.php:276
+#: includes/checks/class-check-vuln-wp.php:283
+#: includes/checks/class-check-vuln-wp.php:300
+#, php-format
+msgid "Blocked (HTTP %d)"
+msgstr "차단됨 (HTTP %d)"
+
+#. translators: %d: HTTP status code.
+#: includes/checks/class-check-vuln-wp.php:283
+#: includes/checks/class-check-vuln-wp.php:285
+#: includes/checks/class-check-vuln-wp.php:288
+#: includes/class-runner.php:119
+msgid "xmlrpc.php blocked"
+msgstr "xmlrpc.php 차단"
+
+#: includes/checks/class-check-vuln-wp.php:285
+msgid "Active — brute-force amplification / pingback DDoS vector"
+msgstr "활성 상태 — 무차별 대입 증폭 · pingback DDoS 통로"
+
+#. translators: %d: HTTP status code.
+#: includes/checks/class-check-vuln-wp.php:288
+#: includes/checks/class-check-vuln-wp.php:303
+#, php-format
+msgid "Inconclusive (HTTP %d)"
+msgstr "판정 불명확 (HTTP %d)"
+
+#. translators: %d: number of user records exposed.
+#: includes/checks/class-check-vuln-wp.php:296
+#, php-format
+msgid "%d users exposed without authentication"
+msgstr "비인증으로 사용자 %d명 노출"
+
+#. translators: %d: HTTP status code.
+#: includes/checks/class-check-vuln-wp.php:297
+#: includes/checks/class-check-vuln-wp.php:300
+#: includes/checks/class-check-vuln-wp.php:303
+msgid "REST user enumeration blocked"
+msgstr "REST 사용자 열거 차단"
+
+#: includes/checks/class-check-vuln-wp.php:306
+msgid "3 exposure probes complete"
+msgstr "노출면 프로브 3종 완료"
+
+#: includes/checks/class-check-vuln-wp.php:400
+msgid "known vulnerabilities"
+msgstr "알려진 취약점"
+
+#. translators: %d: number of additional findings not listed.
+#: includes/checks/class-check-vuln-wp.php:403
+#, php-format
+msgid " and %d more"
+msgstr " 외 %d건"
+
+#: includes/class-admin.php:28
+msgid "Site health"
+msgstr "사이트 진단"
+
+#: includes/class-admin.php:53
+msgid "Running diagnostics…"
+msgstr "진단 중…"
+
+#: includes/class-admin.php:54
+msgid "Preparing…"
+msgstr "진단 준비 중…"
+
+#: includes/class-admin.php:55
+msgid "Diagnostics complete"
+msgstr "진단 완료"
+
+#: includes/class-admin.php:56
+msgid "Something went wrong. Please refresh the page and try again."
+msgstr "오류가 발생했습니다. 화면을 새로고침한 뒤 다시 시도해 주세요."
+
+#: includes/class-admin.php:57
+msgid "WPER Recommendation"
+msgstr "WPER 권장 조치 보기"
+
+#: includes/class-admin.php:58
+msgid "Building the report…"
+msgstr "보고서 생성 중…"
+
+#: includes/class-admin.php:67
+msgid "You do not have permission to access this page."
+msgstr "이 화면에 접근할 권한이 없습니다."
+
+#: includes/class-admin.php:74
+msgid "Response time · database queries · SEO · vulnerabilities · server configuration — five areas, scored out of 1000."
+msgstr "응답 속도 · DB 쿼리 · SEO · 취약점 · 서버 설정 — 5개 영역, 1000점 만점."
+
+#: includes/class-admin.php:78
+msgid "Start diagnostics"
+msgstr "진단 시작"
+
+#: includes/class-admin.php:82
+msgid "Previous results"
+msgstr "지난 결과"
+
+#: includes/class-cli.php:62
+msgid "The diagnostic run did not complete."
+msgstr "진단이 완료되지 않았습니다."
+
+#: includes/class-cli.php:76
+msgid "Area"
+msgstr "영역"
+
+#: includes/class-cli.php:77
+msgid "Score"
+msgstr "점수"
+
+#: includes/class-cli.php:78
+#: includes/class-report.php:239
+msgid "Pass"
+msgstr "통과"
+
+#: includes/class-cli.php:79
+#: includes/class-report.php:240
+msgid "Warn"
+msgstr "주의"
+
+#: includes/class-cli.php:80
+#: includes/class-report.php:241
+msgid "Fail"
+msgstr "실패"
+
+#. translators: 1: total score out of 1000, 2: diagnostic run id.
+#: includes/class-cli.php:99
+#, php-format
+msgid "Total %1$d / 1000 (run #%2$d)"
+msgstr "총점 %1$d / 1000 (run #%2$d)"
+
+#: includes/class-cli.php:115
+msgid "No diagnostic history yet."
+msgstr "이력이 없습니다."
+
+#: includes/class-cli.php:119
+msgid "Date"
+msgstr "일시"
+
+#: includes/class-cli.php:120
+msgid "Total"
+msgstr "총점"
+
+#: includes/class-report.php:32
+msgid "No results yet."
+msgstr "결과가 없습니다."
+
+#: includes/class-report.php:74
+msgid "Diagnostic tool"
+msgstr "진단 도구"
+
+#: includes/class-report.php:87
+msgid "Excellent"
+msgstr "우수"
+
+#: includes/class-report.php:89
+msgid "Good"
+msgstr "양호"
+
+#: includes/class-report.php:91
+msgid "Needs attention"
+msgstr "주의 필요"
+
+#: includes/class-report.php:93
+msgid "At risk"
+msgstr "위험"
+
+#. translators: 1: pass count, 2: warning count, 3: fail count.
+#: includes/class-report.php:148
+#, php-format
+msgid "Pass %1$d · Warn %2$d · Fail %3$d"
+msgstr "통과 %1$d · 주의 %2$d · 실패 %3$d"
+
+#: includes/class-report.php:168
+#: includes/class-report.php:185
+msgid "WPER recommendations"
+msgstr "WPER 권장 조치"
+
+#: includes/class-report.php:169
+msgid "Nothing needs improvement. Keep it as it is."
+msgstr "개선이 필요한 항목이 없습니다. 현재 상태를 유지하세요."
+
+#: includes/class-report.php:195
+msgid "Cause"
+msgstr "원인"
+
+#: includes/class-report.php:196
+msgid "Fix"
+msgstr "해결"
+
+#: includes/class-report.php:211
+msgid "Items that could not be verified"
+msgstr "확인 불가 항목"
+
+#. translators: %d: number of items that could not be measured.
+#: includes/class-report.php:217
+#, php-format
+msgid "%d item could not be measured in this run, so it was excluded from the score denominator. We never report an unmeasured item as a pass or a failure."
+msgid_plural "%d items could not be measured in this run, so they were excluded from the score denominator. We never report an unmeasured item as a pass or a failure."
+msgstr[0] "%d개 항목은 이번 진단에서 측정할 수 없어 점수 분모에서 제외했습니다. 측정하지 않은 것을 통과나 실패로 표기하지 않습니다."
+
+#: includes/class-rest.php:76
+#: includes/class-rest.php:89
+msgid "Diagnostic record not found."
+msgstr "진단 레코드를 찾을 수 없습니다."
+
+#: includes/class-runner.php:55
+msgid "Response time"
+msgstr "응답 속도"
+
+#: includes/class-runner.php:56
+msgid "Database queries"
+msgstr "DB 쿼리"
+
+#: includes/class-runner.php:57
+msgid "SEO"
+msgstr "SEO"
+
+#: includes/class-runner.php:58
+msgid "WordPress vulnerabilities"
+msgstr "WP 취약점"
+
+#: includes/class-runner.php:59
+msgid "Server configuration"
+msgstr "서버 설정"
+
+#: includes/class-runner.php:83
+msgid "No redirect chain"
+msgstr "리다이렉트 체인 없음"
+
+#: includes/class-runner.php:89
+msgid "Landing database time"
+msgstr "랜딩 DB 시간"
+
+#: includes/class-runner.php:97
+msgid "Single h1"
+msgstr "h1 단일"
+
+#: includes/class-runner.php:98
+msgid "Indexable"
+msgstr "색인 허용"
+
+#: includes/class-runner.php:99
+msgid "Canonical URL"
+msgstr "canonical 주소"
+
+#: includes/class-runner.php:101
+msgid "viewport meta tag"
+msgstr "viewport 메타"
+
+#: includes/class-runner.php:103
+msgid "Descriptive link text"
+msgstr "링크 텍스트"
+
+#: includes/class-runner.php:105
+msgid "hreflang"
+msgstr "hreflang"
+
+#: includes/class-runner.php:106
+msgid "Open Graph tags"
+msgstr "Open Graph 태그"
+
+#: includes/class-runner.php:107
+msgid "HTTPS / mixed content"
+msgstr "HTTPS · 혼합 콘텐츠"
+
+#: includes/class-runner.php:108
+msgid "Sitemap reachable"
+msgstr "사이트맵 도달"
+
+#: includes/class-runner.php:111
+msgid "WordPress core vulnerabilities"
+msgstr "코어 취약점"
+
+#: includes/class-runner.php:113
+msgid "Plugin vulnerabilities"
+msgstr "플러그인 취약점"
+
+#: includes/class-runner.php:114
+msgid "Plugin updates"
+msgstr "플러그인 업데이트"
+
+#: includes/class-runner.php:115
+msgid "Theme vulnerabilities"
+msgstr "테마 취약점"
+
+#: includes/class-runner.php:116
+msgid "Theme updates"
+msgstr "테마 업데이트"
+
+#: includes/class-runner.php:118
+msgid "Author enumeration blocked"
+msgstr "작성자 열거 차단"
+
+#: includes/class-runner.php:120
+msgid "REST user list blocked"
+msgstr "REST 사용자 목록 차단"
+
+#: includes/class-runner.php:124
+msgid "expose_php off"
+msgstr "expose_php off"
+
+#: includes/class-runner.php:126
+msgid "curl_exec available"
+msgstr "curl_exec 사용 가능"
+
+#: includes/class-runner.php:127
+msgid "allow_url_fopen off"
+msgstr "allow_url_fopen off"
+
+#: includes/class-runner.php:128
+msgid "display_errors off"
+msgstr "display_errors off"
+
+#: includes/class-runner.php:129
+msgid "open_basedir set"
+msgstr "open_basedir 설정"
+
+#: includes/class-runner.php:130
+msgid "WP_DEBUG off"
+msgstr "WP_DEBUG off"
+
+#: includes/class-runner.php:131
+msgid "DISALLOW_FILE_EDIT on"
+msgstr "DISALLOW_FILE_EDIT on"
+
+#: includes/class-runner.php:132
+msgid "DB_CHARSET utf8mb4"
+msgstr "DB_CHARSET utf8mb4"
+
+#: includes/class-runner.php:137
+msgid "Database server settings"
+msgstr "DB 서버 설정"
+
+#: includes/class-runner.php:160
+msgid "Could not create the diagnostic record."
+msgstr "진단 레코드 생성에 실패했습니다."
+
+#. translators: %s: diagnostic step id.
+#: includes/class-runner.php:177
+#, php-format
+msgid "Unknown step: %s"
+msgstr "알 수 없는 스텝: %s"
+
+#. translators: %s: diagnostic step id.
+#: includes/class-runner.php:192
+#, php-format
+msgid "No handler for step: %s"
+msgstr "핸들러가 없는 스텝: %s"
+
+#: includes/class-runner.php:340
+msgid "Measuring landing response (3 runs)"
+msgstr "랜딩 응답 측정 (3회)"
+
+#: includes/class-runner.php:341
+msgid "Measuring archive response"
+msgstr "아카이브 응답 측정"
+
+#: includes/class-runner.php:342
+msgid "Measuring post response"
+msgstr "글 페이지 응답 측정"
+
+#: includes/class-runner.php:343
+msgid "Measuring page response"
+msgstr "고정 페이지 응답 측정"
+
+#: includes/class-runner.php:344
+msgid "Measuring product/service response"
+msgstr "상품·서비스 응답 측정"
+
+#: includes/class-runner.php:345
+msgid "Checking redirect chains"
+msgstr "리다이렉트 체인 검사"
+
+#: includes/class-runner.php:346
+msgid "Capturing landing queries (3 runs)"
+msgstr "랜딩 쿼리 캡처 (3회)"
+
+#: includes/class-runner.php:347
+msgid "Capturing post queries"
+msgstr "글 페이지 쿼리 캡처"
+
+#: includes/class-runner.php:348
+msgid "Capturing archive queries"
+msgstr "아카이브 쿼리 캡처"
+
+#: includes/class-runner.php:349
+msgid "Analyzing query patterns"
+msgstr "쿼리 패턴 분석"
+
+#: includes/class-runner.php:350
+msgid "Analyzing landing SEO"
+msgstr "랜딩 SEO 분석"
+
+#: includes/class-runner.php:351
+msgid "robots.txt · sitemap"
+msgstr "robots.txt · 사이트맵"
+
+#: includes/class-runner.php:352
+msgid "Looking up core vulnerabilities"
+msgstr "코어 취약점 조회"
+
+#: includes/class-runner.php:353
+msgid "Looking up plugin vulnerabilities"
+msgstr "플러그인 취약점 조회"
+
+#: includes/class-runner.php:354
+msgid "Looking up theme vulnerabilities"
+msgstr "테마 취약점 조회"
+
+#: includes/class-runner.php:356
+msgid "Exposure probes"
+msgstr "노출면 프로브"
+
+#: includes/class-runner.php:357
+msgid "Checking PHP settings"
+msgstr "PHP 설정 검사"
+
+#: includes/class-runner.php:358
+msgid "Checking wp-config"
+msgstr "wp-config 검사"
+
+#: includes/class-runner.php:360
+msgid "Sensitive path probes"
+msgstr "민감 경로 프로브"
+
+#: includes/class-runner.php:361
+msgid "Database server variables"
+msgstr "DB 서버 변수"
+
+#: includes/class-store.php:26
+msgid "Site diagnostics"
+msgstr "사이트 진단"
+
+#: includes/class-store.php:27
+msgid "Diagnostic run"
+msgstr "진단"
+
+#. translators: %s: run timestamp.
+#: includes/class-store.php:51
+#, php-format
+msgid "Diagnostics %s"
+msgstr "진단 %s"

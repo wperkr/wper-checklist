@@ -41,31 +41,33 @@ final class WPER_Checklist_Check_Vuln_WP {
 
 		$hits = self::lookup( 'core/' . $version, $version );
 		if ( null === $hits ) {
-			$items[] = wper_checklist_item( 'vuln:core', self::CAT, '코어 알려진 취약점', 'skip', 40, 'API 조회 실패 — 확인 불가' );
+			$items[] = wper_checklist_item( 'vuln:core', self::CAT, __( 'Core known vulnerabilities', 'wper-checklist' ), 'skip', 40, __( 'API lookup failed — unverifiable', 'wper-checklist' ) );
 		} else {
 			$items[] = wper_checklist_item(
-				'vuln:core', self::CAT, '코어 알려진 취약점',
+				'vuln:core', self::CAT, __( 'Core known vulnerabilities', 'wper-checklist' ),
 				$hits ? 'fail' : 'pass',
 				40,
-				$hits ? sprintf( 'WP %s: %s', $version, self::summarize( $hits ) ) : sprintf( 'WP %s: 해당 CVE 없음', $version )
+				/* translators: %s: WordPress version number. */
+				$hits ? sprintf( 'WP %s: %s', $version, self::summarize( $hits ) ) : sprintf( __( 'WP %s: no matching CVE', 'wper-checklist' ), $version )
 			);
 		}
 
 		// 최신 여부 — 코어가 이미 파악한 상태를 읽는다 (외부 호출 불요).
 		$core = get_site_transient( 'update_core' );
 		if ( ! is_object( $core ) || empty( $core->updates ) ) {
-			$items[] = wper_checklist_item( 'vuln:core-latest', self::CAT, '코어 최신 버전', 'skip', 15, '업데이트 정보 미수신 — 확인 불가' );
+			$items[] = wper_checklist_item( 'vuln:core-latest', self::CAT, __( 'Core up to date', 'wper-checklist' ), 'skip', 15, __( 'Update info unavailable — unverifiable', 'wper-checklist' ) );
 		} else {
 			$latest  = $core->updates[0]->response ?? '';
 			$items[] = wper_checklist_item(
-				'vuln:core-latest', self::CAT, '코어 최신 버전',
+				'vuln:core-latest', self::CAT, __( 'Core up to date', 'wper-checklist' ),
 				'latest' === $latest ? 'pass' : 'fail',
 				15,
-				'latest' === $latest ? sprintf( '%s = 최신', $version ) : sprintf( '%s → %s 업데이트 대기', $version, $core->updates[0]->version ?? '?' )
+				/* translators: %s: current version number. */
+				'latest' === $latest ? sprintf( __( '%s = latest', 'wper-checklist' ), $version ) : sprintf( __( '%1$s → %2$s update pending', 'wper-checklist' ), $version, $core->updates[0]->version ?? '?' )
 			);
 		}
 
-		return [ 'items' => $items, 'events' => [ '코어 취약점 조회: WP ' . $version ], 'done' => true ];
+		return [ 'items' => $items, 'events' => [ __( 'Core vulnerability lookup: WP ', 'wper-checklist' ) . $version ], 'done' => true ];
 	}
 
 	/* ------------------------------------------------------------ 플러그인 */
@@ -99,7 +101,8 @@ final class WPER_Checklist_Check_Vuln_WP {
 				'cves'    => $hits ? self::summarize( $hits ) : '',
 			];
 
-			$events[] = sprintf( '플러그인 %s %s: %s', $slug, $ver, [ 'unknown' => '확인 불가', 'vulnerable' => '⚠ 취약', 'clean' => '이상 없음' ][ $acc[ $slug ]['state'] ] );
+			/* translators: 1: plugin slug, 2: version, 3: result summary. */
+			$events[] = sprintf( __( 'Plugin %1$s %2$s: %3$s', 'wper-checklist' ), $slug, $ver, [ 'unknown' => __( 'Unverifiable', 'wper-checklist' ), 'vulnerable' => __( '⚠ vulnerable', 'wper-checklist' ), 'clean' => __( 'no issues', 'wper-checklist' ) ][ $acc[ $slug ]['state'] ] );
 		}
 
 		$done  = ( $cursor + 1 ) >= $total;
@@ -111,30 +114,41 @@ final class WPER_Checklist_Check_Vuln_WP {
 
 			if ( $vulnerable ) {
 				$list    = implode( ', ', array_map( static fn( $s, $r ) => "{$s} {$r['version']} ({$r['cves']})", array_keys( $vulnerable ), $vulnerable ) );
-				$items[] = wper_checklist_item( 'vuln:plugins', self::CAT, '플러그인 알려진 취약점', 'fail', 40, sprintf( '취약 %d개: %s', count( $vulnerable ), $list ), $acc );
+				/* translators: 1: number of vulnerable plugins, 2: comma-separated list. */
+				$measured = sprintf( __( '%1$d vulnerable: %2$s', 'wper-checklist' ), count( $vulnerable ), $list );
+
+				$items[] = wper_checklist_item( 'vuln:plugins', self::CAT, __( 'Plugin known vulnerabilities', 'wper-checklist' ), 'fail', 40, $measured, $acc );
 			} elseif ( count( $unknown ) === $total && $total > 0 ) {
-				$items[] = wper_checklist_item( 'vuln:plugins', self::CAT, '플러그인 알려진 취약점', 'skip', 40, 'API 전체 조회 실패 — 확인 불가', $acc );
+				$items[] = wper_checklist_item( 'vuln:plugins', self::CAT, __( 'Plugin known vulnerabilities', 'wper-checklist' ), 'skip', 40, __( 'All API lookups failed — unverifiable', 'wper-checklist' ), $acc );
 			} else {
-				$note    = $unknown ? sprintf( ' (%d개는 확인 불가)', count( $unknown ) ) : '';
-				$items[] = wper_checklist_item( 'vuln:plugins', self::CAT, '플러그인 알려진 취약점', 'pass', 40, sprintf( '활성 %d개 중 취약 0개%s', $total, $note ), $acc );
+				/* translators: %d: how many could not be checked. */
+				$note    = $unknown ? sprintf( __( ' (%d unverifiable)', 'wper-checklist' ), count( $unknown ) ) : '';
+				/* translators: 1: number of active plugins, 2: optional suffix. */
+				$clean = sprintf( __( '%1$d active, 0 vulnerable%2$s', 'wper-checklist' ), $total, $note );
+
+				$items[] = wper_checklist_item( 'vuln:plugins', self::CAT, __( 'Plugin known vulnerabilities', 'wper-checklist' ), 'pass', 40, $clean, $acc );
 			}
 
 			// 업데이트 대기 수 — 로컬 상태만으로 판정 (API 다운과 무관하게 동작).
 			$upd     = get_site_transient( 'update_plugins' );
 			$pending = is_object( $upd ) && ! empty( $upd->response ) ? count( $upd->response ) : 0;
 			if ( ! is_object( $upd ) ) {
-				$items[] = wper_checklist_item( 'vuln:plugin-updates', self::CAT, '플러그인 최신 유지', 'skip', 15, '업데이트 정보 미수신 — 확인 불가' );
+				$items[] = wper_checklist_item( 'vuln:plugin-updates', self::CAT, __( 'Plugins up to date', 'wper-checklist' ), 'skip', 15, __( 'Update info unavailable — unverifiable', 'wper-checklist' ) );
 			} else {
 				$items[] = wper_checklist_item(
-					'vuln:plugin-updates', self::CAT, '플러그인 최신 유지',
+					'vuln:plugin-updates', self::CAT, __( 'Plugins up to date', 'wper-checklist' ),
 					0 === $pending ? 'pass' : ( $pending <= 2 ? 'warn' : 'fail' ),
 					15,
-					0 === $pending ? '전부 최신' : sprintf( '업데이트 대기 %d개', $pending )
+					/* translators: %d: number of pending updates. */
+					0 === $pending ? __( 'All up to date', 'wper-checklist' ) : sprintf( __( '%d update(s) pending', 'wper-checklist' ), $pending )
 				);
 			}
 		} else {
 			// 중간 커서: 누적만 저장 (pending 상태는 채점에서 제외된다).
-			$items[] = wper_checklist_item( 'vuln:plugins', self::CAT, '플러그인 알려진 취약점', 'skip', 40, sprintf( '진행 중 %d/%d', $cursor + 1, $total ), $acc );
+			/* translators: 1: items processed so far, 2: total items. */
+			$progress = sprintf( __( 'In progress %1$d/%2$d', 'wper-checklist' ), $cursor + 1, $total );
+
+			$items[] = wper_checklist_item( 'vuln:plugins', self::CAT, __( 'Plugin known vulnerabilities', 'wper-checklist' ), 'skip', 40, $progress, $acc );
 		}
 
 		return [ 'items' => $items, 'events' => $events, 'done' => $done, 'cursor' => $cursor + 1 ];
@@ -160,27 +174,28 @@ final class WPER_Checklist_Check_Vuln_WP {
 		}
 
 		if ( $vuln ) {
-			$items[] = wper_checklist_item( 'vuln:themes', self::CAT, '테마 알려진 취약점', 'fail', 20, implode( ', ', $vuln ) );
+			$items[] = wper_checklist_item( 'vuln:themes', self::CAT, __( 'Theme known vulnerabilities', 'wper-checklist' ), 'fail', 20, implode( ', ', $vuln ) );
 		} elseif ( $miss === count( $slugs ) ) {
-			$items[] = wper_checklist_item( 'vuln:themes', self::CAT, '테마 알려진 취약점', 'skip', 20, 'API 조회 실패 — 확인 불가' );
+			$items[] = wper_checklist_item( 'vuln:themes', self::CAT, __( 'Theme known vulnerabilities', 'wper-checklist' ), 'skip', 20, __( 'API lookup failed — unverifiable', 'wper-checklist' ) );
 		} else {
-			$items[] = wper_checklist_item( 'vuln:themes', self::CAT, '테마 알려진 취약점', 'pass', 20, implode( ' · ', $slugs ) . ': 해당 CVE 없음' );
+			$items[] = wper_checklist_item( 'vuln:themes', self::CAT, __( 'Theme known vulnerabilities', 'wper-checklist' ), 'pass', 20, implode( ' · ', $slugs ) . __( ': no matching CVE', 'wper-checklist' ) );
 		}
 
 		$upd     = get_site_transient( 'update_themes' );
 		$pending = is_object( $upd ) && ! empty( $upd->response ) ? count( $upd->response ) : 0;
 		if ( ! is_object( $upd ) ) {
-			$items[] = wper_checklist_item( 'vuln:theme-updates', self::CAT, '테마 최신 유지', 'skip', 10, '업데이트 정보 미수신 — 확인 불가' );
+			$items[] = wper_checklist_item( 'vuln:theme-updates', self::CAT, __( 'Themes up to date', 'wper-checklist' ), 'skip', 10, __( 'Update info unavailable — unverifiable', 'wper-checklist' ) );
 		} else {
 			$items[] = wper_checklist_item(
-				'vuln:theme-updates', self::CAT, '테마 최신 유지',
+				'vuln:theme-updates', self::CAT, __( 'Themes up to date', 'wper-checklist' ),
 				0 === $pending ? 'pass' : 'warn',
 				10,
-				0 === $pending ? '전부 최신' : sprintf( '업데이트 대기 %d개', $pending )
+				/* translators: %d: number of pending updates. */
+				0 === $pending ? __( 'All up to date', 'wper-checklist' ) : sprintf( __( '%d update(s) pending', 'wper-checklist' ), $pending )
 			);
 		}
 
-		return [ 'items' => $items, 'events' => [ '테마 취약점 조회: ' . implode( ', ', $slugs ) ], 'done' => true ];
+		return [ 'items' => $items, 'events' => [ __( 'Theme vulnerability lookup: ', 'wper-checklist' ) . implode( ', ', $slugs ) ], 'done' => true ];
 	}
 
 	/* ----------------------------------------------------------- 프론트 JS */
@@ -189,8 +204,8 @@ final class WPER_Checklist_Check_Vuln_WP {
 		$res = WPER_Checklist_HTTP::get( $ctx['urls']['home'] ?? home_url( '/' ) );
 
 		if ( ! $res['ok'] ) {
-			$item = wper_checklist_item( 'vuln:js', self::CAT, '프론트 JS 라이브러리', 'skip', 25, '랜딩 수신 실패 — 확인 불가' );
-			return [ 'items' => [ $item ], 'events' => [ 'JS 검사: 수신 실패' ], 'done' => true ];
+			$item = wper_checklist_item( 'vuln:js', self::CAT, __( 'Front-end JS libraries', 'wper-checklist' ), 'skip', 25, __( 'Failed to fetch landing — unverifiable', 'wper-checklist' ) );
+			return [ 'items' => [ $item ], 'events' => [ __( 'JS check: request failed', 'wper-checklist' ) ], 'done' => true ];
 		}
 
 		preg_match_all( '/<script[^>]+src=["\']([^"\']+)["\']/i', $res['body'], $m );
@@ -219,7 +234,8 @@ final class WPER_Checklist_Check_Vuln_WP {
 					foreach ( $def['vulns'] as $v ) {
 						$above = ! isset( $v['since'] ) || version_compare( $ver, $v['since'], '>=' );
 						if ( $above && version_compare( $ver, $v['below'], '<' ) ) {
-							$bad[] = sprintf( '%s %s (%s, %s 미만)', $lib, $ver, $v['cve'], $v['below'] );
+							/* translators: 1: library name, 2: detected version, 3: CVE identifier, 4: first fixed version. */
+							$bad[] = sprintf( __( '%1$s %2$s (%3$s, below %4$s)', 'wper-checklist' ), $lib, $ver, $v['cve'], $v['below'] );
 							break;
 						}
 					}
@@ -228,16 +244,18 @@ final class WPER_Checklist_Check_Vuln_WP {
 		}
 
 		if ( $bad ) {
-			$item = wper_checklist_item( 'vuln:js', self::CAT, '프론트 JS 라이브러리', 'fail', 25, implode( ', ', $bad ) );
+			$item = wper_checklist_item( 'vuln:js', self::CAT, __( 'Front-end JS libraries', 'wper-checklist' ), 'fail', 25, implode( ', ', $bad ) );
 		} elseif ( in_array( '?', $found, true ) ) {
 			$unk  = implode( ', ', array_keys( array_filter( $found, static fn( $v ) => '?' === $v ) ) );
-			$item = wper_checklist_item( 'vuln:js', self::CAT, '프론트 JS 라이브러리', 'warn', 25, sprintf( '버전 미상: %s — 판정 불가', $unk ) );
+			/* translators: %s: script file name. */
+			$item = wper_checklist_item( 'vuln:js', self::CAT, __( 'Front-end JS libraries', 'wper-checklist' ), 'warn', 25, sprintf( __( 'Unknown version: %s — cannot judge', 'wper-checklist' ), $unk ) );
 		} else {
-			$note = $found ? '감지: ' . implode( ', ', array_map( static fn( $l, $v ) => "$l $v", array_keys( $found ), $found ) ) : '알려진 라이브러리 미감지';
-			$item = wper_checklist_item( 'vuln:js', self::CAT, '프론트 JS 라이브러리', 'pass', 25, $note . ' — 취약 범위 아님' );
+			$note = $found ? __( 'Detected: ', 'wper-checklist' ) . implode( ', ', array_map( static fn( $l, $v ) => "$l $v", array_keys( $found ), $found ) ) : __( 'No known libraries detected', 'wper-checklist' );
+			$item = wper_checklist_item( 'vuln:js', self::CAT, __( 'Front-end JS libraries', 'wper-checklist' ), 'pass', 25, $note . __( ' — not in a vulnerable range', 'wper-checklist' ) );
 		}
 
-		return [ 'items' => [ $item ], 'events' => [ sprintf( 'JS 라이브러리: 스크립트 %d개 검사', count( $srcs ) ) ], 'done' => true ];
+		/* translators: %d: number of scripts inspected. */
+		return [ 'items' => [ $item ], 'events' => [ sprintf( __( 'JS libraries: %d scripts checked', 'wper-checklist' ), count( $srcs ) ) ], 'done' => true ];
 	}
 
 	/* ------------------------------------------------------ 노출면 프로브 */
@@ -250,35 +268,42 @@ final class WPER_Checklist_Check_Vuln_WP {
 		$a = WPER_Checklist_HTTP::get( $home . '/?author=1' );
 		$loc = (string) ( is_array( $a['headers']['location'] ?? null ) ? end( $a['headers']['location'] ) : ( $a['headers']['location'] ?? '' ) );
 		if ( $a['code'] >= 300 && $a['code'] < 400 && str_contains( $loc, '/author/' ) ) {
-			$items[] = wper_checklist_item( 'vuln:author', self::CAT, '사용자명 열거 (?author=N)', 'fail', 10, '리다이렉트로 사용자명 노출: ' . wp_parse_url( $loc, PHP_URL_PATH ) );
+			$items[] = wper_checklist_item( 'vuln:author', self::CAT, __( 'Username enumeration (?author=N)', 'wper-checklist' ), 'fail', 10, __( 'Username exposed via redirect: ', 'wper-checklist' ) . wp_parse_url( $loc, PHP_URL_PATH ) );
 		} elseif ( 200 === $a['code'] && preg_match( '/\/author\/[^"\']+/', $a['body'] ) ) {
-			$items[] = wper_checklist_item( 'vuln:author', self::CAT, '사용자명 열거 (?author=N)', 'warn', 10, '작성자 아카이브가 응답에 노출' );
+			$items[] = wper_checklist_item( 'vuln:author', self::CAT, __( 'Username enumeration (?author=N)', 'wper-checklist' ), 'warn', 10, __( 'Author archive exposed in response', 'wper-checklist' ) );
 		} else {
-			$items[] = wper_checklist_item( 'vuln:author', self::CAT, '사용자명 열거 (?author=N)', 'pass', 10, sprintf( '차단됨 (HTTP %d)', $a['code'] ) );
+			/* translators: %d: HTTP status code. */
+			$items[] = wper_checklist_item( 'vuln:author', self::CAT, __( 'Username enumeration (?author=N)', 'wper-checklist' ), 'pass', 10, sprintf( __( 'Blocked (HTTP %d)', 'wper-checklist' ), $a['code'] ) );
 		}
 
 		// xmlrpc.php — GET 에 405 면 활성(POST 수락), 403/404 면 차단.
 		$x = WPER_Checklist_HTTP::get( $home . '/xmlrpc.php' );
 		if ( in_array( $x['code'], [ 403, 404, 410 ], true ) ) {
-			$items[] = wper_checklist_item( 'vuln:xmlrpc', self::CAT, 'xmlrpc.php 차단', 'pass', 10, sprintf( '차단됨 (HTTP %d)', $x['code'] ) );
+			/* translators: %d: HTTP status code. */
+			$items[] = wper_checklist_item( 'vuln:xmlrpc', self::CAT, __( 'xmlrpc.php blocked', 'wper-checklist' ), 'pass', 10, sprintf( __( 'Blocked (HTTP %d)', 'wper-checklist' ), $x['code'] ) );
 		} elseif ( 405 === $x['code'] || str_contains( $x['body'], 'XML-RPC' ) ) {
-			$items[] = wper_checklist_item( 'vuln:xmlrpc', self::CAT, 'xmlrpc.php 차단', 'fail', 10, '활성 상태 — 무차별 대입 증폭 · pingback DDoS 통로' );
+			$items[] = wper_checklist_item( 'vuln:xmlrpc', self::CAT, __( 'xmlrpc.php blocked', 'wper-checklist' ), 'fail', 10, __( 'Active — brute-force amplification / pingback DDoS vector', 'wper-checklist' ) );
 		} else {
-			$items[] = wper_checklist_item( 'vuln:xmlrpc', self::CAT, 'xmlrpc.php 차단', 'warn', 10, sprintf( '판정 불명확 (HTTP %d)', $x['code'] ) );
+			/* translators: %d: HTTP status code. */
+			$items[] = wper_checklist_item( 'vuln:xmlrpc', self::CAT, __( 'xmlrpc.php blocked', 'wper-checklist' ), 'warn', 10, sprintf( __( 'Inconclusive (HTTP %d)', 'wper-checklist' ), $x['code'] ) );
 		}
 
 		// /wp-json/wp/v2/users — 비인증 사용자 목록.
 		$u = WPER_Checklist_HTTP::get( $home . '/wp-json/wp/v2/users' );
 		$list = json_decode( $u['body'], true );
 		if ( 200 === $u['code'] && is_array( $list ) && isset( $list[0]['slug'] ) ) {
-			$items[] = wper_checklist_item( 'vuln:users', self::CAT, 'REST 사용자 열거 차단', 'fail', 15, sprintf( '비인증으로 사용자 %d명 노출', count( $list ) ) );
+			/* translators: %d: number of user records exposed. */
+			$measured = sprintf( __( '%d users exposed without authentication', 'wper-checklist' ), count( $list ) );
+			$items[]  = wper_checklist_item( 'vuln:users', self::CAT, __( 'REST user enumeration blocked', 'wper-checklist' ), 'fail', 15, $measured );
 		} elseif ( in_array( $u['code'], [ 401, 403, 404 ], true ) || ( is_array( $list ) && ! isset( $list[0]['slug'] ) ) ) {
-			$items[] = wper_checklist_item( 'vuln:users', self::CAT, 'REST 사용자 열거 차단', 'pass', 15, sprintf( '차단됨 (HTTP %d)', $u['code'] ) );
+			/* translators: %d: HTTP status code. */
+			$items[] = wper_checklist_item( 'vuln:users', self::CAT, __( 'REST user enumeration blocked', 'wper-checklist' ), 'pass', 15, sprintf( __( 'Blocked (HTTP %d)', 'wper-checklist' ), $u['code'] ) );
 		} else {
-			$items[] = wper_checklist_item( 'vuln:users', self::CAT, 'REST 사용자 열거 차단', 'warn', 15, sprintf( '판정 불명확 (HTTP %d)', $u['code'] ) );
+			/* translators: %d: HTTP status code. */
+			$items[] = wper_checklist_item( 'vuln:users', self::CAT, __( 'REST user enumeration blocked', 'wper-checklist' ), 'warn', 15, sprintf( __( 'Inconclusive (HTTP %d)', 'wper-checklist' ), $u['code'] ) );
 		}
 
-		return [ 'items' => $items, 'events' => [ '노출면 프로브 3종 완료' ], 'done' => true ];
+		return [ 'items' => $items, 'events' => [ __( '3 exposure probes complete', 'wper-checklist' ) ], 'done' => true ];
 	}
 
 	/* --------------------------------------------------------------- 공용 */
@@ -372,9 +397,10 @@ final class WPER_Checklist_Check_Vuln_WP {
 					break;
 				}
 			}
-			$names[] = $cve ?: (string) ( $v['name'] ?? '알려진 취약점' );
+			$names[] = $cve ?: (string) ( $v['name'] ?? __( 'known vulnerabilities', 'wper-checklist' ) );
 		}
-		$more = count( $hits ) > 3 ? sprintf( ' 외 %d건', count( $hits ) - 3 ) : '';
+		/* translators: %d: number of additional findings not listed. */
+		$more = count( $hits ) > 3 ? sprintf( __( ' and %d more', 'wper-checklist' ), count( $hits ) - 3 ) : '';
 		return implode( ', ', $names ) . $more;
 	}
 }

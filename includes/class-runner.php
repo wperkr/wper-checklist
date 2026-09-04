@@ -36,13 +36,116 @@ function wper_checklist_item( string $key, string $cat, string $label, string $s
 
 final class WPER_Checklist_Runner {
 
-	const CATS = [
-		'latency' => '응답 속도',
-		'db'      => 'DB 쿼리',
-		'seo'     => 'SEO',
-		'vuln'    => 'WP 취약점',
-		'server'  => '서버 설정',
-	];
+	/**
+	 * 카테고리 키 목록 — 순서가 곧 보고서 · 진행 UI 의 표시 순서다.
+	 *
+	 * ⚠ 라벨을 상수에 두지 않는다. PHP 상수는 함수 호출을 담을 수 없어 `__()` 가
+	 *   불가능하고, 상수에 한국어를 박으면 그 순간 언어팩 밖으로 문자열이 새어 나간다.
+	 *   라벨은 cat_labels() 가 소유한다.
+	 */
+	const CAT_KEYS = [ 'latency', 'db', 'seo', 'vuln', 'server' ];
+
+	/**
+	 * 카테고리 라벨 (현재 로케일).
+	 *
+	 * @return array<string,string>
+	 */
+	public static function cat_labels(): array {
+		return [
+			'latency' => __( 'Response time', 'wper-checklist' ),
+			'db'      => __( 'Database queries', 'wper-checklist' ),
+			'seo'     => __( 'SEO', 'wper-checklist' ),
+			'vuln'    => __( 'WordPress vulnerabilities', 'wper-checklist' ),
+			'server'  => __( 'Server configuration', 'wper-checklist' ),
+		];
+	}
+
+	/**
+	 * 검사 항목 라벨 — 항목 키(ASCII) → 현재 로케일 라벨.
+	 *
+	 * ⭐ 보고서는 **저장된 라벨이 아니라 이 표**로 그린다. 진단 결과는 실행 시점의
+	 *    언어로 DB 에 남는데, 그것을 그대로 출력하면 로케일을 바꾼 사이트에서
+	 *    "머리말은 영어인데 항목명만 한국어" 인 화면이 된다. 키는 ASCII 로 불변이므로
+	 *    과거 기록도 현재 언어로 다시 그려진다.
+	 *
+	 * @return array<string,string>
+	 */
+	public static function item_labels(): array {
+		return [
+			// latency
+			'latency:home'        => __( 'Landing response time', 'wper-checklist' ),
+			'latency:archive'     => __( 'Archive response time', 'wper-checklist' ),
+			'latency:single'      => __( 'Post response time', 'wper-checklist' ),
+			'latency:page'        => __( 'Page response time', 'wper-checklist' ),
+			'latency:product'     => __( 'Product/service response time', 'wper-checklist' ),
+			'latency:stability'   => __( 'Response time stability', 'wper-checklist' ),
+			'latency:size'        => __( 'Landing HTML size', 'wper-checklist' ),
+			'latency:redirects'   => __( 'No redirect chain', 'wper-checklist' ),
+
+			// db
+			'db:home'             => __( 'Landing query count', 'wper-checklist' ),
+			'db:single'           => __( 'Post query count', 'wper-checklist' ),
+			'db:archive'          => __( 'Archive query count', 'wper-checklist' ),
+			'db:time'             => __( 'Landing database time', 'wper-checklist' ),
+			'db:slow'             => __( 'Slow queries (>20ms)', 'wper-checklist' ),
+			'db:dupes'            => __( 'Duplicate queries (N+1)', 'wper-checklist' ),
+			'db:objcache'         => __( 'Object cache', 'wper-checklist' ),
+
+			// seo
+			'seo:title'           => __( 'Document title', 'wper-checklist' ),
+			'seo:description'     => __( 'Meta description', 'wper-checklist' ),
+			'seo:h1'              => __( 'Single h1', 'wper-checklist' ),
+			'seo:indexable'       => __( 'Indexable', 'wper-checklist' ),
+			'seo:canonical'       => __( 'Canonical URL', 'wper-checklist' ),
+			'seo:lang'            => __( 'html lang attribute', 'wper-checklist' ),
+			'seo:viewport'        => __( 'viewport meta tag', 'wper-checklist' ),
+			'seo:alt'             => __( 'Image alt text', 'wper-checklist' ),
+			'seo:linktext'        => __( 'Descriptive link text', 'wper-checklist' ),
+			'seo:jsonld'          => __( 'Structured data (JSON-LD)', 'wper-checklist' ),
+			'seo:hreflang'        => __( 'hreflang', 'wper-checklist' ),
+			'seo:og'              => __( 'Open Graph tags', 'wper-checklist' ),
+			'seo:https'           => __( 'HTTPS / mixed content', 'wper-checklist' ),
+			'seo:sitemap'         => __( 'Sitemap reachable', 'wper-checklist' ),
+
+			// vuln
+			'vuln:core'           => __( 'WordPress core vulnerabilities', 'wper-checklist' ),
+			'vuln:core-latest'    => __( 'Core up to date', 'wper-checklist' ),
+			'vuln:plugins'        => __( 'Plugin vulnerabilities', 'wper-checklist' ),
+			'vuln:plugin-updates' => __( 'Plugin updates', 'wper-checklist' ),
+			'vuln:themes'         => __( 'Theme vulnerabilities', 'wper-checklist' ),
+			'vuln:theme-updates'  => __( 'Theme updates', 'wper-checklist' ),
+			'vuln:js'             => __( 'Front-end JS libraries', 'wper-checklist' ),
+			'vuln:author'         => __( 'Author enumeration blocked', 'wper-checklist' ),
+			'vuln:xmlrpc'         => __( 'xmlrpc.php blocked', 'wper-checklist' ),
+			'vuln:users'          => __( 'REST user list blocked', 'wper-checklist' ),
+
+			// server
+			'server:php-version'      => __( 'PHP version supported', 'wper-checklist' ),
+			'server:expose-php'       => __( 'expose_php off', 'wper-checklist' ),
+			'server:disable-functions' => __( 'Shell functions disabled', 'wper-checklist' ),
+			'server:curl-alive'       => __( 'curl_exec available', 'wper-checklist' ),
+			'server:url-fopen'        => __( 'allow_url_fopen off', 'wper-checklist' ),
+			'server:display-errors'   => __( 'display_errors off', 'wper-checklist' ),
+			'server:open-basedir'     => __( 'open_basedir set', 'wper-checklist' ),
+			'server:wp-debug'         => __( 'WP_DEBUG off', 'wper-checklist' ),
+			'server:file-edit'        => __( 'DISALLOW_FILE_EDIT on', 'wper-checklist' ),
+			'server:db-charset'       => __( 'DB_CHARSET utf8mb4', 'wper-checklist' ),
+			'server:sec-headers'      => __( 'Security response headers', 'wper-checklist' ),
+			'server:tokens'           => __( 'Server version hidden', 'wper-checklist' ),
+			'server:https'            => __( 'HTTPS enforced', 'wper-checklist' ),
+			'server:files'            => __( 'Sensitive paths blocked', 'wper-checklist' ),
+			'server:db-vars'          => __( 'Database server settings', 'wper-checklist' ),
+		];
+	}
+
+	/**
+	 * 항목 라벨 조회 — 표에 없으면 저장된 라벨로 폴백한다 (구버전 기록 호환).
+	 */
+	public static function item_label( string $key, string $stored = '' ): string {
+		$labels = self::item_labels();
+
+		return $labels[ $key ] ?? $stored;
+	}
 
 	/**
 	 * 진단 시작 — URL 샘플링 · 매니페스트 · 토큰 발급.
@@ -54,7 +157,7 @@ final class WPER_Checklist_Runner {
 		$run_id = WPER_Checklist_Store::create( [ 'urls' => $urls, 'manifest' => wp_list_pluck( $manifest, 'step' ) ] );
 
 		if ( ! $run_id ) {
-			return [ 'error' => '진단 레코드 생성 실패' ];
+			return [ 'error' => __( 'Could not create the diagnostic record.', 'wper-checklist' ) ];
 		}
 
 		WPER_Checklist_Capture::mint( $run_id );
@@ -70,7 +173,8 @@ final class WPER_Checklist_Runner {
 		$results = WPER_Checklist_Store::results( $run_id );
 
 		if ( empty( $context['manifest'] ) || ! in_array( $step_id, $context['manifest'], true ) ) {
-			return [ 'error' => '알 수 없는 스텝: ' . $step_id ];
+			/* translators: %s: diagnostic step id. */
+			return [ 'error' => sprintf( __( 'Unknown step: %s', 'wper-checklist' ), $step_id ) ];
 		}
 
 		$token = get_transient( WPER_Checklist_Capture::TOKEN_OPT );
@@ -84,7 +188,8 @@ final class WPER_Checklist_Runner {
 
 		$class = self::dispatch_class( $step_id );
 		if ( null === $class ) {
-			return [ 'error' => '핸들러 없음: ' . $step_id ];
+			/* translators: %s: diagnostic step id. */
+			return [ 'error' => sprintf( __( 'No handler for step: %s', 'wper-checklist' ), $step_id ) ];
 		}
 
 		$out = $class::run( $step_id, $ctx );
@@ -122,7 +227,7 @@ final class WPER_Checklist_Runner {
 	 */
 	public static function score( array $items ): array {
 		$cats = [];
-		foreach ( array_keys( self::CATS ) as $cat ) {
+		foreach ( self::CAT_KEYS as $cat ) {
 			$cats[ $cat ] = [ 'earned' => 0.0, 'possible' => 0.0, 'score' => 0, 'counts' => [ 'pass' => 0, 'warn' => 0, 'fail' => 0, 'skip' => 0 ] ];
 		}
 
@@ -232,28 +337,28 @@ final class WPER_Checklist_Runner {
 	 */
 	private static function manifest( array $urls ): array {
 		$steps = [
-			[ 'step' => 'latency:home', 'cat' => 'latency', 'label' => '랜딩 응답 측정 (3회)' ],
-			[ 'step' => 'latency:archive', 'cat' => 'latency', 'label' => '아카이브 응답 측정' ],
-			[ 'step' => 'latency:single', 'cat' => 'latency', 'label' => '글 페이지 응답 측정' ],
-			[ 'step' => 'latency:page', 'cat' => 'latency', 'label' => '고정 페이지 응답 측정' ],
-			[ 'step' => 'latency:product', 'cat' => 'latency', 'label' => '상품·서비스 응답 측정' ],
-			[ 'step' => 'latency:redirects', 'cat' => 'latency', 'label' => '리다이렉트 체인 검사' ],
-			[ 'step' => 'db:home', 'cat' => 'db', 'label' => '랜딩 쿼리 캡처 (3회)' ],
-			[ 'step' => 'db:single', 'cat' => 'db', 'label' => '글 페이지 쿼리 캡처' ],
-			[ 'step' => 'db:archive', 'cat' => 'db', 'label' => '아카이브 쿼리 캡처' ],
-			[ 'step' => 'db:analyze', 'cat' => 'db', 'label' => '쿼리 패턴 분석' ],
-			[ 'step' => 'seo:landing', 'cat' => 'seo', 'label' => '랜딩 SEO 분석' ],
-			[ 'step' => 'seo:site', 'cat' => 'seo', 'label' => 'robots.txt · 사이트맵' ],
-			[ 'step' => 'vuln:core', 'cat' => 'vuln', 'label' => '코어 취약점 조회' ],
-			[ 'step' => 'vuln:plugins', 'cat' => 'vuln', 'label' => '플러그인 취약점 조회', 'total' => max( 1, count( (array) get_option( 'active_plugins', [] ) ) ) ],
-			[ 'step' => 'vuln:themes', 'cat' => 'vuln', 'label' => '테마 취약점 조회' ],
-			[ 'step' => 'vuln:js', 'cat' => 'vuln', 'label' => '프론트 JS 라이브러리' ],
-			[ 'step' => 'vuln:probes', 'cat' => 'vuln', 'label' => '노출면 프로브' ],
-			[ 'step' => 'server:php', 'cat' => 'server', 'label' => 'PHP 설정 검사' ],
-			[ 'step' => 'server:wp', 'cat' => 'server', 'label' => 'wp-config 검사' ],
-			[ 'step' => 'server:headers', 'cat' => 'server', 'label' => '보안 응답 헤더' ],
-			[ 'step' => 'server:files', 'cat' => 'server', 'label' => '민감 경로 프로브' ],
-			[ 'step' => 'server:db', 'cat' => 'server', 'label' => 'DB 서버 변수' ],
+			[ 'step' => 'latency:home', 'cat' => 'latency', 'label' => __( 'Measuring landing response (3 runs)', 'wper-checklist' ) ],
+			[ 'step' => 'latency:archive', 'cat' => 'latency', 'label' => __( 'Measuring archive response', 'wper-checklist' ) ],
+			[ 'step' => 'latency:single', 'cat' => 'latency', 'label' => __( 'Measuring post response', 'wper-checklist' ) ],
+			[ 'step' => 'latency:page', 'cat' => 'latency', 'label' => __( 'Measuring page response', 'wper-checklist' ) ],
+			[ 'step' => 'latency:product', 'cat' => 'latency', 'label' => __( 'Measuring product/service response', 'wper-checklist' ) ],
+			[ 'step' => 'latency:redirects', 'cat' => 'latency', 'label' => __( 'Checking redirect chains', 'wper-checklist' ) ],
+			[ 'step' => 'db:home', 'cat' => 'db', 'label' => __( 'Capturing landing queries (3 runs)', 'wper-checklist' ) ],
+			[ 'step' => 'db:single', 'cat' => 'db', 'label' => __( 'Capturing post queries', 'wper-checklist' ) ],
+			[ 'step' => 'db:archive', 'cat' => 'db', 'label' => __( 'Capturing archive queries', 'wper-checklist' ) ],
+			[ 'step' => 'db:analyze', 'cat' => 'db', 'label' => __( 'Analyzing query patterns', 'wper-checklist' ) ],
+			[ 'step' => 'seo:landing', 'cat' => 'seo', 'label' => __( 'Analyzing landing SEO', 'wper-checklist' ) ],
+			[ 'step' => 'seo:site', 'cat' => 'seo', 'label' => __( 'robots.txt · sitemap', 'wper-checklist' ) ],
+			[ 'step' => 'vuln:core', 'cat' => 'vuln', 'label' => __( 'Looking up core vulnerabilities', 'wper-checklist' ) ],
+			[ 'step' => 'vuln:plugins', 'cat' => 'vuln', 'label' => __( 'Looking up plugin vulnerabilities', 'wper-checklist' ), 'total' => max( 1, count( (array) get_option( 'active_plugins', [] ) ) ) ],
+			[ 'step' => 'vuln:themes', 'cat' => 'vuln', 'label' => __( 'Looking up theme vulnerabilities', 'wper-checklist' ) ],
+			[ 'step' => 'vuln:js', 'cat' => 'vuln', 'label' => __( 'Front-end JS libraries', 'wper-checklist' ) ],
+			[ 'step' => 'vuln:probes', 'cat' => 'vuln', 'label' => __( 'Exposure probes', 'wper-checklist' ) ],
+			[ 'step' => 'server:php', 'cat' => 'server', 'label' => __( 'Checking PHP settings', 'wper-checklist' ) ],
+			[ 'step' => 'server:wp', 'cat' => 'server', 'label' => __( 'Checking wp-config', 'wper-checklist' ) ],
+			[ 'step' => 'server:headers', 'cat' => 'server', 'label' => __( 'Security response headers', 'wper-checklist' ) ],
+			[ 'step' => 'server:files', 'cat' => 'server', 'label' => __( 'Sensitive path probes', 'wper-checklist' ) ],
+			[ 'step' => 'server:db', 'cat' => 'server', 'label' => __( 'Database server variables', 'wper-checklist' ) ],
 		];
 
 		return $steps;

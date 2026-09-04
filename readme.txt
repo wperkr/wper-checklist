@@ -4,42 +4,58 @@ Tags: health check, performance, seo, security, diagnostics
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPL-3.0
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-워드프레스 사이트 건강 진단 — 응답 속도 · DB 쿼리 · SEO · 취약점 · 서버 설정을 검사해 1000점 만점 리포트를 만듭니다.
+WordPress site health diagnostics — response time, database queries, SEO, vulnerabilities and server configuration, scored out of 1000.
 
 == Description ==
 
-관리자 메뉴 **WPER › 사이트 진단** 에서 버튼 하나로 5개 영역을 검사합니다. (wper 계열 플러그인은 공용 WPER 대메뉴 아래에 모입니다)
+From **WPER › Site health** in the admin menu, one button checks five areas. (WPER plugins gather under a shared WPER top-level menu.)
 
-* **응답 속도** — 랜딩 · 아카이브 · 글 · 고정 페이지를 3회 측정해 중앙값으로 판정 (단발 수치를 쓰지 않습니다)
-* **DB 쿼리** — 비캐시 경로의 쿼리 수 · DB 시간 · 슬로/중복 쿼리 · 오브젝트 캐시
-* **SEO** — Lighthouse SEO 감사에 준하는 정적 HTML 분석 (title · description · canonical · 구조화 데이터 · 사이트맵 등 14항목)
-* **WP 취약점** — 코어 · 플러그인 · 테마의 알려진 CVE(wpvulnerability.net) + 프론트 JS 라이브러리 + 노출면 프로브
-* **서버 설정** — PHP · wp-config · 보안 헤더 · 민감 경로 · DB 변수
+* **Response time** — landing, archive, post and page measured three times, judged on the median (never a single reading)
+* **Database queries** — query count, database time, slow and duplicate queries, object cache, on the uncached path
+* **SEO** — 14 static HTML checks in the spirit of a Lighthouse SEO audit (title, description, canonical, structured data, sitemap and more)
+* **WordPress vulnerabilities** — known CVEs for core, plugins and themes (wpvulnerability.net) plus front-end JS libraries and exposure probes
+* **Server configuration** — PHP, wp-config, security headers, sensitive paths, database variables
 
-총점 1000점. **측정하지 못한 항목은 "확인 불가" 로 표기하고 점수 분모에서 제외합니다** — 측정하지 않은 것을 통과나 실패로 표기하지 않습니다.
+Scored out of 1000. **Anything that could not be measured is reported as "unverifiable" and dropped from the score denominator** — an unmeasured item is never reported as a pass or a failure.
 
-**[WPER Recommendation (번역 적용)]** 버튼으로 실패 항목마다 원인·해결 문안이 담긴 상세 보고서를 열 수 있고, 보고서는 한국어/영어로 전환됩니다.
+The **[WPER Recommendation]** button expands a detailed report with a written cause and fix for every failing item.
 
 WP-CLI: `wp wper checklist run [--format=json]`, `wp wper checklist history`
 
-== 요구 사항 ==
+== Languages ==
 
-* PHP 8.1 이상
-* 진단은 자기 사이트로의 루프백 HTTP 요청을 사용합니다 — **PHP-FPM 워커가 2개 이상**이어야 합니다 (`pm.max_children >= 2`). 워커가 1개면 진단 요청이 자기 자신을 기다리다 타임아웃됩니다
-* nginx FastCGI 캐시를 쓰는 경우 `wper-checklist/v1` REST 경로를 캐시 우회 목록에 넣어 주세요
-* 취약점 조회는 wpvulnerability.net 무료 API 를 사용합니다 (키 불요). 외부 통신이 차단된 환경에서는 해당 항목이 "확인 불가" 로 표기됩니다
+The plugin ships a standard gettext language pack and **follows the site (or user) locale — there is no language switch to set**.
 
-== 개인정보 ==
+* Source strings are English; `languages/wper-checklist-ko_KR.mo` supplies Korean
+* Bundled: Korean (ko_KR) and English (en_US), plus `wper-checklist.pot` for new translations
+* Because it is a normal text domain, translation tools such as Loco Translate, Poedit and Weglot work without any extra setup — add a `.po`/`.mo` pair for your locale and it is picked up
 
-* 진단 결과는 사이트 DB 에만 저장됩니다 (최근 20건)
-* 외부로 전송되는 것은 wpvulnerability.net 에 대한 슬러그·버전 조회뿐입니다
-* DB 캡처는 쿼리 **개수와 시간만** 응답 헤더로 전달하며 SQL 원문은 네트워크로 내보내지 않습니다
+A note on stored reports: item labels are re-rendered from a stable key, so past runs display in your current language. The measured values (`574ms (median of 3 · HTTP 200)`) are composed at scan time and stay in the language the scan ran in — they are a record of what was observed then, not a re-translatable phrase.
+
+== Requirements ==
+
+* PHP 8.1 or newer
+* Diagnostics use loopback HTTP requests to your own site, so **PHP-FPM needs at least 2 workers** (`pm.max_children >= 2`). With a single worker the request waits on itself and times out
+* If you run an nginx FastCGI cache, add the `wper-checklist/v1` REST path to the cache bypass rules
+* Vulnerability lookups use the free wpvulnerability.net API (no key required). Where outbound requests are blocked, those items are reported as "unverifiable"
+
+== Privacy ==
+
+* Diagnostic results are stored only in your own site database (the most recent 20 runs)
+* The only outbound data is the slug and version sent to wpvulnerability.net for vulnerability lookups
+* The database capture reports **query counts and timings only** — SQL text never leaves the server
 
 == Changelog ==
 
+= 1.1.0 =
+* Replaced the bundled custom translation layer with a standard gettext language pack (`.pot` / `.po` / `.mo`), so the plugin now works with Loco Translate, Poedit, Weglot and any normal WordPress translation workflow
+* Removed the KO/EN report toggle — the report now follows the site locale, and the button reads simply **WPER Recommendation**
+* Source strings are English; Korean (ko_KR) and English (en_US) packs are bundled
+* Item labels in stored reports are re-rendered from their key, so past runs display in the current language
+
 = 1.0.0 =
-* 최초 릴리스 — 5개 영역 · 1000점 진단 · ko/en 보고서
+* First release — five areas, 1000-point diagnostics, Korean/English report

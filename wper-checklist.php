@@ -2,24 +2,42 @@
 /**
  * Plugin Name: WPER Checklist
  * Plugin URI: https://github.com/wperkr/wper-checklist
- * Description: 워드프레스 사이트 건강 진단 — 지연시간 · DB 쿼리 · SEO · 취약점 · 서버 설정을 검사해 1000점 만점 리포트를 만듭니다.
- * Version: 1.0.0
+ * Description: WordPress site health diagnostics — checks response time, database queries, SEO, vulnerabilities and server configuration, and produces a report scored out of 1000.
+ * Version: 1.1.0
+ * Requires at least: 6.0
  * Requires PHP: 8.1
  * Author: WPER
  * Author URI: https://wper.kr
  * License: GPL-3.0
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: wper-checklist
+ * Domain Path: /languages
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
 }
 
-define( 'WPER_CHECKLIST_VERSION', '1.0.0' );
+define( 'WPER_CHECKLIST_VERSION', '1.1.0' );
 define( 'WPER_CHECKLIST_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WPER_CHECKLIST_URL', plugin_dir_url( __FILE__ ) );
 
-require_once WPER_CHECKLIST_PATH . 'includes/i18n.php';
+/**
+ * 언어팩 로드 (1.1.0 — 자체 카탈로그 + KO/EN 토글을 표준 gettext 로 교체).
+ *
+ * ⭐ 소스 문자열은 **영어**이고 한국어는 `languages/wper-checklist-ko_KR.mo` 가 준다.
+ *    화면 언어를 정하는 것은 요청 파라미터가 아니라 **사이트/사용자 로케일**이다 —
+ *    관리자가 언어를 고르는 토글이 없어야 Weglot · Loco Translate · translate.w.org
+ *    같은 표준 도구가 그대로 붙는다.
+ *
+ * ⚠ `init` 보다 이르게 부르지 않는다 — 그보다 이른 시점에는 로케일이 확정되지 않아
+ *    번역이 조용히 빠진다.
+ */
+function wper_checklist_load_textdomain() {
+	load_plugin_textdomain( 'wper-checklist', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+}
+add_action( 'init', 'wper_checklist_load_textdomain' );
+
 require_once WPER_CHECKLIST_PATH . 'includes/class-capture.php';
 
 /*

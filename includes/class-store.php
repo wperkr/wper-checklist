@@ -23,8 +23,8 @@ final class WPER_Checklist_Store {
 			self::CPT,
 			[
 				'labels'              => [
-					'name'          => '사이트 진단',
-					'singular_name' => '진단',
+					'name'          => __( 'Site diagnostics', 'wper-checklist' ),
+					'singular_name' => __( 'Diagnostic run', 'wper-checklist' ),
 				],
 				'public'              => false,
 				'show_ui'             => false,
@@ -47,7 +47,8 @@ final class WPER_Checklist_Store {
 			[
 				'post_type'   => self::CPT,
 				'post_status' => 'private',
-				'post_title'  => '진단 ' . wp_date( 'Y-m-d H:i' ),
+				/* translators: %s: run timestamp. */
+				'post_title'  => sprintf( __( 'Diagnostics %s', 'wper-checklist' ), wp_date( 'Y-m-d H:i' ) ),
 			],
 			true
 		);

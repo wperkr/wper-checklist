@@ -1,0 +1,1816 @@
+# Copyright (C) 2026 WPER
+# This file is distributed under the GPL-3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: WPER Checklist 1.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wper-checklist\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-09-04T13:59:20+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: wper-checklist\n"
+
+#. Plugin Name of the plugin
+#: wper-checklist.php
+#: includes/class-admin.php:27
+#: includes/class-admin.php:73
+msgid "WPER Checklist"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: wper-checklist.php
+msgid "https://github.com/wperkr/wper-checklist"
+msgstr ""
+
+#. Description of the plugin
+#: wper-checklist.php
+msgid "WordPress site health diagnostics — checks response time, database queries, SEO, vulnerabilities and server configuration, and produces a report scored out of 1000."
+msgstr ""
+
+#. Author of the plugin
+#: wper-checklist.php
+msgid "WPER"
+msgstr ""
+
+#. Author URI of the plugin
+#: wper-checklist.php
+msgid "https://wper.kr"
+msgstr ""
+
+#: data/js-vulns.php:26
+msgid "CVE-2013-4383 family"
+msgstr ""
+
+#: data/js-vulns.php:51
+msgid "CVE-2024-6783 family"
+msgstr ""
+
+#: data/recommendations.php:16
+msgid "The landing page is likely executing PHP and DB queries on every request — there is no page cache (e.g. nginx FastCGI) or its miss rate is high."
+msgstr ""
+
+#: data/recommendations.php:17
+msgid "Enable a server-layer page cache (nginx FastCGI cache) together with an object cache (Redis) and OPcache. Avoid stacking cache plugins."
+msgstr ""
+
+#: data/recommendations.php:20
+msgid "Archive listing queries are heavy and slow down easily without caching."
+msgstr ""
+
+#: data/recommendations.php:21
+msgid "Include archives in the page cache scope and verify listing queries use indexes."
+msgstr ""
+
+#: data/recommendations.php:24
+msgid "Post rendering is uncached, or related-post/widget queries are heavy."
+msgstr ""
+
+#: data/recommendations.php:25
+msgid "Apply page caching and audit the query cost of related-post plugins and sidebar widgets."
+msgstr ""
+
+#: data/recommendations.php:28
+msgid "Static pages are rendered on every request without caching."
+msgstr ""
+
+#: data/recommendations.php:29
+msgid "Check the page cache coverage."
+msgstr ""
+
+#: data/recommendations.php:32
+msgid "Product/service pages tend to be excluded from caching due to dynamic elements."
+msgstr ""
+
+#: data/recommendations.php:33
+msgid "Exclude only personalized fragments (cart etc.) and cache the rest."
+msgstr ""
+
+#: data/recommendations.php:36
+msgid "Measurements vary widely — fluctuating server load, cache-miss mixing, or resource contention is suspected."
+msgstr ""
+
+#: data/recommendations.php:37
+msgid "Re-measure during low traffic; if the spread persists, inspect server resources (CPU/memory) and co-hosted workloads."
+msgstr ""
+
+#: data/recommendations.php:40
+msgid "The HTML payload is large — excessive inline CSS/JS or page-builder markup bloat are the usual causes."
+msgstr ""
+
+#: data/recommendations.php:41
+msgid "Move unnecessary inline assets to external files and verify gzip/brotli compression."
+msgstr ""
+
+#: data/recommendations.php:44
+msgid "Every redirect hop adds a round trip and increases perceived latency."
+msgstr ""
+
+#: data/recommendations.php:45
+msgid "Point internal links and canonicals at the final URL (www vs non-www, trailing slash)."
+msgstr ""
+
+#: data/recommendations.php:50
+msgid "Too many queries for one landing view — widget, menu, and option lookups are likely repeating uncached."
+msgstr ""
+
+#: data/recommendations.php:51
+msgid "Introduce a Redis object cache and use Query Monitor to find and reduce hotspots."
+msgstr ""
+
+#: data/recommendations.php:54
+msgid "Post pages issue many queries — related-post, view-counter, and comment plugins are common causes."
+msgstr ""
+
+#: data/recommendations.php:55
+msgid "Attribute queries per plugin and wrap cacheable lookups in transients."
+msgstr ""
+
+#: data/recommendations.php:58
+msgid "The archive loop may run extra queries per post (N+1)."
+msgstr ""
+
+#: data/recommendations.php:59
+msgid "Check update_post_meta_cache / update_post_term_cache and per-item lookups inside the loop."
+msgstr ""
+
+#: data/recommendations.php:62
+msgid "DB time is high — slow queries or latency on the DB server itself."
+msgstr ""
+
+#: data/recommendations.php:63
+msgid "Enable the slow query log to pinpoint offenders, then tune indexes and buffer pool size."
+msgstr ""
+
+#: data/recommendations.php:66
+msgid "Queries exceed 20ms — index misses or full scans on large tables are suspected."
+msgstr ""
+
+#: data/recommendations.php:67
+msgid "Inspect the plan with EXPLAIN and add the missing indexes."
+msgstr ""
+
+#: data/recommendations.php:70
+msgid "Identically-shaped queries repeat within one request — per-item lookups inside a loop (N+1)."
+msgstr ""
+
+#: data/recommendations.php:71
+msgid "Batch the repeated lookups or absorb them with the object cache."
+msgstr ""
+
+#: data/recommendations.php:74
+msgid "Without an external object cache, repeated queries hit the DB every time."
+msgstr ""
+
+#: data/recommendations.php:75
+msgid "Run a Redis server and enable the drop-in via the redis-cache plugin (wp redis enable)."
+msgstr ""
+
+#: data/recommendations.php:80
+msgid "The document title is missing or outside the recommended 10–60 characters — search results truncate or ignore it."
+msgstr ""
+
+#: data/recommendations.php:81
+msgid "Configure title templates in your SEO plugin (e.g. Rank Math)."
+msgstr ""
+
+#: data/recommendations.php:84
+msgid "Without a meta description, search engines excerpt arbitrarily — you lose control of the click-through pitch."
+msgstr ""
+
+#: data/recommendations.php:85
+msgid "Write 50–160 character summaries yourself, starting with key pages."
+msgstr ""
+
+#: data/recommendations.php:88
+msgid "A missing or duplicated H1 blurs the page topic signal."
+msgstr ""
+
+#: data/recommendations.php:89
+msgid "Keep one H1 per page and demote the rest to H2 and below."
+msgstr ""
+
+#: data/recommendations.php:92
+msgid "The landing page is blocked by noindex or robots.txt — it cannot appear in search at all."
+msgstr ""
+
+#: data/recommendations.php:93
+msgid "If unintended, check Settings › Reading discourage-search option and your SEO plugin robots settings."
+msgstr ""
+
+#: data/recommendations.php:96
+msgid "A missing or off-target canonical causes duplicate-content judgments and diluted authority."
+msgstr ""
+
+#: data/recommendations.php:97
+msgid "Verify your SEO plugin outputs a self-referential canonical."
+msgstr ""
+
+#: data/recommendations.php:100
+msgid "Without html lang, search engines and screen readers must guess the language."
+msgstr ""
+
+#: data/recommendations.php:101
+msgid "Check the theme outputs <html <?php language_attributes(); ?>>."
+msgstr ""
+
+#: data/recommendations.php:104
+msgid "Without a viewport meta the desktop layout renders shrunken on mobile — failing mobile-friendliness."
+msgstr ""
+
+#: data/recommendations.php:105
+msgid "Add the standard viewport meta to the theme head."
+msgstr ""
+
+#: data/recommendations.php:108
+msgid "Images without alt are excluded from image search and cost accessibility points."
+msgstr ""
+
+#: data/recommendations.php:109
+msgid "Fill in alt text starting with meaningful images in the media library. Decorative images should carry an empty alt=\"\"."
+msgstr ""
+
+#: data/recommendations.php:112
+msgid "Links without text tell crawlers and screen readers nothing about the destination."
+msgstr ""
+
+#: data/recommendations.php:113
+msgid "Give icon links an aria-label or visually hidden text."
+msgstr ""
+
+#: data/recommendations.php:116
+msgid "Without structured data the site is excluded from rich results (FAQ, ratings, breadcrumbs)."
+msgstr ""
+
+#: data/recommendations.php:117
+msgid "Enable your SEO plugin schema features and emit Article, FAQPage, BreadcrumbList."
+msgstr ""
+
+#: data/recommendations.php:120
+msgid "If you have multilingual pages without hreflang, the wrong language version may surface."
+msgstr ""
+
+#: data/recommendations.php:121
+msgid "No action needed for single-language sites. For multilingual sites, declare reciprocal alternates plus x-default."
+msgstr ""
+
+#: data/recommendations.php:124
+msgid "Without OG meta, shares on social media pick arbitrary titles and images."
+msgstr ""
+
+#: data/recommendations.php:125
+msgid "Enable social meta output in your SEO plugin and set a default image."
+msgstr ""
+
+#: data/recommendations.php:128
+msgid "An http site — or https pages referencing http assets — triggers browser warnings and ranking penalties."
+msgstr ""
+
+#: data/recommendations.php:129
+msgid "Install a TLS certificate and bulk-replace http:// references in the DB (wp search-replace)."
+msgstr ""
+
+#: data/recommendations.php:132
+msgid "A missing sitemap (or one absent from robots.txt) slows discovery of new content."
+msgstr ""
+
+#: data/recommendations.php:133
+msgid "Enable the SEO plugin sitemap, add a Sitemap: line to robots.txt, and submit it to Search Console."
+msgstr ""
+
+#: data/recommendations.php:138
+msgid "Your core version has published vulnerabilities — public CVEs are the first target of automated scanners."
+msgstr ""
+
+#: data/recommendations.php:139
+msgid "Update core immediately after staging verification. Mitigate with WAF rules until then."
+msgstr ""
+
+#: data/recommendations.php:142
+msgid "Core is outdated — the version is public, making known flaws targetable."
+msgstr ""
+
+#: data/recommendations.php:143
+msgid "Back up, then update to the latest version."
+msgstr ""
+
+#: data/recommendations.php:146
+msgid "A plugin with known vulnerabilities is active — the most common WordPress breach entry point."
+msgstr ""
+
+#: data/recommendations.php:147
+msgid "Update it immediately; if no fixed release exists, deactivate and find a replacement."
+msgstr ""
+
+#: data/recommendations.php:150
+msgid "For outdated plugins, the published changelog doubles as an attack manual."
+msgstr ""
+
+#: data/recommendations.php:151
+msgid "Establish a recurring update routine: verify on staging, then roll to production."
+msgstr ""
+
+#: data/recommendations.php:154
+msgid "The theme has known vulnerabilities."
+msgstr ""
+
+#: data/recommendations.php:155
+msgid "Update the theme, or if it is abandoned, consider switching to a maintained one."
+msgstr ""
+
+#: data/recommendations.php:158
+msgid "Theme updates are pending."
+msgstr ""
+
+#: data/recommendations.php:159
+msgid "Keeping customizations in a child theme lets you update the parent safely."
+msgstr ""
+
+#: data/recommendations.php:162
+msgid "A front-end JS library with known vulnerabilities (XSS etc.) is being loaded."
+msgstr ""
+
+#: data/recommendations.php:163
+msgid "Update the theme/plugin loading it. Core-bundled jQuery is fixed by updating core."
+msgstr ""
+
+#: data/recommendations.php:166
+msgid "?author=N redirects hand out login usernames — giving attackers half of a brute-force pair for free."
+msgstr ""
+
+#: data/recommendations.php:167
+msgid "Block author-scan redirects at the web server or via security configuration."
+msgstr ""
+
+#: data/recommendations.php:170
+msgid "xmlrpc.php enables amplified login attempts (system.multicall) and pingback DDoS."
+msgstr ""
+
+#: data/recommendations.php:171
+msgid "If no app depends on it, block xmlrpc.php at the web server."
+msgstr ""
+
+#: data/recommendations.php:174
+msgid "The REST users endpoint is open to unauthenticated requests, enumerating login names."
+msgstr ""
+
+#: data/recommendations.php:175
+msgid "Block unauthenticated /wp-json/wp/v2/users at the web server or require authentication."
+msgstr ""
+
+#: data/recommendations.php:180
+msgid "PHP past (or near) end of security support receives no fixes for new vulnerabilities."
+msgstr ""
+
+#: data/recommendations.php:181
+msgid "Upgrade to a supported PHP branch. Verify compatibility on staging first."
+msgstr ""
+
+#: data/recommendations.php:184
+msgid "X-Powered-By exposes the PHP version, inviting version-specific attacks."
+msgstr ""
+
+#: data/recommendations.php:185
+msgid "Set expose_php = Off in php.ini."
+msgstr ""
+
+#: data/recommendations.php:188
+msgid "With shell-execution functions open, one code injection becomes full server takeover."
+msgstr ""
+
+#: data/recommendations.php:189
+msgid "Add exec, shell_exec, system, passthru, proc_open, popen to disable_functions in php.ini."
+msgstr ""
+
+#: data/recommendations.php:192
+msgid "Disabling curl_exec kills all WordPress outbound HTTP (core updates, plugin installs, external APIs) — the classic copy-pasted-blocklist accident."
+msgstr ""
+
+#: data/recommendations.php:193
+msgid "Remove curl_exec from disable_functions."
+msgstr ""
+
+#: data/recommendations.php:196
+msgid "With allow_url_fopen on, file functions can open remote URLs, widening the remote-inclusion attack surface."
+msgstr ""
+
+#: data/recommendations.php:197
+msgid "Set allow_url_fopen = Off in php.ini. WordPress uses cURL, so nothing breaks."
+msgstr ""
+
+#: data/recommendations.php:200
+msgid "Error messages shown to visitors leak paths, queries, and internal structure."
+msgstr ""
+
+#: data/recommendations.php:201
+msgid "Set display_errors = Off and keep log_errors writing to a file instead."
+msgstr ""
+
+#: data/recommendations.php:204
+msgid "Without a path restriction, compromised PHP can reach files across the whole server."
+msgstr ""
+
+#: data/recommendations.php:205
+msgid "Restrict open_basedir to the document root plus the temp directory."
+msgstr ""
+
+#: data/recommendations.php:208
+msgid "WP_DEBUG in production can expose errors to visitors."
+msgstr ""
+
+#: data/recommendations.php:209
+msgid "Keep WP_DEBUG false; if you need logs, enable only WP_DEBUG_LOG and keep WP_DEBUG_DISPLAY always false."
+msgstr ""
+
+#: data/recommendations.php:212
+msgid "The built-in theme/plugin editor is the shortest path to a web shell once an admin account is stolen."
+msgstr ""
+
+#: data/recommendations.php:213
+msgid "Add define( 'DISALLOW_FILE_EDIT', true ) to wp-config.php."
+msgstr ""
+
+#: data/recommendations.php:216
+msgid "utf8 (3-byte) silently loses emoji and some CJK characters."
+msgstr ""
+
+#: data/recommendations.php:217
+msgid "Switch DB_CHARSET to utf8mb4 and convert existing tables (back up first)."
+msgstr ""
+
+#: data/recommendations.php:220
+msgid "Without security headers, MIME-sniffing, clickjacking, and referrer-leak defenses rely on browser defaults alone."
+msgstr ""
+
+#: data/recommendations.php:221
+msgid "Add X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, and (on https) HSTS at the web server."
+msgstr ""
+
+#: data/recommendations.php:224
+msgid "Exposed server software versions invite attacks on version-specific known flaws."
+msgstr ""
+
+#: data/recommendations.php:225
+msgid "Hide versions with server_tokens off (nginx) and expose_php Off (PHP)."
+msgstr ""
+
+#: data/recommendations.php:228
+msgid "Without forced https, session cookies can travel in plaintext."
+msgstr ""
+
+#: data/recommendations.php:229
+msgid "Add an http→https 301 redirect at the web server and define( 'FORCE_SSL_ADMIN', true ) in wp-config.php."
+msgstr ""
+
+#: data/recommendations.php:232
+msgid "Web-reachable config files, repository metadata, or PHP execution inside uploads leads straight to disclosure and remote execution."
+msgstr ""
+
+#: data/recommendations.php:233
+msgid "Block access to wp-config.php, .git, and *.sql at the web server and forbid PHP execution in uploads."
+msgstr ""
+
+#: data/recommendations.php:236
+msgid "The DB server is outdated or deviates from recommended settings (utf8mb4, local_infile Off, slow query log)."
+msgstr ""
+
+#: data/recommendations.php:237
+msgid "Upgrade to a supported MariaDB/MySQL and set character-set-server=utf8mb4, local_infile=0, slow_query_log=1 in my.cnf."
+msgstr ""
+
+#: includes/checks/class-check-db.php:26
+#: includes/class-runner.php:86
+msgid "Landing query count"
+msgstr ""
+
+#: includes/checks/class-check-db.php:27
+#: includes/class-runner.php:87
+msgid "Post query count"
+msgstr ""
+
+#: includes/checks/class-check-db.php:28
+#: includes/class-runner.php:88
+msgid "Archive query count"
+msgstr ""
+
+#: includes/checks/class-check-db.php:46
+#: includes/checks/class-check-latency.php:60
+msgid "No such URL — skipped"
+msgstr ""
+
+#: includes/checks/class-check-db.php:47
+msgid ": no target"
+msgstr ""
+
+#: includes/checks/class-check-db.php:60
+msgid "Capture headers not received — unverifiable (plugin may be inactive on the front end)"
+msgstr ""
+
+#: includes/checks/class-check-db.php:61
+msgid ": capture failed"
+msgstr ""
+
+#. translators: 1: query count, 2: how it was measured (median of 3, or single run).
+#: includes/checks/class-check-db.php:79
+#, php-format
+msgid "%1$d queries (%2$s)"
+msgstr ""
+
+#. translators: 1: query count, 2: how it was measured (median of 3, or single run).
+#: includes/checks/class-check-db.php:79
+msgid "median of 3"
+msgstr ""
+
+#. translators: 1: query count, 2: how it was measured (median of 3, or single run).
+#: includes/checks/class-check-db.php:79
+msgid "single run"
+msgstr ""
+
+#. translators: %d: database time in milliseconds.
+#: includes/checks/class-check-db.php:87
+msgid "Landing total DB time"
+msgstr ""
+
+#. translators: %d: database time in milliseconds.
+#: includes/checks/class-check-db.php:87
+#, php-format
+msgid "%dms (median of 3)"
+msgstr ""
+
+#. translators: 1: item label, 2: measured count.
+#: includes/checks/class-check-db.php:91
+#, php-format
+msgid "%1$s: %2$d"
+msgstr ""
+
+#. translators: 1: number of occurrences, 2: optional suffix with extra detail.
+#: includes/checks/class-check-db.php:122
+#: includes/checks/class-check-db.php:135
+#: includes/class-runner.php:90
+msgid "Slow queries (>20ms)"
+msgstr ""
+
+#: includes/checks/class-check-db.php:122
+#: includes/checks/class-check-db.php:123
+msgid "No capture data — unverifiable"
+msgstr ""
+
+#. translators: %d: number of duplicate queries.
+#: includes/checks/class-check-db.php:123
+#: includes/checks/class-check-db.php:139
+#: includes/class-runner.php:91
+msgid "Duplicate queries (N+1)"
+msgstr ""
+
+#. translators: %s: duration of the slowest query, in milliseconds.
+#: includes/checks/class-check-db.php:130
+#, php-format
+msgid " · slowest %sms"
+msgstr ""
+
+#. translators: 1: number of occurrences, 2: optional suffix with extra detail.
+#: includes/checks/class-check-db.php:135
+#, php-format
+msgid "%1$d found%2$s"
+msgstr ""
+
+#. translators: %d: number of duplicate queries.
+#: includes/checks/class-check-db.php:139
+#, php-format
+msgid "%d found (by literal-stripped fingerprint)"
+msgstr ""
+
+#: includes/checks/class-check-db.php:147
+msgid "External object cache active"
+msgstr ""
+
+#: includes/checks/class-check-db.php:147
+msgid "No external object cache"
+msgstr ""
+
+#. translators: %d: object cache hit ratio, as a percentage.
+#: includes/checks/class-check-db.php:150
+#, php-format
+msgid " · hit ratio %d%%"
+msgstr ""
+
+#: includes/checks/class-check-db.php:152
+#: includes/class-runner.php:92
+msgid "Object cache"
+msgstr ""
+
+#. translators: 1: slow query count, 2: duplicate query count.
+#: includes/checks/class-check-db.php:155
+#, php-format
+msgid "Query analysis: %1$d slow · %2$d duplicate"
+msgstr ""
+
+#: includes/checks/class-check-latency.php:27
+#: includes/class-runner.php:76
+msgid "Landing response time"
+msgstr ""
+
+#: includes/checks/class-check-latency.php:28
+#: includes/class-runner.php:77
+msgid "Archive response time"
+msgstr ""
+
+#: includes/checks/class-check-latency.php:29
+#: includes/class-runner.php:78
+msgid "Post response time"
+msgstr ""
+
+#: includes/checks/class-check-latency.php:30
+#: includes/class-runner.php:79
+msgid "Page response time"
+msgstr ""
+
+#: includes/checks/class-check-latency.php:31
+#: includes/class-runner.php:80
+msgid "Product/service response time"
+msgstr ""
+
+#: includes/checks/class-check-latency.php:61
+msgid ": no target — skipped"
+msgstr ""
+
+#. translators: 1: HTTP status code, 2: error message.
+#: includes/checks/class-check-latency.php:75
+#, php-format
+msgid "Measurement failed (HTTP %1$d %2$s)"
+msgstr ""
+
+#: includes/checks/class-check-latency.php:76
+msgid ": measurement failed"
+msgstr ""
+
+#. translators: 1: response time in milliseconds, 2: HTTP status code.
+#: includes/checks/class-check-latency.php:94
+#, php-format
+msgid "%1$dms (median of 3 · HTTP %2$d)"
+msgstr ""
+
+#: includes/checks/class-check-latency.php:106
+#: includes/class-runner.php:81
+msgid "Response time stability"
+msgstr ""
+
+#. translators: 1: spread between runs as a percentage, 2: the three measurements.
+#: includes/checks/class-check-latency.php:110
+#, php-format
+msgid "Spread %1$d%% (3 runs: %2$s ms)"
+msgstr ""
+
+#: includes/checks/class-check-latency.php:116
+#: includes/class-runner.php:82
+msgid "Landing HTML size"
+msgstr ""
+
+#: includes/checks/class-check-latency.php:137
+#: includes/checks/class-check-latency.php:151
+msgid " hop(s)"
+msgstr ""
+
+#: includes/checks/class-check-latency.php:145
+msgid "No redirect chains"
+msgstr ""
+
+#: includes/checks/class-check-latency.php:148
+msgid "All URLs direct (0 hops)"
+msgstr ""
+
+#: includes/checks/class-check-latency.php:151
+msgid "Redirect check: max "
+msgstr ""
+
+#: includes/checks/class-check-seo.php:32
+msgid "Failed to fetch landing HTML — unverifiable"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:34
+msgid "SEO: could not fetch the landing page"
+msgstr ""
+
+#. translators: %d: character count.
+#: includes/checks/class-check-seo.php:47
+#: includes/checks/class-check-seo.php:68
+#: includes/checks/class-check-seo.php:97
+#: includes/checks/class-check-seo.php:107
+#: includes/checks/class-check-seo.php:111
+#: includes/checks/class-check-seo.php:244
+#: includes/checks/class-check-seo.php:290
+msgid "None"
+msgstr ""
+
+#. translators: 1: character count, 2: the text that was found.
+#: includes/checks/class-check-seo.php:50
+#, php-format
+msgid "%1$d chars — \"%2$s\""
+msgstr ""
+
+#: includes/checks/class-check-seo.php:54
+#: includes/checks/class-check-seo.php:307
+#: includes/class-runner.php:95
+msgid "Document title"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:64
+#: includes/checks/class-check-seo.php:308
+#: includes/class-runner.php:96
+msgid "Meta description"
+msgstr ""
+
+#. translators: %d: character count.
+#: includes/checks/class-check-seo.php:68
+#, php-format
+msgid "%d chars"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:74
+#: includes/checks/class-check-seo.php:309
+msgid "H1 heading structure"
+msgstr ""
+
+#. translators: %d: number of h1 elements found.
+#: includes/checks/class-check-seo.php:78
+#, php-format
+msgid "%d h1 elements"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:86
+#: includes/checks/class-check-seo.php:214
+#: includes/checks/class-check-seo.php:310
+msgid "Landing indexable"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:89
+#: includes/checks/class-check-seo.php:215
+msgid "noindex directive found"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:89
+msgid "Indexing allowed"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:101
+msgid "self-referential"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:101
+msgid "not self: "
+msgstr ""
+
+#: includes/checks/class-check-seo.php:107
+#: includes/checks/class-check-seo.php:312
+#: includes/class-runner.php:100
+msgid "html lang attribute"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:111
+#: includes/checks/class-check-seo.php:313
+msgid "Mobile viewport"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:122
+#: includes/checks/class-check-seo.php:126
+#: includes/checks/class-check-seo.php:314
+#: includes/class-runner.php:102
+msgid "Image alt text"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:122
+msgid "No images"
+msgstr ""
+
+#. translators: 1: images with alt text, 2: total images, 3: percentage.
+#: includes/checks/class-check-seo.php:130
+#, php-format
+msgid "%1$d of %2$d images have alt (%3$d%%)"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:145
+#: includes/checks/class-check-seo.php:315
+msgid "Link text"
+msgstr ""
+
+#. translators: %d: number of links with no descriptive text.
+#: includes/checks/class-check-seo.php:149
+msgid "No empty links"
+msgstr ""
+
+#. translators: %d: number of links with no descriptive text.
+#: includes/checks/class-check-seo.php:149
+#, php-format
+msgid "%d links without text"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:158
+#: includes/checks/class-check-seo.php:317
+msgid "hreflang alternates"
+msgstr ""
+
+#. translators: %d: number of hreflang declarations.
+#: includes/checks/class-check-seo.php:162
+#, php-format
+msgid "%d declared"
+msgstr ""
+
+#. translators: %d: number of hreflang declarations.
+#: includes/checks/class-check-seo.php:162
+msgid "None (safe to ignore for single-language sites)"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:171
+#: includes/checks/class-check-seo.php:318
+msgid "Social meta (OG)"
+msgstr ""
+
+#. translators: %d: how many of the three Open Graph tags are present.
+#: includes/checks/class-check-seo.php:175
+#, php-format
+msgid "%d of og:title / og:description / og:image"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:184
+#: includes/checks/class-check-seo.php:191
+#: includes/checks/class-check-seo.php:319
+msgid "HTTPS · mixed content"
+msgstr ""
+
+#. translators: %d: number of insecure http:// references on an https page.
+#: includes/checks/class-check-seo.php:188
+msgid "https + no mixed content"
+msgstr ""
+
+#. translators: %d: number of insecure http:// references on an https page.
+#: includes/checks/class-check-seo.php:188
+#, php-format
+msgid "%d http:// references"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:191
+msgid "Site is http — no TLS"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:194
+msgid "Landing SEO analysis complete ("
+msgstr ""
+
+#: includes/checks/class-check-seo.php:194
+msgid " items)"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:215
+msgid "robots.txt blocks everything (Disallow: /)"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:239
+msgid "XML sitemap"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:242
+msgid " · listed in robots.txt"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:242
+msgid " · not listed in robots.txt"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:242
+msgid "No reachable sitemap"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:244
+msgid "Sitemap: "
+msgstr ""
+
+#: includes/checks/class-check-seo.php:244
+msgid "checked"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:276
+msgid " (including post page)"
+msgstr ""
+
+#. translators: 1: number of valid JSON-LD blocks, 2: optional suffix.
+#: includes/checks/class-check-seo.php:282
+#, php-format
+msgid "%1$d valid blocks%2$s"
+msgstr ""
+
+#. translators: 1: valid JSON-LD blocks, 2: total JSON-LD blocks.
+#: includes/checks/class-check-seo.php:284
+#: includes/checks/class-check-seo.php:288
+#: includes/checks/class-check-seo.php:290
+#: includes/checks/class-check-seo.php:316
+#: includes/class-runner.php:104
+msgid "Structured data (JSON-LD)"
+msgstr ""
+
+#. translators: 1: valid JSON-LD blocks, 2: total JSON-LD blocks.
+#: includes/checks/class-check-seo.php:288
+#, php-format
+msgid "only %1$d of %2$d blocks valid"
+msgstr ""
+
+#: includes/checks/class-check-seo.php:290
+msgid "JSON parse failure"
+msgstr ""
+
+#. translators: %s: PHP version number.
+#: includes/checks/class-check-server.php:56
+#, php-format
+msgid "PHP %s — long past end of life"
+msgstr ""
+
+#. translators: %s: PHP version number.
+#: includes/checks/class-check-server.php:56
+#, php-format
+msgid "PHP %s — not in the EOL table, unverifiable"
+msgstr ""
+
+#. translators: 1: PHP version number, 2: end-of-support date.
+#: includes/checks/class-check-server.php:61
+#, php-format
+msgid "PHP %1$s — security support until %2$s"
+msgstr ""
+
+#: includes/checks/class-check-server.php:63
+#: includes/class-runner.php:123
+msgid "PHP version supported"
+msgstr ""
+
+#: includes/checks/class-check-server.php:79
+#: includes/class-runner.php:125
+msgid "Shell functions disabled"
+msgstr ""
+
+#. translators: %d: how many shell functions are disabled.
+#: includes/checks/class-check-server.php:83
+#, php-format
+msgid "%d of 6 shell functions blocked"
+msgstr ""
+
+#: includes/checks/class-check-server.php:90
+msgid "curl_exec not disabled"
+msgstr ""
+
+#: includes/checks/class-check-server.php:93
+msgid "Disabled — kills all WP outbound HTTP"
+msgstr ""
+
+#: includes/checks/class-check-server.php:93
+msgid "Available"
+msgstr ""
+
+#: includes/checks/class-check-server.php:112
+msgid "open_basedir path isolation"
+msgstr ""
+
+#: includes/checks/class-check-server.php:115
+msgid "Configured"
+msgstr ""
+
+#: includes/checks/class-check-server.php:115
+msgid "Not set — PHP can reach the entire filesystem"
+msgstr ""
+
+#: includes/checks/class-check-server.php:118
+msgid "PHP settings checked: "
+msgstr ""
+
+#: includes/checks/class-check-server.php:130
+#: includes/checks/class-check-server.php:132
+#: includes/checks/class-check-server.php:136
+msgid "WP_DEBUG disabled"
+msgstr ""
+
+#: includes/checks/class-check-server.php:130
+msgid "Local/dev environment — excluded from judgment"
+msgstr ""
+
+#: includes/checks/class-check-server.php:139
+msgid "WP_DEBUG with display — errors shown to visitors"
+msgstr ""
+
+#: includes/checks/class-check-server.php:139
+msgid "WP_DEBUG on (log only)"
+msgstr ""
+
+#: includes/checks/class-check-server.php:144
+msgid "File editor disabled (DISALLOW_FILE_EDIT)"
+msgstr ""
+
+#: includes/checks/class-check-server.php:147
+msgid "Blocked"
+msgstr ""
+
+#: includes/checks/class-check-server.php:147
+msgid "Allowed — the shortest path to a web shell after admin takeover"
+msgstr ""
+
+#: includes/checks/class-check-server.php:155
+msgid "(undefined)"
+msgstr ""
+
+#: includes/checks/class-check-server.php:155
+msgid " — 3-byte: silent data loss for emoji and some CJK"
+msgstr ""
+
+#: includes/checks/class-check-server.php:158
+msgid "wp-config constants checked"
+msgstr ""
+
+#: includes/checks/class-check-server.php:169
+#: includes/checks/class-check-server.php:209
+#: includes/class-runner.php:133
+#: includes/class-runner.php:359
+msgid "Security response headers"
+msgstr ""
+
+#: includes/checks/class-check-server.php:169
+#: includes/checks/class-check-server.php:170
+#: includes/checks/class-check-server.php:171
+msgid "No response received — unverifiable"
+msgstr ""
+
+#: includes/checks/class-check-server.php:170
+#: includes/checks/class-check-server.php:222
+#: includes/checks/class-check-server.php:224
+#: includes/checks/class-check-server.php:226
+#: includes/class-runner.php:134
+msgid "Server version hidden"
+msgstr ""
+
+#: includes/checks/class-check-server.php:171
+#: includes/checks/class-check-server.php:231
+#: includes/checks/class-check-server.php:238
+#: includes/class-runner.php:135
+msgid "HTTPS enforced"
+msgstr ""
+
+#: includes/checks/class-check-server.php:173
+msgid "Header check: request failed"
+msgstr ""
+
+#. translators: 1: headers present, 2: headers expected, 3: optional suffix listing what is missing.
+#: includes/checks/class-check-server.php:213
+#, php-format
+msgid "%1$d of %2$d present%3$s"
+msgstr ""
+
+#. translators: 1: headers present, 2: headers expected, 3: optional suffix listing what is missing.
+#: includes/checks/class-check-server.php:213
+msgid " — missing: "
+msgstr ""
+
+#: includes/checks/class-check-server.php:222
+msgid " — version exposed"
+msgstr ""
+
+#: includes/checks/class-check-server.php:224
+msgid "X-Powered-By header exposed"
+msgstr ""
+
+#: includes/checks/class-check-server.php:226
+msgid "(none)"
+msgstr ""
+
+#: includes/checks/class-check-server.php:231
+msgid "Site address is http"
+msgstr ""
+
+#: includes/checks/class-check-server.php:241
+msgid "http→https redirect OK"
+msgstr ""
+
+#: includes/checks/class-check-server.php:241
+msgid "http does not redirect to https"
+msgstr ""
+
+#. translators: 1: headers present, 2: headers expected.
+#: includes/checks/class-check-server.php:246
+#, php-format
+msgid "Security headers %1$d/%2$d"
+msgstr ""
+
+#: includes/checks/class-check-server.php:258
+msgid "source exposed!"
+msgstr ""
+
+#. translators: %d: HTTP status code.
+#: includes/checks/class-check-server.php:263
+#, php-format
+msgid "HTTP %d (executes but exposes nothing — blocking recommended)"
+msgstr ""
+
+#: includes/checks/class-check-server.php:269
+msgid "repository exposed!"
+msgstr ""
+
+#: includes/checks/class-check-server.php:277
+msgid "HTTP 403 — execution-blocking rule confirmed"
+msgstr ""
+
+#. translators: %d: HTTP status code.
+#: includes/checks/class-check-server.php:280
+#, php-format
+msgid "HTTP %d — cannot be judged from a non-existent file (unverifiable)"
+msgstr ""
+
+#: includes/checks/class-check-server.php:291
+#: includes/class-runner.php:136
+msgid "Sensitive paths blocked"
+msgstr ""
+
+#: includes/checks/class-check-server.php:293
+msgid "3 sensitive-path probes complete"
+msgstr ""
+
+#: includes/checks/class-check-server.php:307
+#: includes/checks/class-check-server.php:345
+msgid "DB server settings"
+msgstr ""
+
+#: includes/checks/class-check-server.php:307
+msgid "No SHOW VARIABLES privilege — unverifiable"
+msgstr ""
+
+#: includes/checks/class-check-server.php:308
+msgid "DB variables: permission denied"
+msgstr ""
+
+#: includes/checks/class-check-server.php:322
+#: includes/checks/class-check-server.php:325
+msgid "version"
+msgstr ""
+
+#: includes/checks/class-check-server.php:329
+msgid "server charset"
+msgstr ""
+
+#: includes/checks/class-check-server.php:335
+msgid "slow query log"
+msgstr ""
+
+#: includes/checks/class-check-server.php:344
+msgid " outdated"
+msgstr ""
+
+#: includes/checks/class-check-server.php:344
+msgid " not recommended"
+msgstr ""
+
+#: includes/checks/class-check-server.php:347
+msgid "DB variables checked: "
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:44
+#: includes/checks/class-check-vuln-wp.php:47
+msgid "Core known vulnerabilities"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:44
+#: includes/checks/class-check-vuln-wp.php:179
+msgid "API lookup failed — unverifiable"
+msgstr ""
+
+#. translators: %s: WordPress version number.
+#: includes/checks/class-check-vuln-wp.php:51
+#, php-format
+msgid "WP %s: no matching CVE"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:58
+#: includes/checks/class-check-vuln-wp.php:62
+#: includes/class-runner.php:112
+msgid "Core up to date"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:58
+#: includes/checks/class-check-vuln-wp.php:136
+#: includes/checks/class-check-vuln-wp.php:187
+msgid "Update info unavailable — unverifiable"
+msgstr ""
+
+#. translators: %s: current version number.
+#: includes/checks/class-check-vuln-wp.php:66
+#, php-format
+msgid "%s = latest"
+msgstr ""
+
+#. translators: %s: current version number.
+#: includes/checks/class-check-vuln-wp.php:66
+#, php-format
+msgid "%1$s → %2$s update pending"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:70
+msgid "Core vulnerability lookup: WP "
+msgstr ""
+
+#. translators: 1: plugin slug, 2: version, 3: result summary.
+#: includes/checks/class-check-vuln-wp.php:105
+#, php-format
+msgid "Plugin %1$s %2$s: %3$s"
+msgstr ""
+
+#. translators: 1: plugin slug, 2: version, 3: result summary.
+#: includes/checks/class-check-vuln-wp.php:105
+#: includes/class-cli.php:81
+#: includes/class-report.php:242
+msgid "Unverifiable"
+msgstr ""
+
+#. translators: 1: plugin slug, 2: version, 3: result summary.
+#: includes/checks/class-check-vuln-wp.php:105
+msgid "⚠ vulnerable"
+msgstr ""
+
+#. translators: 1: plugin slug, 2: version, 3: result summary.
+#: includes/checks/class-check-vuln-wp.php:105
+msgid "no issues"
+msgstr ""
+
+#. translators: 1: number of vulnerable plugins, 2: comma-separated list.
+#: includes/checks/class-check-vuln-wp.php:118
+#, php-format
+msgid "%1$d vulnerable: %2$s"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:120
+#: includes/checks/class-check-vuln-wp.php:122
+#: includes/checks/class-check-vuln-wp.php:129
+#: includes/checks/class-check-vuln-wp.php:151
+msgid "Plugin known vulnerabilities"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:122
+msgid "All API lookups failed — unverifiable"
+msgstr ""
+
+#. translators: %d: how many could not be checked.
+#: includes/checks/class-check-vuln-wp.php:125
+#, php-format
+msgid " (%d unverifiable)"
+msgstr ""
+
+#. translators: 1: number of active plugins, 2: optional suffix.
+#: includes/checks/class-check-vuln-wp.php:127
+#, php-format
+msgid "%1$d active, 0 vulnerable%2$s"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:136
+#: includes/checks/class-check-vuln-wp.php:139
+msgid "Plugins up to date"
+msgstr ""
+
+#. translators: %d: number of pending updates.
+#: includes/checks/class-check-vuln-wp.php:143
+#: includes/checks/class-check-vuln-wp.php:194
+msgid "All up to date"
+msgstr ""
+
+#. translators: %d: number of pending updates.
+#: includes/checks/class-check-vuln-wp.php:143
+#: includes/checks/class-check-vuln-wp.php:194
+#, php-format
+msgid "%d update(s) pending"
+msgstr ""
+
+#. translators: 1: items processed so far, 2: total items.
+#: includes/checks/class-check-vuln-wp.php:149
+#, php-format
+msgid "In progress %1$d/%2$d"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:177
+#: includes/checks/class-check-vuln-wp.php:179
+#: includes/checks/class-check-vuln-wp.php:181
+msgid "Theme known vulnerabilities"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:181
+msgid ": no matching CVE"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:187
+#: includes/checks/class-check-vuln-wp.php:190
+msgid "Themes up to date"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:198
+msgid "Theme vulnerability lookup: "
+msgstr ""
+
+#. translators: %s: script file name.
+#: includes/checks/class-check-vuln-wp.php:207
+#: includes/checks/class-check-vuln-wp.php:247
+#: includes/checks/class-check-vuln-wp.php:251
+#: includes/checks/class-check-vuln-wp.php:254
+#: includes/class-runner.php:117
+#: includes/class-runner.php:355
+msgid "Front-end JS libraries"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:207
+msgid "Failed to fetch landing — unverifiable"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:208
+msgid "JS check: request failed"
+msgstr ""
+
+#. translators: 1: library name, 2: detected version, 3: CVE identifier, 4: first fixed version.
+#: includes/checks/class-check-vuln-wp.php:238
+#, php-format
+msgid "%1$s %2$s (%3$s, below %4$s)"
+msgstr ""
+
+#. translators: %s: script file name.
+#: includes/checks/class-check-vuln-wp.php:251
+#, php-format
+msgid "Unknown version: %s — cannot judge"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:253
+msgid "Detected: "
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:253
+msgid "No known libraries detected"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:254
+msgid " — not in a vulnerable range"
+msgstr ""
+
+#. translators: %d: number of scripts inspected.
+#: includes/checks/class-check-vuln-wp.php:258
+#, php-format
+msgid "JS libraries: %d scripts checked"
+msgstr ""
+
+#. translators: %d: HTTP status code.
+#: includes/checks/class-check-vuln-wp.php:271
+#: includes/checks/class-check-vuln-wp.php:273
+#: includes/checks/class-check-vuln-wp.php:276
+msgid "Username enumeration (?author=N)"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:271
+msgid "Username exposed via redirect: "
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:273
+msgid "Author archive exposed in response"
+msgstr ""
+
+#. translators: %d: HTTP status code.
+#: includes/checks/class-check-vuln-wp.php:276
+#: includes/checks/class-check-vuln-wp.php:283
+#: includes/checks/class-check-vuln-wp.php:300
+#, php-format
+msgid "Blocked (HTTP %d)"
+msgstr ""
+
+#. translators: %d: HTTP status code.
+#: includes/checks/class-check-vuln-wp.php:283
+#: includes/checks/class-check-vuln-wp.php:285
+#: includes/checks/class-check-vuln-wp.php:288
+#: includes/class-runner.php:119
+msgid "xmlrpc.php blocked"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:285
+msgid "Active — brute-force amplification / pingback DDoS vector"
+msgstr ""
+
+#. translators: %d: HTTP status code.
+#: includes/checks/class-check-vuln-wp.php:288
+#: includes/checks/class-check-vuln-wp.php:303
+#, php-format
+msgid "Inconclusive (HTTP %d)"
+msgstr ""
+
+#. translators: %d: number of user records exposed.
+#: includes/checks/class-check-vuln-wp.php:296
+#, php-format
+msgid "%d users exposed without authentication"
+msgstr ""
+
+#. translators: %d: HTTP status code.
+#: includes/checks/class-check-vuln-wp.php:297
+#: includes/checks/class-check-vuln-wp.php:300
+#: includes/checks/class-check-vuln-wp.php:303
+msgid "REST user enumeration blocked"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:306
+msgid "3 exposure probes complete"
+msgstr ""
+
+#: includes/checks/class-check-vuln-wp.php:400
+msgid "known vulnerabilities"
+msgstr ""
+
+#. translators: %d: number of additional findings not listed.
+#: includes/checks/class-check-vuln-wp.php:403
+#, php-format
+msgid " and %d more"
+msgstr ""
+
+#: includes/class-admin.php:28
+msgid "Site health"
+msgstr ""
+
+#: includes/class-admin.php:53
+msgid "Running diagnostics…"
+msgstr ""
+
+#: includes/class-admin.php:54
+msgid "Preparing…"
+msgstr ""
+
+#: includes/class-admin.php:55
+msgid "Diagnostics complete"
+msgstr ""
+
+#: includes/class-admin.php:56
+msgid "Something went wrong. Please refresh the page and try again."
+msgstr ""
+
+#: includes/class-admin.php:57
+msgid "WPER Recommendation"
+msgstr ""
+
+#: includes/class-admin.php:58
+msgid "Building the report…"
+msgstr ""
+
+#: includes/class-admin.php:67
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: includes/class-admin.php:74
+msgid "Response time · database queries · SEO · vulnerabilities · server configuration — five areas, scored out of 1000."
+msgstr ""
+
+#: includes/class-admin.php:78
+msgid "Start diagnostics"
+msgstr ""
+
+#: includes/class-admin.php:82
+msgid "Previous results"
+msgstr ""
+
+#: includes/class-cli.php:62
+msgid "The diagnostic run did not complete."
+msgstr ""
+
+#: includes/class-cli.php:76
+msgid "Area"
+msgstr ""
+
+#: includes/class-cli.php:77
+msgid "Score"
+msgstr ""
+
+#: includes/class-cli.php:78
+#: includes/class-report.php:239
+msgid "Pass"
+msgstr ""
+
+#: includes/class-cli.php:79
+#: includes/class-report.php:240
+msgid "Warn"
+msgstr ""
+
+#: includes/class-cli.php:80
+#: includes/class-report.php:241
+msgid "Fail"
+msgstr ""
+
+#. translators: 1: total score out of 1000, 2: diagnostic run id.
+#: includes/class-cli.php:99
+#, php-format
+msgid "Total %1$d / 1000 (run #%2$d)"
+msgstr ""
+
+#: includes/class-cli.php:115
+msgid "No diagnostic history yet."
+msgstr ""
+
+#: includes/class-cli.php:119
+msgid "Date"
+msgstr ""
+
+#: includes/class-cli.php:120
+msgid "Total"
+msgstr ""
+
+#: includes/class-report.php:32
+msgid "No results yet."
+msgstr ""
+
+#: includes/class-report.php:74
+msgid "Diagnostic tool"
+msgstr ""
+
+#: includes/class-report.php:87
+msgid "Excellent"
+msgstr ""
+
+#: includes/class-report.php:89
+msgid "Good"
+msgstr ""
+
+#: includes/class-report.php:91
+msgid "Needs attention"
+msgstr ""
+
+#: includes/class-report.php:93
+msgid "At risk"
+msgstr ""
+
+#. translators: 1: pass count, 2: warning count, 3: fail count.
+#: includes/class-report.php:148
+#, php-format
+msgid "Pass %1$d · Warn %2$d · Fail %3$d"
+msgstr ""
+
+#: includes/class-report.php:168
+#: includes/class-report.php:185
+msgid "WPER recommendations"
+msgstr ""
+
+#: includes/class-report.php:169
+msgid "Nothing needs improvement. Keep it as it is."
+msgstr ""
+
+#: includes/class-report.php:195
+msgid "Cause"
+msgstr ""
+
+#: includes/class-report.php:196
+msgid "Fix"
+msgstr ""
+
+#: includes/class-report.php:211
+msgid "Items that could not be verified"
+msgstr ""
+
+#. translators: %d: number of items that could not be measured.
+#: includes/class-report.php:217
+#, php-format
+msgid "%d item could not be measured in this run, so it was excluded from the score denominator. We never report an unmeasured item as a pass or a failure."
+msgid_plural "%d items could not be measured in this run, so they were excluded from the score denominator. We never report an unmeasured item as a pass or a failure."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-rest.php:76
+#: includes/class-rest.php:89
+msgid "Diagnostic record not found."
+msgstr ""
+
+#: includes/class-runner.php:55
+msgid "Response time"
+msgstr ""
+
+#: includes/class-runner.php:56
+msgid "Database queries"
+msgstr ""
+
+#: includes/class-runner.php:57
+msgid "SEO"
+msgstr ""
+
+#: includes/class-runner.php:58
+msgid "WordPress vulnerabilities"
+msgstr ""
+
+#: includes/class-runner.php:59
+msgid "Server configuration"
+msgstr ""
+
+#: includes/class-runner.php:83
+msgid "No redirect chain"
+msgstr ""
+
+#: includes/class-runner.php:89
+msgid "Landing database time"
+msgstr ""
+
+#: includes/class-runner.php:97
+msgid "Single h1"
+msgstr ""
+
+#: includes/class-runner.php:98
+msgid "Indexable"
+msgstr ""
+
+#: includes/class-runner.php:99
+msgid "Canonical URL"
+msgstr ""
+
+#: includes/class-runner.php:101
+msgid "viewport meta tag"
+msgstr ""
+
+#: includes/class-runner.php:103
+msgid "Descriptive link text"
+msgstr ""
+
+#: includes/class-runner.php:105
+msgid "hreflang"
+msgstr ""
+
+#: includes/class-runner.php:106
+msgid "Open Graph tags"
+msgstr ""
+
+#: includes/class-runner.php:107
+msgid "HTTPS / mixed content"
+msgstr ""
+
+#: includes/class-runner.php:108
+msgid "Sitemap reachable"
+msgstr ""
+
+#: includes/class-runner.php:111
+msgid "WordPress core vulnerabilities"
+msgstr ""
+
+#: includes/class-runner.php:113
+msgid "Plugin vulnerabilities"
+msgstr ""
+
+#: includes/class-runner.php:114
+msgid "Plugin updates"
+msgstr ""
+
+#: includes/class-runner.php:115
+msgid "Theme vulnerabilities"
+msgstr ""
+
+#: includes/class-runner.php:116
+msgid "Theme updates"
+msgstr ""
+
+#: includes/class-runner.php:118
+msgid "Author enumeration blocked"
+msgstr ""
+
+#: includes/class-runner.php:120
+msgid "REST user list blocked"
+msgstr ""
+
+#: includes/class-runner.php:124
+msgid "expose_php off"
+msgstr ""
+
+#: includes/class-runner.php:126
+msgid "curl_exec available"
+msgstr ""
+
+#: includes/class-runner.php:127
+msgid "allow_url_fopen off"
+msgstr ""
+
+#: includes/class-runner.php:128
+msgid "display_errors off"
+msgstr ""
+
+#: includes/class-runner.php:129
+msgid "open_basedir set"
+msgstr ""
+
+#: includes/class-runner.php:130
+msgid "WP_DEBUG off"
+msgstr ""
+
+#: includes/class-runner.php:131
+msgid "DISALLOW_FILE_EDIT on"
+msgstr ""
+
+#: includes/class-runner.php:132
+msgid "DB_CHARSET utf8mb4"
+msgstr ""
+
+#: includes/class-runner.php:137
+msgid "Database server settings"
+msgstr ""
+
+#: includes/class-runner.php:160
+msgid "Could not create the diagnostic record."
+msgstr ""
+
+#. translators: %s: diagnostic step id.
+#: includes/class-runner.php:177
+#, php-format
+msgid "Unknown step: %s"
+msgstr ""
+
+#. translators: %s: diagnostic step id.
+#: includes/class-runner.php:192
+#, php-format
+msgid "No handler for step: %s"
+msgstr ""
+
+#: includes/class-runner.php:340
+msgid "Measuring landing response (3 runs)"
+msgstr ""
+
+#: includes/class-runner.php:341
+msgid "Measuring archive response"
+msgstr ""
+
+#: includes/class-runner.php:342
+msgid "Measuring post response"
+msgstr ""
+
+#: includes/class-runner.php:343
+msgid "Measuring page response"
+msgstr ""
+
+#: includes/class-runner.php:344
+msgid "Measuring product/service response"
+msgstr ""
+
+#: includes/class-runner.php:345
+msgid "Checking redirect chains"
+msgstr ""
+
+#: includes/class-runner.php:346
+msgid "Capturing landing queries (3 runs)"
+msgstr ""
+
+#: includes/class-runner.php:347
+msgid "Capturing post queries"
+msgstr ""
+
+#: includes/class-runner.php:348
+msgid "Capturing archive queries"
+msgstr ""
+
+#: includes/class-runner.php:349
+msgid "Analyzing query patterns"
+msgstr ""
+
+#: includes/class-runner.php:350
+msgid "Analyzing landing SEO"
+msgstr ""
+
+#: includes/class-runner.php:351
+msgid "robots.txt · sitemap"
+msgstr ""
+
+#: includes/class-runner.php:352
+msgid "Looking up core vulnerabilities"
+msgstr ""
+
+#: includes/class-runner.php:353
+msgid "Looking up plugin vulnerabilities"
+msgstr ""
+
+#: includes/class-runner.php:354
+msgid "Looking up theme vulnerabilities"
+msgstr ""
+
+#: includes/class-runner.php:356
+msgid "Exposure probes"
+msgstr ""
+
+#: includes/class-runner.php:357
+msgid "Checking PHP settings"
+msgstr ""
+
+#: includes/class-runner.php:358
+msgid "Checking wp-config"
+msgstr ""
+
+#: includes/class-runner.php:360
+msgid "Sensitive path probes"
+msgstr ""
+
+#: includes/class-runner.php:361
+msgid "Database server variables"
+msgstr ""
+
+#: includes/class-store.php:26
+msgid "Site diagnostics"
+msgstr ""
+
+#: includes/class-store.php:27
+msgid "Diagnostic run"
+msgstr ""
+
+#. translators: %s: run timestamp.
+#: includes/class-store.php:51
+#, php-format
+msgid "Diagnostics %s"
+msgstr ""

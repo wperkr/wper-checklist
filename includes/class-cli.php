@@ -17,8 +17,7 @@ final class WPER_Checklist_CLI {
 	 * [--format=<format>]
 	 * : table(기본) 또는 json.
 	 *
-	 * [--lang=<lang>]
-	 * : 보고서 언어 ko(기본) 또는 en. json 출력에는 영향 없음.
+	 * 출력 언어는 사이트 로케일을 따른다 (1.1.0 — `--lang` 제거).
 	 *
 	 * ## EXAMPLES
 	 *
@@ -60,7 +59,7 @@ final class WPER_Checklist_CLI {
 		}
 
 		if ( ! $final || empty( $final['scores'] ) ) {
-			WP_CLI::error( '진단이 완료되지 않았습니다.' );
+			WP_CLI::error( __( 'The diagnostic run did not complete.', 'wper-checklist' ) );
 		}
 
 		$scores = $final['scores'];
@@ -71,21 +70,33 @@ final class WPER_Checklist_CLI {
 			return;
 		}
 
+		// 표 머리글도 번역 대상이다 — 컬럼 키와 헤더 목록이 같은 문자열이어야 하므로
+		// 한 번만 만들어 두 곳에서 쓴다 (직접 두 번 쓰면 번역이 갈리는 순간 표가 빈다).
+		$head = [
+			'area'  => __( 'Area', 'wper-checklist' ),
+			'score' => __( 'Score', 'wper-checklist' ),
+			'pass'  => __( 'Pass', 'wper-checklist' ),
+			'warn'  => __( 'Warn', 'wper-checklist' ),
+			'fail'  => __( 'Fail', 'wper-checklist' ),
+			'skip'  => __( 'Unverifiable', 'wper-checklist' ),
+		];
+
 		$rows = [];
-		foreach ( WPER_Checklist_Runner::CATS as $cat => $label ) {
+		foreach ( WPER_Checklist_Runner::cat_labels() as $cat => $label ) {
 			$row    = $scores['cats'][ $cat ];
 			$rows[] = [
-				'영역'   => $label,
-				'점수'   => $row['score'] . ' / 200',
-				'통과'   => $row['counts']['pass'],
-				'주의'   => $row['counts']['warn'],
-				'실패'   => $row['counts']['fail'],
-				'확인불가' => $row['counts']['skip'],
+				$head['area']  => $label,
+				$head['score'] => $row['score'] . ' / 200',
+				$head['pass']  => $row['counts']['pass'],
+				$head['warn']  => $row['counts']['warn'],
+				$head['fail']  => $row['counts']['fail'],
+				$head['skip']  => $row['counts']['skip'],
 			];
 		}
 
-		\WP_CLI\Utils\format_items( 'table', $rows, [ '영역', '점수', '통과', '주의', '실패', '확인불가' ] );
-		WP_CLI::success( sprintf( '총점 %d / 1000 (run #%d)', $scores['total'], $run_id ) );
+		\WP_CLI\Utils\format_items( 'table', $rows, array_values( $head ) );
+		/* translators: 1: total score out of 1000, 2: diagnostic run id. */
+		WP_CLI::success( sprintf( __( 'Total %1$d / 1000 (run #%2$d)', 'wper-checklist' ), $scores['total'], $run_id ) );
 	}
 
 	/**
@@ -101,17 +112,20 @@ final class WPER_Checklist_CLI {
 		$rows = WPER_Checklist_Store::recent( 20 );
 
 		if ( ! $rows ) {
-			WP_CLI::log( '이력이 없습니다.' );
+			WP_CLI::log( __( 'No diagnostic history yet.', 'wper-checklist' ) );
 			return;
 		}
+
+		$date  = __( 'Date', 'wper-checklist' );
+		$total = __( 'Total', 'wper-checklist' );
 
 		\WP_CLI\Utils\format_items(
 			'table',
 			array_map(
-				static fn( $r ) => [ 'ID' => $r['id'], '일시' => $r['date'], '총점' => $r['total'] . ' / 1000' ],
+				static fn( $r ) => [ 'ID' => $r['id'], $date => $r['date'], $total => $r['total'] . ' / 1000' ],
 				$rows
 			),
-			[ 'ID', '일시', '총점' ]
+			[ 'ID', $date, $total ]
 		);
 	}
 }

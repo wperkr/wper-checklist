@@ -23,7 +23,7 @@ return [
 	'jquery-migrate' => [
 		'detect' => '/\/jquery-migrate(?:[.-]\d[\d.]*)?(?:\.min)?\.js/i',
 		'vulns'  => [
-			[ 'below' => '1.2.0', 'cve' => 'CVE-2013-4383 계열' ],
+			[ 'below' => '1.2.0', 'cve' => __( 'CVE-2013-4383 family', 'wper-checklist' ) ],
 		],
 	],
 	'bootstrap'     => [
@@ -48,7 +48,7 @@ return [
 	'vue'           => [
 		'detect' => '/\/vue(?:[.-]\d[\d.]*)?(?:\.min|\.global|\.runtime)*\.js/i',
 		'vulns'  => [
-			[ 'since' => '2.0.0', 'below' => '2.7.16', 'cve' => 'CVE-2024-6783 계열' ],
+			[ 'since' => '2.0.0', 'below' => '2.7.16', 'cve' => __( 'CVE-2024-6783 family', 'wper-checklist' ) ],
 		],
 	],
 	'underscore'    => [

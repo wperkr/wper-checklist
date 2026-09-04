@@ -1,11 +1,18 @@
 <?php
 /**
- * 보고서 렌더러 — 서버측 DOM. "[WPER Recommendation (번역 적용)]" 의 실체.
+ * 보고서 렌더러 — 서버측 DOM. "[WPER Recommendation]" 버튼이 펼치는 실체.
  *
  * ⭐ 전 항목을 표기한다 — pass 든 fail 이든 skip 이든. 선택적 보고는 한 번 들키면
  *    나머지 수치의 신뢰까지 무너뜨린다 (계측 독트린).
  * ⭐ 추천 문안은 규칙 기반 — data/recommendations.php 의 사전 작성 원인·해결.
  *    AI 호출 없음: 결과가 항상 재현 가능하고 오프라인에서도 완전하다.
+ * ⭐ 언어는 **사이트 로케일**이 정한다 (1.1.0 — 보고서 언어 토글 제거). 문자열은
+ *    전부 표준 gettext 를 탄다.
+ *
+ * ⚠ 항목 라벨은 저장된 값이 아니라 Runner::item_label() 로 다시 그린다 — 진단 결과는
+ *   실행 시점 언어로 DB 에 남으므로, 저장값을 그대로 쓰면 로케일을 바꾼 사이트에서
+ *   머리말과 항목명의 언어가 갈린다. 반면 `measured` 는 숫자가 섞인 합성 문자열이라
+ *   재번역이 불가능하고 실행 시점 언어로 고정된다 — "그때 관측된 기록" 의 정직한 형태다.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,16 +22,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class WPER_Checklist_Report {
 
 	/**
-	 * 보고서 HTML. $lang: ko | en.
+	 * 보고서 HTML — 현재 로케일로 렌더한다.
 	 */
-	public static function render_html( int $run_id, string $lang = 'ko' ): string {
-		WPER_Checklist_I18N::set_lang( $lang );
-
+	public static function render_html( int $run_id ): string {
 		$results = WPER_Checklist_Store::results( $run_id );
 		$items   = $results['items'] ?? [];
 
 		if ( ! $items ) {
-			return '<p class="wper-check-empty">' . esc_html( wper_checklist_t( '결과가 없습니다.' ) ) . '</p>';
+			return '<p class="wper-check-empty">' . esc_html__( 'No results yet.', 'wper-checklist' ) . '</p>';
 		}
 
 		$scores = WPER_Checklist_Runner::score( $items );
@@ -39,22 +44,22 @@ final class WPER_Checklist_Report {
 			<?php self::render_cats( $scores ); ?>
 
 			<section class="wper-check-report">
-				<?php foreach ( WPER_Checklist_Runner::CATS as $cat => $cat_label ) : ?>
+				<?php foreach ( WPER_Checklist_Runner::cat_labels() as $cat => $cat_label ) : ?>
 					<?php
 					$cat_items = array_filter( $items, static fn( $i ) => $cat === ( $i['cat'] ?? '' ) );
 					if ( ! $cat_items ) {
 						continue;
 					}
 					?>
-					<h3 class="wper-check-report__cat"><?php wper_checklist_e( $cat_label ); ?>
+					<h3 class="wper-check-report__cat"><?php echo esc_html( $cat_label ); ?>
 						<span class="wper-check-report__pts"><?php echo esc_html( $scores['cats'][ $cat ]['score'] ); ?> / 200</span>
 					</h3>
 					<ul class="wper-check-items">
 						<?php foreach ( $cat_items as $item ) : ?>
 							<li class="wper-check-item wper-check-item--<?php echo esc_attr( $item['status'] ); ?>">
 								<span class="wper-check-badge wper-check-badge--<?php echo esc_attr( $item['status'] ); ?>"><?php echo esc_html( self::status_label( $item['status'] ) ); ?></span>
-								<span class="wper-check-item__label"><?php echo esc_html( wper_checklist_t( $item['label'] ) ); ?></span>
-								<span class="wper-check-item__measured"><?php echo esc_html( WPER_Checklist_I18N::t_mixed( (string) $item['measured'] ) ); ?></span>
+								<span class="wper-check-item__label"><?php echo esc_html( WPER_Checklist_Runner::item_label( (string) $item['key'], (string) $item['label'] ) ); ?></span>
+								<span class="wper-check-item__measured"><?php echo esc_html( (string) $item['measured'] ); ?></span>
 								<span class="wper-check-item__pts"><?php echo 'skip' === $item['status'] ? '—' : esc_html( round( $item['score'] ) . '/' . round( $item['possible'] ) ); ?></span>
 							</li>
 						<?php endforeach; ?>
@@ -66,7 +71,7 @@ final class WPER_Checklist_Report {
 			<?php self::render_skip_note( $items ); ?>
 
 			<footer class="wper-check-footer">
-				<p><?php wper_checklist_e( '진단 도구' ); ?>: WPER Checklist v<?php echo esc_html( WPER_CHECKLIST_VERSION ); ?> · <a href="https://wper.kr" target="_blank" rel="noopener">wper.kr</a></p>
+				<p><?php esc_html_e( 'Diagnostic tool', 'wper-checklist' ); ?>: WPER Checklist v<?php echo esc_html( WPER_CHECKLIST_VERSION ); ?> · <a href="https://wper.kr" target="_blank" rel="noopener">wper.kr</a></p>
 			</footer>
 		</div>
 		<?php
@@ -79,13 +84,13 @@ final class WPER_Checklist_Report {
 
 		// 등급 — 표시용일 뿐 점수를 대신하지 않는다.
 		if ( $total >= 900 ) {
-			$grade = [ 'pass', '우수' ];
+			$grade = [ 'pass', __( 'Excellent', 'wper-checklist' ) ];
 		} elseif ( $total >= 700 ) {
-			$grade = [ 'pass', '양호' ];
+			$grade = [ 'pass', __( 'Good', 'wper-checklist' ) ];
 		} elseif ( $total >= 500 ) {
-			$grade = [ 'warn', '주의 필요' ];
+			$grade = [ 'warn', __( 'Needs attention', 'wper-checklist' ) ];
 		} else {
-			$grade = [ 'fail', '위험' ];
+			$grade = [ 'fail', __( 'At risk', 'wper-checklist' ) ];
 		}
 
 		$c      = 2 * M_PI * 52; // 링 둘레.
@@ -106,7 +111,7 @@ final class WPER_Checklist_Report {
 				</div>
 			</div>
 			<div class="wper-check-score__meta">
-				<p class="wper-check-score__grade wper-check-score__grade--<?php echo esc_attr( $grade[0] ); ?>"><?php wper_checklist_e( $grade[1] ); ?></p>
+				<p class="wper-check-score__grade wper-check-score__grade--<?php echo esc_attr( $grade[0] ); ?>"><?php echo esc_html( $grade[1] ); ?></p>
 				<p class="wper-check-score__site"><?php echo esc_html( home_url() ); ?></p>
 				<?php if ( $post ) : ?>
 					<p class="wper-check-score__date"><?php echo esc_html( get_date_from_gmt( $post->post_date_gmt, 'Y-m-d H:i' ) ); ?></p>
@@ -119,7 +124,7 @@ final class WPER_Checklist_Report {
 	private static function render_cats( array $scores ): void {
 		?>
 		<div class="wper-check-cats">
-			<?php foreach ( WPER_Checklist_Runner::CATS as $cat => $cat_label ) : ?>
+			<?php foreach ( WPER_Checklist_Runner::cat_labels() as $cat => $cat_label ) : ?>
 				<?php
 				$row = $scores['cats'][ $cat ];
 				$pct = (int) round( $row['score'] / 2 ); // 200 만점 → %.
@@ -127,7 +132,7 @@ final class WPER_Checklist_Report {
 				?>
 				<div class="wper-check-cat">
 					<div class="wper-check-cat__head">
-						<span class="wper-check-cat__name"><?php wper_checklist_e( $cat_label ); ?></span>
+						<span class="wper-check-cat__name"><?php echo esc_html( $cat_label ); ?></span>
 						<span class="wper-check-cat__score"><?php echo esc_html( $row['score'] ); ?> <small>/ 200</small></span>
 					</div>
 					<div class="wper-check-meter">
@@ -137,12 +142,14 @@ final class WPER_Checklist_Report {
 					</div>
 					<p class="wper-check-cat__counts">
 						<?php
-						printf(
-							/* 상태 개수 요약 */
-							esc_html( wper_checklist_t( '통과 %1$d · 주의 %2$d · 실패 %3$d' ) ),
-							(int) $row['counts']['pass'],
-							(int) $row['counts']['warn'],
-							(int) $row['counts']['fail']
+						echo esc_html(
+							sprintf(
+								/* translators: 1: pass count, 2: warning count, 3: fail count. */
+								__( 'Pass %1$d · Warn %2$d · Fail %3$d', 'wper-checklist' ),
+								(int) $row['counts']['pass'],
+								(int) $row['counts']['warn'],
+								(int) $row['counts']['fail']
+							)
 						);
 						?>
 					</p>
@@ -158,8 +165,8 @@ final class WPER_Checklist_Report {
 		if ( ! $needs ) {
 			?>
 			<section class="wper-check-recos">
-				<h3><?php wper_checklist_e( 'WPER 권장 조치' ); ?></h3>
-				<p class="wper-check-recos__clean"><?php wper_checklist_e( '개선이 필요한 항목이 없습니다. 현재 상태를 유지하세요.' ); ?></p>
+				<h3><?php esc_html_e( 'WPER recommendations', 'wper-checklist' ); ?></h3>
+				<p class="wper-check-recos__clean"><?php esc_html_e( 'Nothing needs improvement. Keep it as it is.', 'wper-checklist' ); ?></p>
 			</section>
 			<?php
 			return;
@@ -175,18 +182,18 @@ final class WPER_Checklist_Report {
 		);
 		?>
 		<section class="wper-check-recos">
-			<h3><?php wper_checklist_e( 'WPER 권장 조치' ); ?></h3>
+			<h3><?php esc_html_e( 'WPER recommendations', 'wper-checklist' ); ?></h3>
 			<?php foreach ( $needs as $item ) : ?>
 				<?php $reco = $recos[ $item['key'] ] ?? null; ?>
 				<article class="wper-check-reco wper-check-reco--<?php echo esc_attr( $item['status'] ); ?>">
 					<h4 class="wper-check-reco__title">
 						<span class="wper-check-badge wper-check-badge--<?php echo esc_attr( $item['status'] ); ?>"><?php echo esc_html( self::status_label( $item['status'] ) ); ?></span>
-						<?php echo esc_html( wper_checklist_t( $item['label'] ) ); ?>
+						<?php echo esc_html( WPER_Checklist_Runner::item_label( (string) $item['key'], (string) $item['label'] ) ); ?>
 					</h4>
-					<p class="wper-check-reco__measured"><?php echo esc_html( WPER_Checklist_I18N::t_mixed( (string) $item['measured'] ) ); ?></p>
+					<p class="wper-check-reco__measured"><?php echo esc_html( (string) $item['measured'] ); ?></p>
 					<?php if ( $reco ) : ?>
-						<p class="wper-check-reco__cause"><strong><?php wper_checklist_e( '원인' ); ?>:</strong> <?php echo esc_html( wper_checklist_t( $reco['cause'] ) ); ?></p>
-						<p class="wper-check-reco__fix"><strong><?php wper_checklist_e( '해결' ); ?>:</strong> <?php echo esc_html( wper_checklist_t( $reco['fix'] ) ); ?></p>
+						<p class="wper-check-reco__cause"><strong><?php esc_html_e( 'Cause', 'wper-checklist' ); ?>:</strong> <?php echo esc_html( $reco['cause'] ); ?></p>
+						<p class="wper-check-reco__fix"><strong><?php esc_html_e( 'Fix', 'wper-checklist' ); ?>:</strong> <?php echo esc_html( $reco['fix'] ); ?></p>
 					<?php endif; ?>
 				</article>
 			<?php endforeach; ?>
@@ -201,19 +208,26 @@ final class WPER_Checklist_Report {
 		}
 		?>
 		<section class="wper-check-skips">
-			<h4><?php wper_checklist_e( '확인 불가 항목' ); ?></h4>
+			<h4><?php esc_html_e( 'Items that could not be verified', 'wper-checklist' ); ?></h4>
 			<p>
 				<?php
 				printf(
-					/* skip 항목 수 */
-					esc_html( wper_checklist_t( '%d개 항목은 이번 진단에서 측정할 수 없어 점수 분모에서 제외했습니다. 측정하지 않은 것을 통과나 실패로 표기하지 않습니다.' ) ),
+					esc_html(
+						/* translators: %d: number of items that could not be measured. */
+						_n(
+							'%d item could not be measured in this run, so it was excluded from the score denominator. We never report an unmeasured item as a pass or a failure.',
+							'%d items could not be measured in this run, so they were excluded from the score denominator. We never report an unmeasured item as a pass or a failure.',
+							count( $skips ),
+							'wper-checklist'
+						)
+					),
 					count( $skips )
 				);
 				?>
 			</p>
 			<ul>
 				<?php foreach ( $skips as $item ) : ?>
-					<li><?php echo esc_html( wper_checklist_t( $item['label'] ) ); ?> — <?php echo esc_html( WPER_Checklist_I18N::t_mixed( (string) $item['measured'] ) ); ?></li>
+					<li><?php echo esc_html( WPER_Checklist_Runner::item_label( (string) $item['key'], (string) $item['label'] ) ); ?> — <?php echo esc_html( (string) $item['measured'] ); ?></li>
 				<?php endforeach; ?>
 			</ul>
 		</section>
@@ -221,6 +235,13 @@ final class WPER_Checklist_Report {
 	}
 
 	private static function status_label( string $status ): string {
-		return wper_checklist_t( [ 'pass' => '통과', 'warn' => '주의', 'fail' => '실패', 'skip' => '확인 불가' ][ $status ] ?? $status );
+		$labels = [
+			'pass' => __( 'Pass', 'wper-checklist' ),
+			'warn' => __( 'Warn', 'wper-checklist' ),
+			'fail' => __( 'Fail', 'wper-checklist' ),
+			'skip' => __( 'Unverifiable', 'wper-checklist' ),
+		];
+
+		return $labels[ $status ] ?? $status;
 	}
 }

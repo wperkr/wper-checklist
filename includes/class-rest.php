@@ -43,6 +43,8 @@ final class WPER_Checklist_REST {
 			]
 		);
 
+		// ⚠ `lang` 파라미터는 1.1.0 에서 제거했다 — 보고서 언어는 사이트 로케일이 정한다.
+		//   주소로 언어를 바꾸는 경로가 남아 있으면 언어팩과 두 개의 진실이 생긴다.
 		register_rest_route(
 			self::NS,
 			'/report/(?P<id>\d+)',
@@ -50,9 +52,6 @@ final class WPER_Checklist_REST {
 				'methods'             => 'GET',
 				'callback'            => [ __CLASS__, 'report' ],
 				'permission_callback' => $perm,
-				'args'                => [
-					'lang' => [ 'required' => false, 'type' => 'string', 'default' => 'ko' ],
-				],
 			]
 		);
 	}
@@ -74,7 +73,7 @@ final class WPER_Checklist_REST {
 
 		$post = get_post( $run_id );
 		if ( ! $post || WPER_Checklist_Store::CPT !== $post->post_type ) {
-			return new WP_REST_Response( [ 'error' => '진단 레코드 없음' ], 404 );
+			return new WP_REST_Response( [ 'error' => __( 'Diagnostic record not found.', 'wper-checklist' ) ], 404 );
 		}
 
 		$out = WPER_Checklist_Runner::run_step( $run_id, $step_id, $cursor );
@@ -84,18 +83,17 @@ final class WPER_Checklist_REST {
 
 	public static function report( WP_REST_Request $request ): WP_REST_Response {
 		$run_id = (int) $request->get_param( 'id' );
-		$lang   = sanitize_key( (string) $request->get_param( 'lang' ) );
 
 		$post = get_post( $run_id );
 		if ( ! $post || WPER_Checklist_Store::CPT !== $post->post_type ) {
-			return new WP_REST_Response( [ 'error' => '진단 레코드 없음' ], 404 );
+			return new WP_REST_Response( [ 'error' => __( 'Diagnostic record not found.', 'wper-checklist' ) ], 404 );
 		}
 
 		$results = WPER_Checklist_Store::results( $run_id );
 
 		return new WP_REST_Response(
 			[
-				'html'   => WPER_Checklist_Report::render_html( $run_id, $lang ),
+				'html'   => WPER_Checklist_Report::render_html( $run_id ),
 				'scores' => WPER_Checklist_Runner::score( $results['items'] ?? [] ),
 			],
 			200

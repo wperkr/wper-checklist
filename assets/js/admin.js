@@ -17,7 +17,9 @@
 		return;
 	}
 
-	var CAT_LABELS = { latency: '응답 속도', db: 'DB 쿼리', seo: 'SEO', vuln: 'WP 취약점', server: '서버 설정' };
+	// ⚠ 라벨을 여기에 두지 않는다 — JS 안의 문자열은 언어팩이 닿지 않는다.
+	//    서버가 wp_localize_script 로 번역해 내려준 것만 쓴다.
+	var CAT_LABELS = cfg.i18n && cfg.i18n.cats ? cfg.i18n.cats : {};
 
 	function api(path, opts) {
 		opts = opts || {};
@@ -127,7 +129,7 @@
 			function nextStep() {
 				if (index >= manifest.length) {
 					panel.finish();
-					showReport(created.run_id, 'ko', true);
+					showReport(created.run_id, true);
 					return;
 				}
 				var step = manifest[index];
@@ -156,39 +158,30 @@
 
 	/* ---------------------------------------------------------------- 보고서 */
 
-	function showReport(runId, lang, fresh) {
+	function showReport(runId, fresh) {
 		var loading = el('p', 'wper-check-progress__preparing', cfg.i18n.loading);
 		stage.appendChild(loading);
 
-		api('/report/' + runId + '?lang=' + lang).then(function (out) {
+		api('/report/' + runId).then(function (out) {
 			stage.innerHTML = '';
 
 			var holder = el('div', 'wper-check-holder');
 			holder.innerHTML = out.html; // 서버 렌더 HTML — 서버측에서 전량 이스케이프됨.
 			stage.appendChild(holder);
 
-			// 툴바 — 상세 보고서 토글 + 언어 전환.
+			// 툴바 — 상세 보고서 토글. 언어 전환 버튼은 1.1.0 에서 제거했다:
+			// 보고서 언어는 사이트 로케일이 정하고 언어팩이 공급한다.
 			var toolbar = el('div', 'wper-check-toolbar');
 			var recoBtn = el('button', 'wper-check-toolbar__reco js-check-reco', cfg.i18n.reco);
 			recoBtn.type = 'button';
 			toolbar.appendChild(recoBtn);
-
-			var langWrap = el('span', 'wper-check-toolbar__lang');
-			['ko', 'en'].forEach(function (code) {
-				var b = el('button', 'wper-check-toolbar__lang-btn js-check-lang' + (code === lang ? ' is-active' : ''), code.toUpperCase());
-				b.type = 'button';
-				b.dataset.lang = code;
-				b.dataset.run = runId;
-				langWrap.appendChild(b);
-			});
-			toolbar.appendChild(langWrap);
 
 			var head = holder.querySelector('.wper-check-cats');
 			if (head && head.parentNode) {
 				head.parentNode.insertBefore(toolbar, head.nextSibling);
 			}
 
-			// 상세는 접힌 채 시작 — "[WPER Recommendation (번역 적용)]" 클릭으로 펼친다.
+			// 상세는 접힌 채 시작 — "[WPER Recommendation]" 클릭으로 펼친다.
 			var detail = holder.querySelectorAll('.wper-check-report, .wper-check-recos, .wper-check-skips');
 			var open = !fresh;
 			detail.forEach(function (sec) { sec.hidden = !open; });
@@ -221,13 +214,7 @@
 
 		var open = event.target.closest('.js-check-open');
 		if (open) {
-			showReport(parseInt(open.dataset.run, 10), 'ko', false);
-			return;
-		}
-
-		var langBtn = event.target.closest('.js-check-lang');
-		if (langBtn && !langBtn.classList.contains('is-active')) {
-			showReport(parseInt(langBtn.dataset.run, 10), langBtn.dataset.lang, false);
+			showReport(parseInt(open.dataset.run, 10), false);
 		}
 	});
 })();

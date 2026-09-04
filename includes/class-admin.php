@@ -24,8 +24,8 @@ final class WPER_Checklist_Admin {
 	public static function register_menu(): void {
 		self::$hook = add_submenu_page(
 			'wper',
-			'WPER 진단',
-			'사이트 진단',
+			__( 'WPER Checklist', 'wper-checklist' ),
+			__( 'Site health', 'wper-checklist' ),
 			'manage_options',
 			self::PAGE,
 			[ __CLASS__, 'render' ]
@@ -46,13 +46,17 @@ final class WPER_Checklist_Admin {
 			[
 				'root'  => esc_url_raw( rest_url( WPER_Checklist_REST::NS ) ),
 				'nonce' => wp_create_nonce( 'wp_rest' ),
+				// JS 는 문자열을 갖지 않는다 — 전부 여기서 번역해 내려보낸다.
+				// (관리자 화면 JS 하나뿐이라 wp_set_script_translations 의 JSON 파일
+				//  배선을 들이는 것보다 이 편이 단순하고, 언어팩 하나로 끝난다.)
 				'i18n'  => [
-					'running'   => '진단 중…',
-					'preparing' => '진단 준비 중…',
-					'complete'  => '진단 완료',
-					'error'     => '오류가 발생했습니다. 화면을 새로고침한 뒤 다시 시도해 주세요.',
-					'reco'      => 'WPER Recommendation (번역 적용)',
-					'loading'   => '보고서 생성 중…',
+					'running'   => __( 'Running diagnostics…', 'wper-checklist' ),
+					'preparing' => __( 'Preparing…', 'wper-checklist' ),
+					'complete'  => __( 'Diagnostics complete', 'wper-checklist' ),
+					'error'     => __( 'Something went wrong. Please refresh the page and try again.', 'wper-checklist' ),
+					'reco'      => __( 'WPER Recommendation', 'wper-checklist' ),
+					'loading'   => __( 'Building the report…', 'wper-checklist' ),
+					'cats'      => WPER_Checklist_Runner::cat_labels(),
 				],
 			]
 		);
@@ -60,22 +64,22 @@ final class WPER_Checklist_Admin {
 
 	public static function render(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( '권한이 없습니다.' );
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'wper-checklist' ) );
 		}
 
 		$recent = WPER_Checklist_Store::recent( 5 );
 		?>
 		<div class="wrap wper-checklist">
-			<h1 class="wper-checklist__title">WPER 진단</h1>
-			<p class="wper-checklist__lede">응답 속도 · DB 쿼리 · SEO · 취약점 · 서버 설정 — 5개 영역, 1000점 만점.</p>
+			<h1 class="wper-checklist__title"><?php esc_html_e( 'WPER Checklist', 'wper-checklist' ); ?></h1>
+			<p class="wper-checklist__lede"><?php esc_html_e( 'Response time · database queries · SEO · vulnerabilities · server configuration — five areas, scored out of 1000.', 'wper-checklist' ); ?></p>
 
 			<div class="wper-checklist__stage" id="wper-check-stage">
 				<div class="wper-checklist__intro">
-					<button type="button" class="wper-check-start js-check-start">진단 시작</button>
+					<button type="button" class="wper-check-start js-check-start"><?php esc_html_e( 'Start diagnostics', 'wper-checklist' ); ?></button>
 
 					<?php if ( $recent ) : ?>
 						<div class="wper-check-history">
-							<h2 class="wper-check-history__title">지난 결과</h2>
+							<h2 class="wper-check-history__title"><?php esc_html_e( 'Previous results', 'wper-checklist' ); ?></h2>
 							<ul>
 								<?php foreach ( $recent as $row ) : ?>
 									<li>

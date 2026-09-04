@@ -16,12 +16,18 @@ final class WPER_Checklist_Check_DB {
 
 	const CAT = 'db';
 
-	/** 스텝 → [ URL 키, 가중치, 라벨, pass/warn 상한(쿼리 수), 측정 횟수 ]. */
-	const URL_STEPS = [
-		'db:home'    => [ 'home', 40, '랜딩 쿼리 수', [ 30, 80 ], 3 ],
-		'db:single'  => [ 'single', 30, '글 페이지 쿼리 수', [ 40, 100 ], 1 ],
-		'db:archive' => [ 'archive', 30, '아카이브 쿼리 수', [ 50, 120 ], 1 ],
-	];
+	/**
+	 * 스텝 → [ URL 키, 가중치, 라벨, pass/warn 상한(쿼리 수), 측정 횟수 ].
+	 *
+	 * ⚠ 상수가 아니라 메서드다 — 상수 표현식에는 `__()` 를 넣을 수 없다.
+	 */
+	private static function url_steps(): array {
+		return [
+			'db:home'    => [ 'home', 40, __( 'Landing query count', 'wper-checklist' ), [ 30, 80 ], 3 ],
+			'db:single'  => [ 'single', 30, __( 'Post query count', 'wper-checklist' ), [ 40, 100 ], 1 ],
+			'db:archive' => [ 'archive', 30, __( 'Archive query count', 'wper-checklist' ), [ 50, 120 ], 1 ],
+		];
+	}
 
 	public static function run( string $step_id, array $ctx ): array {
 		if ( 'db:analyze' === $step_id ) {
@@ -31,14 +37,14 @@ final class WPER_Checklist_Check_DB {
 	}
 
 	private static function run_url( string $step_id, array $ctx ): array {
-		[ $url_key, $weight, $label, [ $ok, $warn ], $runs ] = self::URL_STEPS[ $step_id ];
+		[ $url_key, $weight, $label, [ $ok, $warn ], $runs ] = self::url_steps()[ $step_id ];
 
 		$url   = $ctx['urls'][ $url_key ] ?? '';
 		$token = $ctx['token'] ?? '';
 
 		if ( '' === $url ) {
-			$item = wper_checklist_item( $step_id, self::CAT, $label, 'skip', $weight, '해당 URL 없음 — 건너뜀' );
-			return [ 'items' => [ $item ], 'events' => [ $label . ': 대상 없음' ], 'done' => true ];
+			$item = wper_checklist_item( $step_id, self::CAT, $label, 'skip', $weight, __( 'No such URL — skipped', 'wper-checklist' ) );
+			return [ 'items' => [ $item ], 'events' => [ $label . __( ': no target', 'wper-checklist' ) ], 'done' => true ];
 		}
 
 		// 워밍 1회 — 첫 요청은 오브젝트 캐시 미스가 섞여 대표성이 없다. "전" 측정도 동일 조건.
@@ -51,8 +57,8 @@ final class WPER_Checklist_Check_DB {
 		for ( $i = 0; $i < $runs; $i++ ) {
 			$res = self::probe( $url, $token );
 			if ( null === $res ) {
-				$item = wper_checklist_item( $step_id, self::CAT, $label, 'skip', $weight, '캡처 헤더 미수신 — 확인 불가 (플러그인이 프론트에서 비활성일 수 있음)' );
-				return [ 'items' => [ $item ], 'events' => [ $label . ': 캡처 실패' ], 'done' => true ];
+				$item = wper_checklist_item( $step_id, self::CAT, $label, 'skip', $weight, __( 'Capture headers not received — unverifiable (plugin may be inactive on the front end)', 'wper-checklist' ) );
+				return [ 'items' => [ $item ], 'events' => [ $label . __( ': capture failed', 'wper-checklist' ) ], 'done' => true ];
 			}
 			$counts[] = $res['queries'];
 			$times[]  = $res['time_ms'];
@@ -69,17 +75,20 @@ final class WPER_Checklist_Check_DB {
 			$label,
 			$status,
 			$weight,
-			sprintf( '%d개 쿼리 (%s)', $count, $runs > 1 ? '3회 중앙값' : '1회' ),
+			/* translators: 1: query count, 2: how it was measured (median of 3, or single run). */
+			sprintf( __( '%1$d queries (%2$s)', 'wper-checklist' ), $count, $runs > 1 ? __( 'median of 3', 'wper-checklist' ) : __( 'single run', 'wper-checklist' ) ),
 			[ 'slow' => $last['slow'], 'dupes' => $last['dupes'], 'hits' => $last['hits'], 'misses' => $last['misses'] ]
 		);
 
 		if ( 'home' === $url_key ) {
 			$time_ms = WPER_Checklist_HTTP::median( $times );
 			$t_state = $time_ms < 50 ? 'pass' : ( $time_ms <= 150 ? 'warn' : 'fail' );
-			$items[] = wper_checklist_item( 'db:time', self::CAT, '랜딩 DB 총 시간', $t_state, 30, sprintf( '%dms (3회 중앙값)', (int) round( $time_ms ) ) );
+			/* translators: %d: database time in milliseconds. */
+			$items[] = wper_checklist_item( 'db:time', self::CAT, __( 'Landing total DB time', 'wper-checklist' ), $t_state, 30, sprintf( __( '%dms (median of 3)', 'wper-checklist' ), (int) round( $time_ms ) ) );
 		}
 
-		return [ 'items' => $items, 'events' => [ sprintf( '%s: %d개', $label, $count ) ], 'done' => true ];
+		/* translators: 1: item label, 2: measured count. */
+		return [ 'items' => $items, 'events' => [ sprintf( __( '%1$s: %2$d', 'wper-checklist' ), $label, $count ) ], 'done' => true ];
 	}
 
 	/**
@@ -110,21 +119,24 @@ final class WPER_Checklist_Check_DB {
 		$items = [];
 
 		if ( ! $seen ) {
-			$items[] = wper_checklist_item( 'db:slow', self::CAT, '슬로 쿼리 (>20ms)', 'skip', 30, '캡처 데이터 없음 — 확인 불가' );
-			$items[] = wper_checklist_item( 'db:dupes', self::CAT, '중복 쿼리 (N+1)', 'skip', 20, '캡처 데이터 없음 — 확인 불가' );
+			$items[] = wper_checklist_item( 'db:slow', self::CAT, __( 'Slow queries (>20ms)', 'wper-checklist' ), 'skip', 30, __( 'No capture data — unverifiable', 'wper-checklist' ) );
+			$items[] = wper_checklist_item( 'db:dupes', self::CAT, __( 'Duplicate queries (N+1)', 'wper-checklist' ), 'skip', 20, __( 'No capture data — unverifiable', 'wper-checklist' ) );
 		} else {
 			$fingerprints = WPER_Checklist_Capture::read_and_clear();
 			$fp_note      = '';
 			if ( $fingerprints ) {
-				$first   = reset( $fingerprints );
-				$fp_note = $first ? sprintf( ' · 최다 %sms', $first[0]['ms'] ?? '?' ) : '';
+				$first = reset( $fingerprints );
+				/* translators: %s: duration of the slowest query, in milliseconds. */
+				$fp_note = $first ? sprintf( __( ' · slowest %sms', 'wper-checklist' ), $first[0]['ms'] ?? '?' ) : '';
 			}
 
 			$s_status = 0 === $slow ? 'pass' : ( $slow <= 3 ? 'warn' : 'fail' );
-			$items[]  = wper_checklist_item( 'db:slow', self::CAT, '슬로 쿼리 (>20ms)', $s_status, 30, sprintf( '%d건%s', $slow, $fp_note ) );
+			/* translators: 1: number of occurrences, 2: optional suffix with extra detail. */
+			$items[]  = wper_checklist_item( 'db:slow', self::CAT, __( 'Slow queries (>20ms)', 'wper-checklist' ), $s_status, 30, sprintf( __( '%1$d found%2$s', 'wper-checklist' ), $slow, $fp_note ) );
 
 			$d_status = 0 === $dupes ? 'pass' : ( $dupes <= 5 ? 'warn' : 'fail' );
-			$items[]  = wper_checklist_item( 'db:dupes', self::CAT, '중복 쿼리 (N+1)', $d_status, 20, sprintf( '%d건 (리터럴 제거 지문 기준)', $dupes ) );
+			/* translators: %d: number of duplicate queries. */
+			$items[]  = wper_checklist_item( 'db:dupes', self::CAT, __( 'Duplicate queries (N+1)', 'wper-checklist' ), $d_status, 20, sprintf( __( '%d found (by literal-stripped fingerprint)', 'wper-checklist' ), $dupes ) );
 		}
 
 		// 오브젝트 캐시 — 외부 드롭인 + 히트율.
@@ -132,13 +144,15 @@ final class WPER_Checklist_Check_DB {
 		$dropin  = file_exists( WP_CONTENT_DIR . '/object-cache.php' );
 		$ratio   = ( $hits >= 0 && ( $hits + $miss ) > 0 ) ? $hits / ( $hits + $miss ) : null;
 		$o_state = ( $ext && $dropin ) ? 'pass' : ( $ext || $dropin ? 'warn' : 'fail' );
-		$note    = $ext ? '외부 오브젝트 캐시 활성' : '외부 오브젝트 캐시 없음';
+		$note    = $ext ? __( 'External object cache active', 'wper-checklist' ) : __( 'No external object cache', 'wper-checklist' );
 		if ( null !== $ratio ) {
-			$note .= sprintf( ' · 히트율 %d%%', (int) round( $ratio * 100 ) );
+			/* translators: %d: object cache hit ratio, as a percentage. */
+			$note .= sprintf( __( ' · hit ratio %d%%', 'wper-checklist' ), (int) round( $ratio * 100 ) );
 		}
-		$items[] = wper_checklist_item( 'db:objcache', self::CAT, '오브젝트 캐시', $o_state, 20, $note );
+		$items[] = wper_checklist_item( 'db:objcache', self::CAT, __( 'Object cache', 'wper-checklist' ), $o_state, 20, $note );
 
-		return [ 'items' => $items, 'events' => [ sprintf( '쿼리 분석: 슬로 %d · 중복 %d', $slow, $dupes ) ], 'done' => true ];
+		/* translators: 1: slow query count, 2: duplicate query count. */
+		return [ 'items' => $items, 'events' => [ sprintf( __( 'Query analysis: %1$d slow · %2$d duplicate', 'wper-checklist' ), $slow, $dupes ) ], 'done' => true ];
 	}
 
 	/**

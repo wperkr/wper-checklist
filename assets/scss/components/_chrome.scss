@@ -84,7 +84,8 @@
 	}
 }
 
-// 툴바 — 보고서 상세 토글 + 언어.
+// 툴바 — 보고서 상세 토글. 언어 전환 필은 1.1.0 에서 제거했다
+// (보고서 언어는 사이트 로케일 + 언어팩이 정한다).
 .wper-check-toolbar {
 	display: flex;
 	align-items: center;
@@ -107,27 +108,6 @@
 		}
 	}
 
-	&__lang {
-		display: inline-flex;
-		border: 1px solid var(--wper-border);
-		border-radius: var(--wper-radius-full);
-		overflow: hidden;
-	}
-
-	&__lang-btn {
-		padding: var(--wper-space-1) var(--wper-space-3);
-		border: 0;
-		background: var(--wper-surface);
-		color: var(--wper-ink-subtle);
-		font-size: var(--wper-text-xs);
-		font-weight: var(--wper-weight-semibold);
-		cursor: pointer;
-
-		&.is-active {
-			background: var(--wper-brand-tint);
-			color: var(--wper-brand-active);
-		}
-	}
 }
 
 .wper-check-error {
