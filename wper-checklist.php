@@ -41,6 +41,7 @@ require_once WPER_CHECKLIST_PATH . 'includes/checks/class-check-server.php';
 require_once WPER_CHECKLIST_PATH . 'includes/class-runner.php';
 require_once WPER_CHECKLIST_PATH . 'includes/class-report.php';
 require_once WPER_CHECKLIST_PATH . 'includes/class-rest.php';
+require_once WPER_CHECKLIST_PATH . 'includes/admin-menu.php';
 require_once WPER_CHECKLIST_PATH . 'includes/class-admin.php';
 
 /**

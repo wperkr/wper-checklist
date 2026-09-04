@@ -1,6 +1,9 @@
 <?php
 /**
- * 관리자 화면 — 도구 › WPER 진단. 화면은 하나다.
+ * 관리자 화면 — WPER › 진단. 화면은 하나다.
+ *
+ * ⭐ 부모는 wper 계열 공용 최상위 메뉴 `wper` 다 (includes/admin-menu.php 의 사본 규약).
+ *    단독 설치 사이트에서도 이 플러그인 자신이 그 메뉴를 만들므로 부모는 항상 있다.
  *
  * ⭐ 진입 화면에는 "진단 시작" 버튼만 둔다 (+ 이력이 있으면 지난 결과 링크).
  *    진행 · 점수 · 보고서는 전부 JS 가 같은 화면에 그린다.
@@ -19,9 +22,10 @@ final class WPER_Checklist_Admin {
 	private static $hook = '';
 
 	public static function register_menu(): void {
-		self::$hook = add_management_page(
+		self::$hook = add_submenu_page(
+			'wper',
 			'WPER 진단',
-			'WPER 진단',
+			'사이트 진단',
 			'manage_options',
 			self::PAGE,
 			[ __CLASS__, 'render' ]
