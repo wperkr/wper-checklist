@@ -344,6 +344,20 @@ final class WPER_Checklist_Check_Vuln_WP {
 			return [];
 		}
 
+		/*
+		 * ⚠ 코어 엔드포인트는 **버전별로 질의**된다 (`core/6.4.2`) — 서버가 이미 그
+		 *   버전에 해당하는 것만 골라서 주고, 그래서 항목에 `operator` 범위가 없다.
+		 *   플러그인 · 테마는 반대로 슬러그 전체 목록을 주고 범위 필터를 클라이언트가 건다.
+		 *
+		 *   이 구분을 놓치면 코어 항목이 전부 "서술자 불명" 으로 떨어져 **어떤 버전이든
+		 *   언제나 "해당 CVE 없음"** 이 된다 (2026-09-05 실측: core/4.7 은 362건을
+		 *   돌려주는데 필터를 통과한 것이 0건이었다). 취약점 진단을 표방하면서 코어에
+		 *   대해 늘 무결하다고 답하는 상태이므로, 이 분기는 지우지 않는다.
+		 */
+		if ( isset( $cached['data']['core'] ) ) {
+			return $vulns;
+		}
+
 		$hits = [];
 		foreach ( $vulns as $v ) {
 			if ( '' !== $version && true === self::affected( $v, $version ) ) {
@@ -391,13 +405,19 @@ final class WPER_Checklist_Check_Vuln_WP {
 		$names = [];
 		foreach ( array_slice( $hits, 0, 3 ) as $v ) {
 			$cve = '';
+			$alt = '';
 			foreach ( (array) ( $v['source'] ?? [] ) as $src ) {
+				// ⚠ 코어 항목의 `name` 은 **질의한 버전 문자열**이라 이름 자리에 쓰면
+				//   "4.7, 4.7, 4.7" 이 된다. CVE 가 없을 때는 출처가 붙인 제목을 쓴다.
+				if ( '' === $alt && ! empty( $src['name'] ) ) {
+					$alt = (string) $src['name'];
+				}
 				if ( ! empty( $src['id'] ) && str_starts_with( (string) $src['id'], 'CVE' ) ) {
 					$cve = (string) $src['id'];
 					break;
 				}
 			}
-			$names[] = $cve ?: (string) ( $v['name'] ?? __( 'known vulnerabilities', 'wper-checklist' ) );
+			$names[] = $cve ?: ( $alt ? mb_substr( $alt, 0, 60 ) : (string) ( $v['name'] ?? __( 'known vulnerabilities', 'wper-checklist' ) ) );
 		}
 		/* translators: %d: number of additional findings not listed. */
 		$more = count( $hits ) > 3 ? sprintf( __( ' and %d more', 'wper-checklist' ), count( $hits ) - 3 ) : '';

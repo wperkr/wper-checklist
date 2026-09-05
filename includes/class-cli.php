@@ -81,18 +81,25 @@ final class WPER_Checklist_CLI {
 			'skip'  => __( 'Unverifiable', 'wper-checklist' ),
 		];
 
+		$context = WPER_Checklist_Store::context( $run_id );
+		$per     = (int) ( $scores['per'] ?? 200 );
+
 		$rows = [];
-		foreach ( WPER_Checklist_Runner::cat_labels() as $cat => $label ) {
+		foreach ( WPER_Checklist_Runner::cat_labels( $context ) as $cat => $label ) {
 			$row    = $scores['cats'][ $cat ];
 			$rows[] = [
 				$head['area']  => $label,
-				$head['score'] => $row['score'] . ' / 200',
+				$head['score'] => $row['score'] . ' / ' . $per,
 				$head['pass']  => $row['counts']['pass'],
 				$head['warn']  => $row['counts']['warn'],
 				$head['fail']  => $row['counts']['fail'],
 				$head['skip']  => $row['counts']['skip'],
 			];
 		}
+
+		// 진단 대상을 먼저 밝힌다 — 확장이 다른 사이트를 대상으로 걸어 둘 수 있으므로,
+		// 어느 주소를 잰 표인지 모른 채 숫자만 읽는 일이 없어야 한다.
+		WP_CLI::log( untrailingslashit( (string) ( $context['urls']['home'] ?? home_url() ) ) );
 
 		\WP_CLI\Utils\format_items( 'table', $rows, array_values( $head ) );
 		/* translators: 1: total score out of 1000, 2: diagnostic run id. */

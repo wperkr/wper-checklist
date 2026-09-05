@@ -94,7 +94,9 @@ final class WPER_Checklist_REST {
 		return new WP_REST_Response(
 			[
 				'html'   => WPER_Checklist_Report::render_html( $run_id ),
-				'scores' => WPER_Checklist_Runner::score( $results['items'] ?? [] ),
+				// ⚠ 채점은 **그 진단의** 컨텍스트로 한다 — 지금 화면의 설정으로 하면
+				//   지난 기록이 다시 열 때마다 다른 점수를 낸다.
+				'scores' => WPER_Checklist_Runner::score( $results['items'] ?? [], WPER_Checklist_Store::context( $run_id ) ),
 			],
 			200
 		);

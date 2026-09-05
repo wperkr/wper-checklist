@@ -47,8 +47,14 @@ final class WPER_Checklist_Store {
 			[
 				'post_type'   => self::CPT,
 				'post_status' => 'private',
-				/* translators: %s: run timestamp. */
-				'post_title'  => sprintf( __( 'Diagnostics %s', 'wper-checklist' ), wp_date( 'Y-m-d H:i' ) ),
+				// 이력 목록에서 진단끼리 구분되는 유일한 단서다 — 대상이 여럿이 될 수
+				// 있는 구성에서는 확장이 여기에 대상을 적는다.
+				'post_title'  => (string) apply_filters(
+					'wper_checklist_run_title',
+					/* translators: %s: run timestamp. */
+					sprintf( __( 'Diagnostics %s', 'wper-checklist' ), wp_date( 'Y-m-d H:i' ) ),
+					$context
+				),
 			],
 			true
 		);

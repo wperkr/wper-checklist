@@ -1814,3 +1814,9 @@ msgstr ""
 #, php-format
 msgid "Diagnostics %s"
 msgstr ""
+
+#. translators: 1: category names joined by a separator, 2: number of categories.
+#: includes/class-admin.php:80
+#, php-format
+msgid "%1$s — %2$d areas, scored out of 1000."
+msgstr ""

@@ -32,19 +32,25 @@ final class WPER_Checklist_Report {
 			return '<p class="wper-check-empty">' . esc_html__( 'No results yet.', 'wper-checklist' ) . '</p>';
 		}
 
-		$scores = WPER_Checklist_Runner::score( $items );
-		$recos  = (array) include WPER_CHECKLIST_PATH . 'data/recommendations.php';
-		$post   = get_post( $run_id );
+		// ⭐ 컨텍스트가 채점 · 라벨 · 대상 표기의 단일 근거다. 진단마다 카테고리 구성이
+		//    다를 수 있으므로, 보고서는 언제나 **그 진단이 실제로 돌던 구성**으로 그린다.
+		$context = WPER_Checklist_Store::context( $run_id );
+		$scores  = WPER_Checklist_Runner::score( $items, $context );
+		$recos   = (array) apply_filters(
+			'wper_checklist_recommendations',
+			(array) include WPER_CHECKLIST_PATH . 'data/recommendations.php'
+		);
+		$post    = get_post( $run_id );
 
 		ob_start();
 		?>
 		<div class="wper-check-result">
 
-			<?php self::render_score_head( $scores, $post ); ?>
-			<?php self::render_cats( $scores ); ?>
+			<?php self::render_score_head( $scores, $post, $context ); ?>
+			<?php self::render_cats( $scores, $context ); ?>
 
 			<section class="wper-check-report">
-				<?php foreach ( WPER_Checklist_Runner::cat_labels() as $cat => $cat_label ) : ?>
+				<?php foreach ( WPER_Checklist_Runner::cat_labels( $context ) as $cat => $cat_label ) : ?>
 					<?php
 					$cat_items = array_filter( $items, static fn( $i ) => $cat === ( $i['cat'] ?? '' ) );
 					if ( ! $cat_items ) {
@@ -52,7 +58,7 @@ final class WPER_Checklist_Report {
 					}
 					?>
 					<h3 class="wper-check-report__cat"><?php echo esc_html( $cat_label ); ?>
-						<span class="wper-check-report__pts"><?php echo esc_html( $scores['cats'][ $cat ]['score'] ); ?> / 200</span>
+						<span class="wper-check-report__pts"><?php echo esc_html( $scores['cats'][ $cat ]['score'] ); ?> / <?php echo esc_html( $scores['per'] ); ?></span>
 					</h3>
 					<ul class="wper-check-items">
 						<?php foreach ( $cat_items as $item ) : ?>
@@ -78,7 +84,7 @@ final class WPER_Checklist_Report {
 		return (string) ob_get_clean();
 	}
 
-	private static function render_score_head( array $scores, ?WP_Post $post ): void {
+	private static function render_score_head( array $scores, ?WP_Post $post, array $context = [] ): void {
 		$total = (int) $scores['total'];
 		$pct   = max( 0, min( 1, $total / 1000 ) );
 
@@ -112,7 +118,9 @@ final class WPER_Checklist_Report {
 			</div>
 			<div class="wper-check-score__meta">
 				<p class="wper-check-score__grade wper-check-score__grade--<?php echo esc_attr( $grade[0] ); ?>"><?php echo esc_html( $grade[1] ); ?></p>
-				<p class="wper-check-score__site"><?php echo esc_html( home_url() ); ?></p>
+				<?php // ⚠ 진단 대상은 언제나 컨텍스트가 답한다. home_url() 로 그리면 다른 ?>
+				<?php //   사이트를 잰 기록이 우리 주소로 표기돼 리포트 전체가 거짓이 된다. ?>
+				<p class="wper-check-score__site"><?php echo esc_html( untrailingslashit( (string) ( $context['urls']['home'] ?? home_url() ) ) ); ?></p>
 				<?php if ( $post ) : ?>
 					<p class="wper-check-score__date"><?php echo esc_html( get_date_from_gmt( $post->post_date_gmt, 'Y-m-d H:i' ) ); ?></p>
 				<?php endif; ?>
@@ -121,19 +129,21 @@ final class WPER_Checklist_Report {
 		<?php
 	}
 
-	private static function render_cats( array $scores ): void {
+	private static function render_cats( array $scores, array $context = [] ): void {
+		$per = max( 1, (int) ( $scores['per'] ?? 200 ) );
 		?>
 		<div class="wper-check-cats">
-			<?php foreach ( WPER_Checklist_Runner::cat_labels() as $cat => $cat_label ) : ?>
+			<?php foreach ( WPER_Checklist_Runner::cat_labels( $context ) as $cat => $cat_label ) : ?>
 				<?php
-				$row = $scores['cats'][ $cat ];
-				$pct = (int) round( $row['score'] / 2 ); // 200 만점 → %.
-				$cls = $row['score'] >= 160 ? 'ok' : ( $row['score'] >= 100 ? 'warn' : 'fail' );
+				$row   = $scores['cats'][ $cat ];
+				$ratio = $row['score'] / $per;
+				$pct   = (int) round( $ratio * 100 );
+				$cls   = $ratio >= 0.8 ? 'ok' : ( $ratio >= 0.5 ? 'warn' : 'fail' );
 				?>
 				<div class="wper-check-cat">
 					<div class="wper-check-cat__head">
 						<span class="wper-check-cat__name"><?php echo esc_html( $cat_label ); ?></span>
-						<span class="wper-check-cat__score"><?php echo esc_html( $row['score'] ); ?> <small>/ 200</small></span>
+						<span class="wper-check-cat__score"><?php echo esc_html( $row['score'] ); ?> <small>/ <?php echo esc_html( $per ); ?></small></span>
 					</div>
 					<div class="wper-check-meter">
 						<div class="wper-check-meter__track">

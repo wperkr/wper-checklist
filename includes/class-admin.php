@@ -71,7 +71,37 @@ final class WPER_Checklist_Admin {
 		?>
 		<div class="wrap wper-checklist">
 			<h1 class="wper-checklist__title"><?php esc_html_e( 'WPER Checklist', 'wper-checklist' ); ?></h1>
-			<p class="wper-checklist__lede"><?php esc_html_e( 'Response time · database queries · SEO · vulnerabilities · server configuration — five areas, scored out of 1000.', 'wper-checklist' ); ?></p>
+			<?php
+			/*
+			 * ⚠ 영역 이름을 문장에 박아 두지 않는다. 카테고리 구성은 확장이 갈아 끼울 수
+			 *   있으므로(§Extending), 고정 문장을 두면 "5개 영역" 이라고 적힌 화면이
+			 *   4개짜리 채점표를 내놓는 상태가 된다 — 화면이 자기 결과를 부정하게 된다.
+			 */
+			$cats = WPER_Checklist_Runner::cat_labels();
+			?>
+			<p class="wper-checklist__lede">
+				<?php
+				printf(
+					/* translators: 1: category names joined by a separator, 2: number of categories. */
+					esc_html__( '%1$s — %2$d areas, scored out of 1000.', 'wper-checklist' ),
+					esc_html( implode( ' · ', $cats ) ),
+					count( $cats )
+				);
+				?>
+			</p>
+
+			<?php
+			/**
+			 * 화면 확장 지점 — 시작 버튼 무대 바로 앞.
+			 *
+			 * ⭐ 이 훅 하나로 "제목 옆 절대 위치 UI" 와 "무대 위 인라인 패널" 을 동시에
+			 *    붙일 수 있다. 절대 위치는 DOM 순서를 따지지 않으므로 훅이 하나면 된다 —
+			 *    `.wper-checklist` 는 position: relative 를 전제로 삼아도 좋다.
+			 * ⚠ 이 플러그인은 여기에 무엇이 붙는지 알지 않는다. 확장이 없으면 아무 일도
+			 *   일어나지 않고, 있으면 그 확장이 자기 자산을 스스로 등록한다.
+			 */
+			do_action( 'wper_checklist_before_stage' );
+			?>
 
 			<div class="wper-checklist__stage" id="wper-check-stage">
 				<div class="wper-checklist__intro">
