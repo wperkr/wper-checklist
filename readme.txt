@@ -75,6 +75,7 @@ A check returns `[ 'items' => [...], 'events' => [...], 'done' => bool, 'cursor'
 * Category scoring is no longer fixed at five areas × 200 — the maximum is derived from the category count, so a four-area layout scores 250 each and still totals 1000
 * Reports are scored and labelled with **the context of the run being viewed**, not the current configuration, so past runs cannot change score when the setup changes
 * The report and the CLI now name the address that was actually measured instead of assuming the current site
+* The screen is one panel with three bands — masthead, summary, detail — instead of loose blocks on the wp-admin canvas. Admin notices land inside the masthead, and the score ring, category cards and detail toggle read as a single unit
 
 = 1.1.0 =
 * Replaced the bundled custom translation layer with a standard gettext language pack (`.pot` / `.po` / `.mo`), so the plugin now works with Loco Translate, Poedit, Weglot and any normal WordPress translation workflow
