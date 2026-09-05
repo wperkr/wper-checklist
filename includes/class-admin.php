@@ -70,6 +70,14 @@ final class WPER_Checklist_Admin {
 		$recent = WPER_Checklist_Store::recent( 5 );
 		?>
 		<div class="wrap wper-checklist">
+			<?php
+			/*
+			 * Head band: title, admin notices and lede as one unit. WordPress relocates
+			 * admin notices to just after the first h1 inside `.wrap`, so keeping the h1
+			 * in here pulls the notices into the same band instead of leaving them loose.
+			 */
+			?>
+			<div class="wper-checklist__head">
 			<h1 class="wper-checklist__title"><?php esc_html_e( 'WPER Checklist', 'wper-checklist' ); ?></h1>
 			<?php
 			/*
@@ -89,6 +97,7 @@ final class WPER_Checklist_Admin {
 				);
 				?>
 			</p>
+			</div><?php // .wper-checklist__head ?>
 
 			<?php
 			/**

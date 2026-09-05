@@ -1,11 +1,32 @@
 // 보고서 — 점수 링 · 카테고리 카드 · 항목 목록 · 권장 조치 · 확인 불가 고지.
 // 전 항목(pass/warn/fail/skip)이 표기된다 — 선택적 보고 금지 (계측 독트린).
 
+// One vertical rhythm for the whole report — the gap replaces the per-section margins
+// that used to make each block look like a separate page.
+.wper-check-result {
+	display: grid;
+	gap: var(--wper-space-6);
+}
+
+// Summary band — score ring, category cards and the detail toggle are one unit.
+.wper-check-summary {
+	padding: var(--wper-space-6);
+	border: 1px solid var(--wper-border);
+	border-radius: var(--wper-radius-lg);
+	background: var(--wper-surface-alt);
+}
+
 .wper-check-score {
 	display: flex;
 	align-items: center;
 	gap: var(--wper-space-8);
-	padding: var(--wper-space-6) 0;
+	padding: 0 0 var(--wper-space-6);
+
+	@media (max-width: 600px) {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--wper-space-4);
+	}
 
 	&__grade {
 		margin: 0;
@@ -80,14 +101,15 @@
 
 .wper-check-cats {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-	gap: var(--wper-space-4);
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	gap: var(--wper-space-3);
 }
 
+// White on the tinted summary band — the card edge carries the separation.
 .wper-check-cat {
 	padding: var(--wper-space-4);
 	border: 1px solid var(--wper-border);
-	border-radius: var(--wper-radius-lg);
+	border-radius: var(--wper-radius-md);
 	background: var(--wper-surface);
 	box-shadow: var(--wper-shadow-sm);
 
@@ -124,6 +146,15 @@
 
 /* -------------------------------------------------------------- 항목 목록 */
 
+// Detail sections share one panel language so the report reads as a single document.
+.wper-check-report,
+.wper-check-recos {
+	padding: var(--wper-space-6);
+	border: 1px solid var(--wper-border);
+	border-radius: var(--wper-radius-lg);
+	background: var(--wper-surface);
+}
+
 .wper-check-report {
 	&__cat {
 		display: flex;
@@ -132,6 +163,10 @@
 		margin: var(--wper-space-8) 0 var(--wper-space-3);
 		font-size: var(--wper-text-lg);
 		color: var(--wper-heading);
+
+		&:first-child {
+			margin-block-start: 0;
+		}
 	}
 
 	&__pts {
@@ -207,9 +242,8 @@
 /* ------------------------------------------------------------ 권장 조치 */
 
 .wper-check-recos {
-	margin-block-start: var(--wper-space-10);
-
 	h3 {
+		margin-block-start: 0;
 		font-size: var(--wper-text-xl);
 		color: var(--wper-heading);
 	}
@@ -260,8 +294,7 @@
 /* ---------------------------------------------------- 확인 불가 · 푸터 */
 
 .wper-check-skips {
-	margin-block-start: var(--wper-space-8);
-	padding: var(--wper-space-4) var(--wper-space-5);
+	padding: var(--wper-space-5) var(--wper-space-6);
 	border: 1px dashed var(--wper-border);
 	border-radius: var(--wper-radius-md);
 	color: var(--wper-ink-subtle);
@@ -278,7 +311,7 @@
 }
 
 .wper-check-footer {
-	margin-block-start: var(--wper-space-8);
+	margin-block-start: 0;
 	padding-block-start: var(--wper-space-4);
 	border-block-start: 1px solid var(--wper-border);
 	color: var(--wper-ink-faint);

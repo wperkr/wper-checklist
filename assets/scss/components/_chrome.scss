@@ -1,23 +1,79 @@
 // 화면 크롬 — 진입 화면(시작 버튼 · 이력) · 툴바 · 오류.
 
+// The plugin container. Everything this screen renders lives inside one surface so it
+// reads as a single app panel instead of loose blocks floating on the wp-admin canvas.
+//
+// `position: relative` is part of the published extension contract (see class-admin.php):
+// extensions anchor absolutely positioned UI to this box. Without it their UI escaped to
+// the initial containing block.
 .wper-checklist {
-	max-inline-size: 960px;
+	position: relative;
+	box-sizing: border-box;
+	max-inline-size: var(--wper-container-max);
+	margin-block: var(--wper-space-5) var(--wper-space-10);
+	margin-inline: 0 var(--wper-space-5);
+	padding: var(--wper-space-6) var(--wper-space-8) var(--wper-space-8);
+	border: 1px solid var(--wper-border);
+	border-radius: var(--wper-radius-lg);
+	background: var(--wper-surface);
+	box-shadow: var(--wper-shadow-sm);
+	color: var(--wper-ink);
+
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	// Head band — title, injected admin notices and the lede read as one masthead.
+	&__head {
+		margin-block-end: var(--wper-space-6);
+		padding-block-end: var(--wper-space-5);
+		border-block-end: 1px solid var(--wper-border);
+	}
 
 	&__title {
+		margin: 0;
+		padding: 0;
 		color: var(--wper-heading);
+		font-size: var(--wper-text-3xl);
+		font-weight: var(--wper-weight-bold);
+		line-height: 1.25;
 	}
 
 	&__lede {
-		margin: var(--wper-space-1) 0 var(--wper-space-6);
+		margin: var(--wper-space-2) 0 0;
 		color: var(--wper-ink-muted);
 		font-size: var(--wper-text-base);
 	}
 
+	// WordPress relocates admin notices to just after the first h1 inside `.wrap`,
+	// which lands them in the head band. Re-space them so they belong to the panel.
+	.notice,
+	.updated,
+	.error {
+		margin: var(--wper-space-4) 0 0;
+	}
+
+	&__stage {
+		min-block-size: 96px;
+	}
+
+	// Empty state — the start button is the only thing on screen, so centre it and
+	// give it a dashed well instead of leaving it stranded on the panel.
 	&__intro {
 		display: grid;
-		justify-items: start;
+		justify-items: center;
 		gap: var(--wper-space-8);
-		padding: var(--wper-space-10) 0;
+		padding: var(--wper-space-12) var(--wper-space-6);
+		border: 1px dashed var(--wper-border);
+		border-radius: var(--wper-radius-lg);
+		background: var(--wper-surface-alt);
+	}
+
+	@media (max-width: 782px) {
+		margin-inline: 0;
+		padding: var(--wper-space-5) var(--wper-space-4) var(--wper-space-6);
 	}
 }
 
@@ -86,11 +142,12 @@
 
 // 툴바 — 보고서 상세 토글. 언어 전환 필은 1.1.0 에서 제거했다
 // (보고서 언어는 사이트 로케일 + 언어팩이 정한다).
+// JS injects this right after `.wper-check-cats`, i.e. inside the summary band.
 .wper-check-toolbar {
 	display: flex;
 	align-items: center;
 	gap: var(--wper-space-4);
-	margin: var(--wper-space-6) 0;
+	margin: var(--wper-space-6) 0 0;
 
 	&__reco {
 		padding: var(--wper-space-3) var(--wper-space-6);

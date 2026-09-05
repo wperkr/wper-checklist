@@ -44,6 +44,9 @@
 	--wper-info-bg: #e4f3ff;
 	--wper-info-fg: #0b6fb8;
 
+	// Layout — the plugin owns one container; nothing renders outside it.
+	--wper-container-max: 1180px;
+
 	// Spacing (4px 기반)
 	--wper-space-1: 4px;
 	--wper-space-2: 8px;

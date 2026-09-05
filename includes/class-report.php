@@ -46,8 +46,17 @@ final class WPER_Checklist_Report {
 		?>
 		<div class="wper-check-result">
 
-			<?php self::render_score_head( $scores, $post, $context ); ?>
-			<?php self::render_cats( $scores, $context ); ?>
+			<?php
+			/*
+			 * Summary band. The score ring, the per-category cards and the detail toggle
+			 * that JS injects after `.wper-check-cats` all land in this one box, so the
+			 * headline reads as a single unit instead of three stacked strips.
+			 */
+			?>
+			<div class="wper-check-summary">
+				<?php self::render_score_head( $scores, $post, $context ); ?>
+				<?php self::render_cats( $scores, $context ); ?>
+			</div>
 
 			<section class="wper-check-report">
 				<?php foreach ( WPER_Checklist_Runner::cat_labels( $context ) as $cat => $cat_label ) : ?>
