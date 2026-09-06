@@ -8,8 +8,9 @@
  *    (wper-checklist · wper-simple-admin-menu)이 wper-core 없이도 서야 하므로
  *    공용 라이브러리 대신 사본 규약을 쓴다.
  *
- * ⚠ 사본 v1 — 고치면 네 곳을 함께 고친다:
+ * ⚠ 사본 v2 — 고치면 다섯 곳을 함께 고친다:
  *   wper-core/includes/admin-menu.php
+ *   wper-contact/includes/admin-menu.php
  *   wper-payments/includes/admin-menu.php
  *   wper-checklist/includes/admin-menu.php
  *   wper-simple-admin-menu/includes/admin-menu.php
